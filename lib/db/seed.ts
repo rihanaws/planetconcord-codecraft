@@ -1,5 +1,6 @@
 import prisma from "./prisma";
 import bcrypt from "bcryptjs";
+import { PricingType } from "@prisma/client";
 
 async function main() {
   console.log("🌱 Starting database seed...");
@@ -47,7 +48,7 @@ async function main() {
 With our proven templates and strategies, you'll be able to launch your newsletter in just 48 hours and start building your subscriber list immediately.`,
       shortDesc: "Everything you need to launch and grow your email newsletter from scratch, including templates, strategies, and monetization playbook.",
       price: 149,
-      pricingType: "ONE_TIME",
+      pricingType: PricingType.ONE_TIME,
       category: "Marketing",
       deliverables: [
         "12 pre-written newsletter templates",
@@ -111,7 +112,7 @@ With our proven templates and strategies, you'll be able to launch your newslett
 Our clients typically see 2-3x conversion rate improvements within 30 days of implementing our recommendations.`,
       shortDesc: "Battle-tested CRO system to double your landing page conversions, including templates, copywriting formulas, and A/B testing playbook.",
       price: 597,
-      pricingType: "ONE_TIME",
+      pricingType: PricingType.ONE_TIME,
       category: "Marketing",
       deliverables: [
         "23-point CRO audit framework",
@@ -174,7 +175,7 @@ Our clients typically see 2-3x conversion rate improvements within 30 days of im
 Post consistently for 3 months straight without creative burnout, plus build sustainable content systems for long-term success.`,
       shortDesc: "90-day social media content calendar with 270+ post ideas, templates, captions, and engagement strategies across all major platforms.",
       price: 199,
-      pricingType: "ONE_TIME",
+      pricingType: PricingType.ONE_TIME,
       category: "Marketing",
       deliverables: [
         "90-day content calendar (Google Sheets)",
@@ -246,7 +247,7 @@ Post consistently for 3 months straight without creative burnout, plus build sus
 Access to the same marketing systems used by 7-figure businesses, updated monthly with fresh strategies and templates.`,
       shortDesc: "Complete digital marketing subscription with all templates, tools, training, monthly strategy calls, and private community access.",
       price: 599.67,
-      pricingType: "SUBSCRIPTION",
+      pricingType: PricingType.SUBSCRIPTION,
       category: "Marketing",
       deliverables: [
         "Access to full template library (100+)",
@@ -318,7 +319,7 @@ Access to the same marketing systems used by 7-figure businesses, updated monthl
 Increase video engagement by 40%+ and generate more qualified leads from your property listings.`,
       shortDesc: "AI-powered video analysis tool for real estate professionals with quality scoring, engagement metrics, and optimization recommendations.",
       price: 29.99,
-      pricingType: "SUBSCRIPTION",
+      pricingType: PricingType.SUBSCRIPTION,
       category: "Analytics",
       deliverables: [
         "Unlimited video analysis",
@@ -391,7 +392,7 @@ Increase video engagement by 40%+ and generate more qualified leads from your pr
 Average improvement of 40-60% in PageSpeed score, leading to higher conversions and better search rankings.`,
       shortDesc: "Professional Shopify store optimization service to dramatically improve loading speed, conversions, and search rankings.",
       price: 500,
-      pricingType: "ONE_TIME",
+      pricingType: PricingType.ONE_TIME,
       category: "Development",
       deliverables: [
         "Complete speed audit report",

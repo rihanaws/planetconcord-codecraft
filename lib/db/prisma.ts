@@ -3,6 +3,7 @@ import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
+  prismaForAuth: PrismaClient | undefined;
 };
 
 // Parse DATABASE_URL to extract connection details
@@ -29,6 +30,20 @@ export const prisma =
         : ["error"],
   });
 
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+// Separate Prisma client for NextAuth (also needs adapter for MySQL)
+export const prismaForAuth =
+  globalForPrisma.prismaForAuth ??
+  new PrismaClient({
+    adapter,
+    log:
+      process.env.NODE_ENV === "development"
+        ? ["query", "error", "warn"]
+        : ["error"],
+  });
+
+if (process.env.NODE_ENV !== "production") {
+  globalForPrisma.prisma = prisma;
+  globalForPrisma.prismaForAuth = prismaForAuth;
+}
 
 export default prisma;

@@ -1,21 +1,23 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/db/prisma"
-import { hashPassword, validatePasswordStrength } from "@/lib/auth/utils"
-import { createOTPToken } from "@/lib/auth/utils"
+import { hashPassword, validatePasswordStrength, createOTPToken } from "@/lib/auth/utils"
 import { sendVerificationEmail } from "@/lib/email/send"
 import { TokenType } from "@prisma/client"
 import { z } from "zod"
 
-const signupSchema = z.object({
+const registerSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
   password: z.string().min(8, "Password must be at least 8 characters"),
 })
 
+/**
+ * POST /api/auth/register - Register new user account
+ */
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { name, email, password } = signupSchema.parse(body)
+    const { name, email, password } = registerSchema.parse(body)
 
     // Validate password strength
     const passwordValidation = validatePasswordStrength(password)
@@ -65,12 +67,12 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: "Invalid request data", details: error.errors },
+        { error: "Invalid request data", details: error.issues },
         { status: 400 }
       )
     }
 
-    console.error("Signup error:", error)
+    console.error("Register error:", error)
     return NextResponse.json(
       { error: "Failed to create account" },
       { status: 500 }

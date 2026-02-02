@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { signIn } from "next-auth/react"
 import { Button } from "@/components/ui/button"
@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label"
 import { Alert } from "@/components/ui/alert"
 import { Loader2, Mail, CheckCircle2, AlertCircle, ArrowRight } from "lucide-react"
 
-export default function VerifyEmailPage() {
+function VerifyEmailPageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const email = searchParams.get("email") || ""
@@ -83,7 +83,7 @@ export default function VerifyEmailPage() {
     setError(null)
 
     try {
-      const response = await fetch("/api/auth/verify-email", {
+      const response = await fetch("/api/verify-email/confirm", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, otp: otpString }),
@@ -118,7 +118,7 @@ export default function VerifyEmailPage() {
     setError(null)
 
     try {
-      const response = await fetch("/api/auth/resend-otp", {
+      const response = await fetch("/api/verify-email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
@@ -268,5 +268,13 @@ export default function VerifyEmailPage() {
         </p>
       </div>
     </div>
+  )
+}
+
+export default function VerifyEmailPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+      <VerifyEmailPageContent />
+    </Suspense>
   )
 }

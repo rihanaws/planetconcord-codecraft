@@ -4,15 +4,18 @@ import { verifyOTPToken } from "@/lib/auth/utils"
 import { TokenType } from "@prisma/client"
 import { z } from "zod"
 
-const verifySchema = z.object({
+const verifyOTPSchema = z.object({
   email: z.string().email(),
   otp: z.string().length(6),
 })
 
+/**
+ * POST /api/verify-email/confirm - Verify OTP and mark email as verified
+ */
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { email, otp } = verifySchema.parse(body)
+    const { email, otp } = verifyOTPSchema.parse(body)
 
     // Verify the OTP
     const result = await verifyOTPToken(email, otp, TokenType.EMAIL_VERIFICATION)
@@ -37,7 +40,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: "Invalid request data", details: error.errors },
+        { error: "Invalid request data", details: error.issues },
         { status: 400 }
       )
     }

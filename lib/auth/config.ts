@@ -2,7 +2,7 @@ import NextAuth, { DefaultSession } from "next-auth"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import Google from "next-auth/providers/google"
 import Credentials from "next-auth/providers/credentials"
-import { prisma } from "@/lib/db/prisma"
+import { prisma, prismaForAuth } from "@/lib/db/prisma"
 import { comparePasswords } from "./utils"
 import { UserRole } from "@prisma/client"
 
@@ -20,7 +20,7 @@ declare module "next-auth" {
 }
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  adapter: PrismaAdapter(prisma),
+  adapter: PrismaAdapter(prismaForAuth) as any,
 
   // Configure session strategy
   session: {

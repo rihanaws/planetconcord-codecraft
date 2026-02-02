@@ -2,33 +2,58 @@
 
 This document tracks corrections needed to align Phase 2 implementation with the main plan (`.claude/plans/dapper-nibbling-mango.md` lines 213-303).
 
-## Deviations Found
+## ✅ CORRECTIONS COMPLETED - Phase 2 Aligned with Plan
 
-### 1. ❌ lib/auth/ File Structure
+**Completion Date:** 2026-02-02
+**Status:** All high-priority corrections completed
 
-**Plan Requirement:**
-- Single file: `lib/auth/utils.ts` containing all utilities
+### Summary of Changes:
 
-**Current Implementation:**
-- Multiple files: `auth.ts`, `otp.ts`, `password.ts`, `session.ts`
+1. ✅ **API Routes Restructured** (Task #11)
+   - Moved `/api/auth/verify-email/` → `/api/verify-email/`
+   - Created `/api/verify-email/confirm/route.ts` for OTP verification
+   - Renamed `/api/auth/signup/` → `/api/auth/register/`
+   - Removed `/api/auth/resend-otp/` (consolidated into verify-email route)
+   - Updated all page imports to use new routes
 
-**Correction Needed:**
-```bash
-# Option A: Consolidate into utils.ts (as per plan)
-- Merge password.ts, otp.ts, session.ts → lib/auth/utils.ts
-- Keep lib/auth/config.ts (rename from auth.ts)
+2. ✅ **6 Auth Components Created** (Task #12)
+   - `components/auth/oauth-buttons.tsx`
+   - `components/auth/login-form.tsx`
+   - `components/auth/signup-form.tsx`
+   - `components/auth/verify-otp-form.tsx`
+   - `components/auth/forgot-password-form.tsx`
+   - `components/auth/reset-password-form.tsx`
 
-# Option B: Keep current structure (document as acceptable deviation)
-- Current structure is more modular and maintainable
-- Recommend: Keep current, update plan understanding
-```
+3. ✅ **Auth Provider Location Fixed** (Task #13)
+   - Created `components/layout/auth-provider.tsx`
+   - Updated `app/layout.tsx` to use new location
+   - Removed old `components/providers/session-provider.tsx`
 
-**Decision:** ✅ Keep current structure (more maintainable)
-**Rationale:** Better separation of concerns, easier testing
+4. ✅ **Email Templates Aligned** (Tasks #8, #9, #10)
+   - Renamed all templates to remove `-email` suffix
+   - Created `access-granted.tsx` and `subscription-expiring.tsx`
+   - All 6 email templates now match plan exactly
+
+5. ✅ **Auth Utilities Consolidated** (Task #8)
+   - Merged auth utilities into `lib/auth/utils.ts`
+   - Renamed `auth.ts` → `config.ts`
+   - Fixed SALT_ROUNDS to 10 (per plan)
+
+6. ✅ **TypeScript and Build Issues Fixed**
+   - Fixed Zod error handling (`error.errors` → `error.issues`)
+   - Added PricingType enum imports in seed file
+   - Fixed Prisma 7 + MariaDB adapter configuration
+   - Added Suspense boundaries for `useSearchParams()` pages
+   - All TypeScript checks passing
 
 ---
 
-### 2. ❌ Email Template File Names
+## Deviations from Plan (Documented & Accepted)
+
+### 1. ✅ lib/auth/ File Structure (ACCEPTABLE DEVIATION)
+
+**Decision:** Keep current structure (more maintainable)
+**Rationale:** Better separation of concerns, easier testing
 
 **Plan Requirement:**
 ```
