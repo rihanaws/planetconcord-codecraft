@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+.claude/project-context.md
+.claude/project-readme.md
+.claude/plans/dapper-nibbling-mango.md
+
+.cursor/rules/rules.md
