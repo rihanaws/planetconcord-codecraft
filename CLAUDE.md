@@ -12,16 +12,19 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - ✅ Database seeded with admin user, 6 products, and test customer
 - ✅ Git repository initialized and connected to GitHub
 
-**Phase 2: Authentication System** ✅ COMPLETED
+**Phase 2: Authentication System** ✅ COMPLETED & ALIGNED
 - ✅ NextAuth.js v5 configured with database sessions and Prisma adapter
 - ✅ Google OAuth 2.0 integration (OAuth buttons, auto email verification)
 - ✅ Email/Password authentication with 6-digit OTP verification (10-min expiry)
-- ✅ Password strength validation and bcryptjs hashing (12 rounds)
+- ✅ Password strength validation and bcryptjs hashing (10 rounds)
 - ✅ Route protection with proxy.ts (Next.js 16) - role-based access control
 - ✅ 5 authentication pages with production-grade UI (login, signup, verify, forgot, reset)
-- ✅ Email service with Resend and 4 React Email templates
-- ✅ Session management with SessionProvider and ThemeProvider
-- ✅ 6 API routes for auth operations (signup, verify, resend, forgot, reset, NextAuth)
+- ✅ 6 reusable auth components extracted (login-form, signup-form, oauth-buttons, etc.)
+- ✅ Email service with Resend and 6 React Email templates
+- ✅ Session management with AuthProvider and ThemeProvider
+- ✅ API routes restructured per plan (register, verify-email with confirm endpoint)
+- ✅ All TypeScript and build issues resolved
+- ✅ Full alignment with main plan (.claude/plans/dapper-nibbling-mango.md)
 
 **Next Steps:**
 - Phase 3: Public Website (Homepage, product pages, legal pages)
@@ -39,7 +42,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Domain:** https://codecraft.techsci.xyz
 - **Company:** TechSci, Inc. (Delaware Corporation)
 - **Purpose:** Demonstrate complete product fulfillment system for Whop business verification
-- **Status:** Phase 2 completed - Authentication system fully operational
+- **Status:** Phase 2 completed & aligned - Authentication system fully operational and production-ready
 - **Products:** 6 premium digital products configured and seeded
 
 ## Development Commands
@@ -91,10 +94,10 @@ bunx prisma migrate reset                     # Reset database (deletes all data
 - **prisma.config.ts** for Prisma 7 datasource configuration
 
 ### Authentication
-- **NextAuth.js v5** with database sessions
-- **Google OAuth 2.0** for social login
-- **Email/Password** with OTP verification
-- **bcryptjs** for password hashing
+- **NextAuth.js v5** with database sessions (Prisma adapter)
+- **Google OAuth 2.0** for social login (auto email verification)
+- **Email/Password** with 6-digit OTP verification (10-min expiry)
+- **bcryptjs** for password hashing (10 rounds)
 
 ### Integrations
 - **Whop** - Payment processing and webhook integration
@@ -181,13 +184,17 @@ Monitor Webhooks → View Analytics
 
 ## Email System (Resend)
 
-Transactional emails sent from `noreply@techsci.xyz`:
-- OTP verification codes
-- Welcome emails
-- Purchase confirmations
-- Access granted notifications
-- Password reset links
-- Subscription reminders
+Transactional emails sent from `noreply@techsci.xyz` using React Email templates:
+
+**6 Email Templates** (`lib/email/templates/`):
+1. `verification-otp.tsx` - 6-digit OTP for email verification
+2. `welcome.tsx` - Welcome message for new users
+3. `purchase-confirmation.tsx` - Order confirmation after payment
+4. `access-granted.tsx` - Product access notification
+5. `password-reset.tsx` - Password reset OTP code
+6. `subscription-expiring.tsx` - Renewal reminder for subscriptions
+
+All templates use consistent branding and are fully responsive.
 
 ## Project Structure
 
@@ -203,14 +210,26 @@ techsci-codecraft/
 │   ├── (dashboard)/dashboard/  # Customer portal (protected)
 │   ├── (admin)/admin/          # Admin panel (admin only)
 │   └── api/
-│       ├── auth/[...nextauth]/ # NextAuth config
-│       ├── webhooks/whop/      # Whop webhook handler
-│       ├── verify-email/       # OTP send/verify
-│       └── [products, access]/ # API routes
+│       ├── auth/
+│       │   ├── [...nextauth]/      # NextAuth handlers
+│       │   ├── register/           # User registration
+│       │   ├── forgot-password/    # Password reset request
+│       │   └── reset-password/     # Password reset with OTP
+│       ├── verify-email/
+│       │   ├── route.ts            # Send OTP
+│       │   └── confirm/route.ts    # Verify OTP
+│       ├── webhooks/whop/          # Whop webhook handler
+│       └── [products, access]/     # API routes
 ├── components/
 │   ├── ui/                     # shadcn/ui components (managed via CLI)
-│   ├── auth/                   # Login, signup, OTP forms
-│   ├── layout/                 # Headers, footers, nav
+│   ├── auth/                   # 6 reusable auth components
+│   │   ├── oauth-buttons.tsx       # Google OAuth button
+│   │   ├── login-form.tsx          # Email/password login
+│   │   ├── signup-form.tsx         # Registration form
+│   │   ├── verify-otp-form.tsx     # OTP verification
+│   │   ├── forgot-password-form.tsx # Password reset request
+│   │   └── reset-password-form.tsx  # New password form
+│   ├── layout/                 # Headers, footers, nav, auth-provider
 │   ├── dashboard/              # Customer portal components
 │   ├── admin/                  # Admin panel components
 │   └── products/               # Product display components
@@ -272,8 +291,15 @@ techsci-codecraft/
 
 ### Database Operations
 - Always use Prisma Client from `@/lib/db/prisma`
+- **Prisma 7 with MariaDB adapter** required for MySQL connections
+- Two Prisma clients exported: `prisma` (with adapter) and `prismaForAuth` (for NextAuth compatibility)
 - Use transactions for multi-step operations
 - Handle errors gracefully with try-catch
+
+### React Server Components & Client Components
+- **Pages with `useSearchParams()`** must be wrapped in Suspense boundaries
+- Example: Login, verify-email, reset-password pages all use Suspense
+- Server Components by default; use `"use client"` only when needed
 
 ## Critical Requirements
 
@@ -295,7 +321,10 @@ techsci-codecraft/
 - ❌ Storing plain text passwords
 - ❌ Skipping webhook signature verification
 - ❌ Exposing admin routes to customers
-- ❌ Using `any` type in TypeScript
+- ❌ Using `any` type in TypeScript (except for known library compatibility issues)
+- ❌ Using `error.errors` with Zod (correct: `error.issues`)
+- ❌ Forgetting Suspense boundaries for `useSearchParams()` pages
+- ❌ Using string literals for Prisma enums (use `PricingType.ONE_TIME`, not `"ONE_TIME"`)
 - ❌ Inconsistent design across pages
 - ❌ Different styling on different pages
 
@@ -344,8 +373,23 @@ Has access to: Email Newsletter Starter Pack
 - **Domain:** codecraft.techsci.xyz
 - **SSL:** Automatic via Vercel
 
+## Recent Updates & Corrections
+
+**Phase 2 Corrections Completed** (2026-02-02):
+- ✅ Restructured API routes to match plan exactly
+- ✅ Created 6 reusable auth components
+- ✅ Moved auth provider to `components/layout/auth-provider.tsx`
+- ✅ Fixed all TypeScript and build issues
+- ✅ Added Suspense boundaries for client components
+- ✅ Fixed Zod error handling across all API routes
+- ✅ Fixed Prisma 7 adapter configuration for MySQL
+
+See `PHASE2_CORRECTIONS.md` for detailed change log.
+
 ## Additional Context
 
 For detailed product specifications, business requirements, and implementation checklists, see:
 - `.claude/project-context.md` - Complete mission and architecture
 - `.claude/project-readme.md` - Comprehensive technical documentation
+- `.claude/plans/dapper-nibbling-mango.md` - Main implementation plan
+- `PHASE2_CORRECTIONS.md` - Phase 2 corrections and alignment details
