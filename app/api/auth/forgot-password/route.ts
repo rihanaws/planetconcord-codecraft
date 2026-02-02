@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/db/prisma"
-import { createOTPToken } from "@/lib/auth/otp"
+import { createOTPToken } from "@/lib/auth/utils"
 import { sendPasswordResetEmail } from "@/lib/email/send"
 import { TokenType } from "@prisma/client"
 import { z } from "zod"

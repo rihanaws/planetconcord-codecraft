@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/db/prisma"
-import { verifyOTPToken } from "@/lib/auth/otp"
+import { verifyOTPToken } from "@/lib/auth/utils"
 import { TokenType } from "@prisma/client"
 import { z } from "zod"
 

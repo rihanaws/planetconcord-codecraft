@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
-import { auth } from "@/lib/auth/auth"
+import { auth } from "@/lib/auth/config"
 import { UserRole } from "@prisma/client"
 
 // Public routes that don't require authentication
