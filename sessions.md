@@ -310,75 +310,102 @@ Five authentication pages with refined minimalist design:
 **Status:** 🚧 IN PROGRESS
 **Target Date:** TBD
 
-### Important Instructions
+### ⚠️ CRITICAL INSTRUCTIONS - MUST READ BEFORE STARTING
 
-⚠️ **CRITICAL: Design Consistency Requirements**
+**🎯 STRICT ADHERENCE TO MAIN PLAN REQUIRED**
 
-Before implementing ANY page in Phase 3, you MUST:
+You MUST follow the main implementation plan located at:
+`.claude/plans/dapper-nibbling-mango.md` (Phase 3: Lines 306-417)
 
-1. **Use frontend-design Skill First**
-   - Run `frontend-design` skill for EVERY new page/component
-   - Ensure design matches existing auth pages aesthetic
-   - Maintain consistent color palette (OKLCH)
+**NO DEVIATIONS ALLOWED** - Implement exactly as specified in the plan.
+
+### Mandatory Workflow for Phase 3
+
+**For EVERY component, page, or feature in Phase 3:**
+
+1. **📖 Read the Main Plan First**
+   - Open `.claude/plans/dapper-nibbling-mango.md`
+   - Read Phase 3 section (lines 306-417) completely
+   - Understand exact file structure, naming, and requirements
+   - Follow the plan EXACTLY - no improvisation
+
+2. **🎨 Use frontend-design Skill**
+   - Run `frontend-design` skill for ALL UI components/pages
+   - Reference existing auth pages for design consistency
+   - Match OKLCH color palette exactly
    - Use same typography (Geist Sans/Mono)
-   - Apply same spacing system
-   - Keep animations consistent (200ms transitions)
-   - Use glass-morphic design elements
+   - Apply consistent spacing (4/8/12/16/24/32/48px)
+   - Maintain glass-morphic design aesthetic
+   - Keep transitions at 200ms
 
-2. **Use Serena for Code Implementation**
-   - Utilize Serena's symbolic tools for intelligent code editing
-   - Read existing components before creating new ones
-   - Follow project patterns and conventions
-   - Use `find_symbol` to understand relationships
-   - Leverage `replace_symbol_body` for modifications
-   - Maintain codebase consistency
+3. **🔧 Use Serena for Implementation**
+   - Use Serena's symbolic tools for ALL code creation/editing
+   - Run `find_symbol` to understand existing patterns
+   - Use `get_symbols_overview` before modifying files
+   - Follow project conventions exactly
+   - Use `replace_symbol_body` for modifications
+   - Never create duplicate code
 
-3. **Design Verification Checklist**
-   Before marking any page as complete, verify:
-   - [ ] Colors match existing pages (OKLCH values)
-   - [ ] Typography is identical (font families, sizes, weights)
-   - [ ] Spacing follows established scale (4/8/12/16/24/32/48px)
-   - [ ] Button styles match exactly
-   - [ ] Card designs are consistent
-   - [ ] Animations are uniform
+4. **✅ Verification Before Completion**
+   For EACH file created, verify:
+   - [ ] File path matches plan exactly
+   - [ ] File name matches plan exactly
+   - [ ] Component structure follows plan
+   - [ ] All required props/functions included per plan
+   - [ ] Design matches existing auth pages
+   - [ ] Colors are OKLCH from globals.css
+   - [ ] Typography uses Geist Sans/Mono
+   - [ ] Spacing follows established scale
    - [ ] Dark mode works correctly
-   - [ ] Mobile responsive matches quality of auth pages
+   - [ ] Mobile responsive
+   - [ ] No console errors
+   - [ ] TypeScript strict mode passes
 
-### Goals
+### ❌ FORBIDDEN Actions
 
-#### Phase 3: Public Website Implementation
+**DO NOT:**
+- ❌ Deviate from file names in the plan
+- ❌ Change folder structure from the plan
+- ❌ Skip any components mentioned in the plan
+- ❌ Add extra features not in the plan
+- ❌ Use different naming conventions
+- ❌ Create alternative implementations
+- ❌ Improvise or "improve" the plan
+- ❌ Merge components that are separate in plan
+- ❌ Split components that are single in plan
+
+### Goals - EXACT IMPLEMENTATION PER MAIN PLAN
+
+#### Phase 3: Public Website (From Plan Lines 306-417)
 
 **3.1 Public Layout & Navigation**
-- [ ] Create `components/layout/header.tsx` - Public header
-  - Logo with link to homepage
-  - Navigation menu (Products, About, Contact)
-  - Login/Signup buttons (conditional on auth state)
+
+EXACT FILES TO CREATE (as per plan):
+
+- [ ] `components/layout/header.tsx` - Public header
+  - Logo, nav menu (Products, About, Contact)
+  - Login/Signup buttons
   - Dark mode toggle
   - Mobile hamburger menu
 
-- [ ] Create `components/layout/footer.tsx` - Site footer
-  - Product links
-  - Company links (About, Contact)
-  - Legal links (Terms, Privacy, Refund)
-  - Copyright notice
-  - Social media links
+- [ ] `components/layout/footer.tsx` - Site footer
+  - Links (Products, About, Terms, Privacy, Refund, Contact)
+  - Copyright, social links
   - Newsletter signup form
 
-- [ ] Create `components/layout/mobile-menu.tsx` - Mobile drawer
-  - Slide-in navigation
-  - Same links as desktop header
-  - Close button
-  - Touch-friendly design
+- [ ] `components/layout/mobile-menu.tsx` - Mobile navigation drawer
 
 **3.2 Homepage (`app/page.tsx`)**
-- [ ] **Hero Section** - Compelling headline, subheading, CTA buttons
-- [ ] **Features Section** - 4-6 key benefits with icons
-- [ ] **Products Section** - Featured products grid (3 cards)
-- [ ] **Social Proof Section** - Testimonials or trust badges
-- [ ] **FAQ Section** - Common questions accordion
-- [ ] **CTA Section** - Final conversion section
 
-Components to create:
+HOMEPAGE SECTIONS (as per plan):
+- [ ] Hero: Headline, subheading, CTA buttons
+- [ ] Features: 4-6 key benefits with icons
+- [ ] Products: Featured products grid (3 cards)
+- [ ] Social Proof: Testimonials or trust badges
+- [ ] FAQ: Common questions accordion
+- [ ] CTA: Final conversion section
+
+EXACT COMPONENTS TO CREATE (as per plan):
 - [ ] `components/sections/hero.tsx`
 - [ ] `components/sections/features.tsx`
 - [ ] `components/sections/testimonials.tsx`
@@ -386,38 +413,46 @@ Components to create:
 - [ ] `components/sections/cta.tsx`
 - [ ] `components/sections/trust-badges.tsx`
 
-**3.3 Product Pages**
-- [ ] `/products/page.tsx` - Product listing
+**3.3 Product Pages (Route Group: `app/(public)/products/`)**
+
+⚠️ IMPORTANT: Create route group folder `app/(public)/` as per plan
+
+EXACT PAGES TO CREATE:
+- [ ] `app/(public)/products/page.tsx` - Product listing
   - Grid of all 6 products
   - Category filters (Marketing, Analytics, Development)
   - Search bar
   - Sorting (price, popularity)
 
-- [ ] `/products/[slug]/page.tsx` - Product detail
+- [ ] `app/(public)/products/[slug]/page.tsx` - Product detail
   - Product hero (name, price, image)
   - Full description
   - Deliverables list
   - Features checklist
-  - Requirements section
+  - Requirements
   - FAQ accordion
   - "Buy Now" button → Redirect to Whop checkout
 
-Components to create:
-- [ ] `components/products/product-card.tsx`
-- [ ] `components/products/product-grid.tsx`
-- [ ] `components/products/product-filter.tsx`
-- [ ] `components/products/product-hero.tsx`
-- [ ] `components/products/product-features.tsx`
-- [ ] `components/products/product-faq.tsx`
+EXACT COMPONENTS TO CREATE (as per plan):
+- [ ] `components/products/product-card.tsx` - Grid item
+- [ ] `components/products/product-grid.tsx` - Grid layout
+- [ ] `components/products/product-filter.tsx` - Category/search filters
+- [ ] `components/products/product-hero.tsx` - Detail page hero
+- [ ] `components/products/product-features.tsx` - Features section
+- [ ] `components/products/product-faq.tsx` - FAQ section
 
-**3.4 Other Public Pages**
-- [ ] `/about/page.tsx` - About TechSci CodeCraft Agency
-- [ ] `/contact/page.tsx` - Contact form (sends via Resend)
-- [ ] `/terms/page.tsx` - Terms of Service
-- [ ] `/privacy/page.tsx` - Privacy Policy
-- [ ] `/refund/page.tsx` - Refund Policy
+**3.4 Other Public Pages (`app/(public)/`)**
 
-**3.5 Utilities & Data Helpers**
+EXACT PAGES TO CREATE:
+- [ ] `app/(public)/about/page.tsx` - About TechSci CodeCraft Agency
+- [ ] `app/(public)/contact/page.tsx` - Contact form (sends via Resend)
+- [ ] `app/(public)/terms/page.tsx` - Terms of Service
+- [ ] `app/(public)/privacy/page.tsx` - Privacy Policy
+- [ ] `app/(public)/refund/page.tsx` - Refund Policy
+
+**3.5 Product Data & Utilities**
+
+EXACT FILES TO CREATE (as per plan):
 - [ ] `lib/products.ts` - Product data helpers
   - getAllProducts()
   - getProductBySlug(slug)
@@ -426,26 +461,77 @@ Components to create:
 
 - [ ] `lib/constants.ts` - Site configuration
   - Site name, URLs
-  - Contact information
-  - Social media links
+  - Contact emails
+  - Social links
   - Product categories
 
 **3.6 Forms**
-- [ ] `components/forms/contact-form.tsx` - Contact page form
-- [ ] `components/forms/newsletter-form.tsx` - Footer newsletter signup
 
-Both with:
-- react-hook-form + Zod validation
-- Rate limiting
-- Success/error states
-- Loading indicators
+EXACT COMPONENTS TO CREATE:
+- [ ] `components/forms/contact-form.tsx` - Contact page form
+- [ ] `components/forms/newsletter-form.tsx` - Newsletter signup (footer)
+
+Both with validation, rate limiting, Sentry tracking (as per plan)
 
 **3.7 SEO & Metadata**
+
+AS PER PLAN:
 - [ ] Dynamic metadata for all pages
 - [ ] OG images for social sharing
 - [ ] Structured data (JSON-LD) for products
-- [ ] Sitemap generation (`app/sitemap.ts`)
-- [ ] Robots.txt (`app/robots.ts`)
+- [ ] Sitemap generation
+- [ ] Robots.txt generation
+
+Note: Plan doesn't specify exact file paths for sitemap/robots - implement as Next.js 16 standard
+
+### Critical Files Checklist (FROM PLAN - Lines 408-416)
+
+**MUST CREATE EXACTLY THESE FILES:**
+
+Layout Components:
+- [ ] `components/layout/header.tsx`
+- [ ] `components/layout/footer.tsx`
+- [ ] `components/layout/mobile-menu.tsx` (plan line 324)
+
+Homepage:
+- [ ] `app/page.tsx`
+
+Section Components (6 files):
+- [ ] `components/sections/hero.tsx`
+- [ ] `components/sections/features.tsx`
+- [ ] `components/sections/testimonials.tsx`
+- [ ] `components/sections/faq.tsx`
+- [ ] `components/sections/cta.tsx`
+- [ ] `components/sections/trust-badges.tsx`
+
+Product Pages:
+- [ ] `app/(public)/products/page.tsx`
+- [ ] `app/(public)/products/[slug]/page.tsx`
+
+Product Components (6 files):
+- [ ] `components/products/product-card.tsx`
+- [ ] `components/products/product-grid.tsx`
+- [ ] `components/products/product-filter.tsx`
+- [ ] `components/products/product-hero.tsx`
+- [ ] `components/products/product-features.tsx`
+- [ ] `components/products/product-faq.tsx`
+
+Other Public Pages (5 files):
+- [ ] `app/(public)/about/page.tsx`
+- [ ] `app/(public)/contact/page.tsx`
+- [ ] `app/(public)/terms/page.tsx`
+- [ ] `app/(public)/privacy/page.tsx`
+- [ ] `app/(public)/refund/page.tsx`
+
+Utilities (2 files):
+- [ ] `lib/products.ts`
+- [ ] `lib/constants.ts`
+
+Forms (2 files):
+- [ ] `components/forms/contact-form.tsx`
+- [ ] `components/forms/newsletter-form.tsx`
+
+**TOTAL: 29 files to create for Phase 3**
 
 ### Prerequisites
 
@@ -504,23 +590,44 @@ Access: Email Newsletter Starter Pack (ACTIVE, LIFETIME)
 
 ### Important Reminders
 
-1. **Next.js 16 Specifics**
-   - Use `proxy.ts` for route protection (NOT middleware.ts)
-   - Tailwind v4 has NO config file (CSS-only in globals.css)
+1. **FOLLOW THE MAIN PLAN EXACTLY**
+   - Reference: `.claude/plans/dapper-nibbling-mango.md`
+   - Phase 3: Lines 306-417
+   - NO deviations, NO improvisation, NO "improvements"
+   - File names must match plan exactly
+   - Folder structure must match plan exactly
+   - Component count must match plan exactly (29 files)
 
-2. **Design Consistency is CRITICAL**
-   - ALWAYS use frontend-design skill for new pages
-   - ALWAYS use Serena for code implementation
-   - Match existing color palette exactly
-   - Maintain typography consistency
-   - Keep spacing system uniform
-   - Ensure animations are consistent
+2. **Mandatory Tools Usage**
+   - MUST use `frontend-design` skill for ALL UI components/pages
+   - MUST use Serena for ALL code implementation
+   - Read plan before starting each component
+   - Verify against plan after completing each component
 
-3. **Git Workflow**
+3. **Design Consistency Requirements**
+   - Match existing auth pages aesthetic EXACTLY
+   - Use OKLCH colors from globals.css
+   - Use Geist Sans/Mono fonts only
+   - Spacing: 4/8/12/16/24/32/48px scale
+   - Transitions: 200ms duration
+   - Glass-morphic design elements
+   - Full dark mode support
+   - Mobile-first responsive
+
+4. **Next.js 16 & Tech Stack**
+   - Route groups: Use `app/(public)/` as per plan
+   - Tailwind v4: CSS-only (NO config file)
+   - shadcn/ui: Use existing components
+   - Forms: react-hook-form + Zod validation
+   - Rate limiting: As per plan requirements
+   - Sentry: Error tracking on all routes
+
+5. **Git Workflow**
    - .env* files excluded from git
    - Check status before committing
    - Use descriptive commit messages
    - Push after each major milestone
+   - Reference plan in commit messages
 
 ### Remaining Phases
 
