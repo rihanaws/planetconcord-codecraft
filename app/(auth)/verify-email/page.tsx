@@ -237,7 +237,7 @@ function VerifyEmailPageContent() {
 
           {/* Resend button */}
           <div className="mt-6 text-center">
-            <p className="text-sm text-muted-foreground mb-2">Didn't receive the code?</p>
+            <p className="text-sm text-muted-foreground mb-2">Didn&apos;t receive the code?</p>
             <Button
               variant="ghost"
               size="sm"

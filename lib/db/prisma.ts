@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { PrismaMariaDb } from "@prisma/adapter-mariadb";
+import mariadb from "mariadb";
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
@@ -9,7 +10,8 @@ const globalForPrisma = globalThis as unknown as {
 // Parse DATABASE_URL to extract connection details
 const dbUrl = new URL(process.env.DATABASE_URL!);
 
-// Create MariaDB adapter for MySQL connection
+// Create MariaDB adapter for Prisma 7
+// Pass connection config directly instead of pool
 const adapter = new PrismaMariaDb({
   host: dbUrl.hostname,
   port: parseInt(dbUrl.port) || 3306,

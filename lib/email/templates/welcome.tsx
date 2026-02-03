@@ -26,7 +26,7 @@ export const WelcomeEmailTemplate = ({ name }: WelcomeEmailProps) => {
           <Heading style={h1}>Welcome to TechSci CodeCraft!</Heading>
           <Text style={text}>Hi {name},</Text>
           <Text style={text}>
-            Thank you for joining TechSci CodeCraft! We're excited to have you
+            Thank you for joining TechSci CodeCraft! We&apos;re excited to have you
             as part of our community.
           </Text>
           <Text style={text}>
