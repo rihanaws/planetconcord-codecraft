@@ -1,8 +1,8 @@
 # CLAUDE.md
 
-## Status: Phase 4 Complete ✅
+## Status: Phase 5 Complete ✅
 
-**Phases Complete:** 1-4 (Foundation, Auth, Public Site, Whop Integration) | **Next:** Phase 5 (Customer Portal)
+**Phases Complete:** 1-5 (Foundation, Auth, Public Site, Whop Integration, Customer Portal) | **Next:** Phase 6 (Admin Panel)
 
 ## Tech Stack
 
@@ -132,6 +132,27 @@ DATABASE_URL, NEXTAUTH_URL, NEXTAUTH_SECRET, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SEC
 
 **Testing:** `/api/webhooks/whop/test` (dev), `/api/webhooks/whop/replay/[id]` (admin)
 **Validations:** All Zod schemas in `lib/validations.ts`
+
+## Customer Portal (Phase 5)
+
+**Dashboard Routes:** `/dashboard`, `/dashboard/products/[slug]`, `/dashboard/purchases`, `/dashboard/profile`
+
+**Features:**
+- Sidebar navigation (desktop) + mobile menu
+- Stats cards: Products owned, subscriptions, total spent
+- Product access grid with expiration warnings
+- Content viewer: Files (download), Links, Text (expandable), Videos (YouTube/Vimeo)
+- Purchase history with search/filter/CSV export
+- Profile management: Avatar upload, name/email, password change
+- Connected OAuth accounts display
+
+**API Routes:**
+- `PUT /api/user/profile` - Update name/email
+- `PUT /api/user/password` - Change password (requires current password)
+- `POST /api/user/avatar` - Upload avatar to Vercel Blob (5MB max)
+
+**Auth:** Uses NextAuth v5 `auth()` function (NOT `getServerSession`)
+**Toast:** Sonner library via `hooks/use-toast.tsx`
 
 ## Reference Docs
 

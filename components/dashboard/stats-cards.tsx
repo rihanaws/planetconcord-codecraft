@@ -1,0 +1,78 @@
+"use client"
+
+import { Package, Repeat, DollarSign } from "lucide-react"
+
+interface DashboardStatsProps {
+  totalProducts: number
+  activeSubscriptions: number
+  totalSpent: number
+}
+
+export function DashboardStats({
+  totalProducts,
+  activeSubscriptions,
+  totalSpent,
+}: DashboardStatsProps) {
+  const stats = [
+    {
+      label: "Products Owned",
+      value: totalProducts,
+      icon: Package,
+      gradient: "from-chart-1/20 to-transparent",
+      iconColor: "text-chart-1",
+      bgColor: "bg-chart-1/10",
+    },
+    {
+      label: "Active Subscriptions",
+      value: activeSubscriptions,
+      icon: Repeat,
+      gradient: "from-chart-2/20 to-transparent",
+      iconColor: "text-chart-2",
+      bgColor: "bg-chart-2/10",
+    },
+    {
+      label: "Total Spent",
+      value: `$${totalSpent.toFixed(2)}`,
+      icon: DollarSign,
+      gradient: "from-chart-3/20 to-transparent",
+      iconColor: "text-chart-3",
+      bgColor: "bg-chart-3/10",
+    },
+  ]
+
+  return (
+    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {stats.map((stat) => {
+        const Icon = stat.icon
+        return (
+          <div
+            key={stat.label}
+            className="relative group overflow-hidden rounded-2xl border border-border/50 bg-card/50 backdrop-blur-xl p-6 transition-all duration-300 hover:border-border hover:shadow-lg hover:shadow-primary/5"
+          >
+            {/* Gradient background */}
+            <div className={`absolute inset-0 bg-gradient-to-br ${stat.gradient} opacity-50`} />
+
+            {/* Content */}
+            <div className="relative flex items-start justify-between">
+              <div className="space-y-1">
+                <p className="text-sm font-medium text-muted-foreground">
+                  {stat.label}
+                </p>
+                <p className="text-3xl font-semibold tracking-tight">
+                  {stat.value}
+                </p>
+              </div>
+
+              <div className={`${stat.bgColor} p-3 rounded-xl transition-transform duration-300 group-hover:scale-110`}>
+                <Icon className={`h-6 w-6 ${stat.iconColor}`} />
+              </div>
+            </div>
+
+            {/* Hover effect */}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+          </div>
+        )
+      })}
+    </div>
+  )
+}
