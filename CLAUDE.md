@@ -1,8 +1,8 @@
 # CLAUDE.md
 
-## Status: Phase 3 Complete ✅
+## Status: Phase 4 Complete ✅
 
-**Phases Complete:** 1-3 (Foundation, Auth, Public Site) | **Next:** Phase 4 (Whop Integration)
+**Phases Complete:** 1-4 (Foundation, Auth, Public Site, Whop Integration) | **Next:** Phase 5 (Customer Portal)
 
 ## Tech Stack
 
@@ -119,6 +119,19 @@ Customer: customer@example.com / TestPassword123!
 ## Env Vars
 
 DATABASE_URL, NEXTAUTH_URL, NEXTAUTH_SECRET, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, RESEND_API_KEY, WHOP_WEBHOOK_SECRET, WHOP_API_KEY, WHOP_COMPANY_ID
+
+## Whop Integration (Phase 4)
+
+**Webhook Handler:** `/api/webhooks/whop`
+- Signature verification (HMAC-SHA256)
+- Rate limiting (100 req/min per IP)
+- Sentry error tracking
+- 4 events: payment.succeeded, membership.went_valid, membership.went_invalid, payment.refunded
+- Auto-creates users, grants access, sends emails
+- Idempotency checks, transaction safety
+
+**Testing:** `/api/webhooks/whop/test` (dev), `/api/webhooks/whop/replay/[id]` (admin)
+**Validations:** All Zod schemas in `lib/validations.ts`
 
 ## Reference Docs
 
