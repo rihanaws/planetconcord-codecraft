@@ -27,7 +27,7 @@ const faqs = [
   {
     question: "How quickly will I receive my products after purchase?",
     answer:
-      "Instant delivery! Once your payment is processed, you'll immediately receive access to your purchased products via email and your customer dashboard. No waiting periods, no shipping delays - start using your products within minutes of purchase.",
+      "Instant delivery! Once your payment is processed, you&apos;ll immediately receive access to your purchased products via email and your customer dashboard. No waiting periods, no shipping delays - start using your products within minutes of purchase.",
   },
   {
     question: "What kind of support do you provide?",
@@ -37,7 +37,7 @@ const faqs = [
   {
     question: "Do I get free updates and improvements?",
     answer:
-      "Absolutely! All purchases include lifetime updates at no additional cost. As we improve our products, add new features, or release updated versions, you'll automatically get access to everything. Once you buy, you own that product forever with all future enhancements included.",
+      "Absolutely! All purchases include lifetime updates at no additional cost. As we improve our products, add new features, or release updated versions, you&apos;ll automatically get access to everything. Once you buy, you own that product forever with all future enhancements included.",
   },
 ]
 

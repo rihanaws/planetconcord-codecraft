@@ -131,7 +131,7 @@ function TestimonialCard({
 
       {/* Quote */}
       <blockquote className="text-sm text-foreground/90 leading-relaxed mb-6 italic">
-        "{testimonial.quote}"
+        &quot;{testimonial.quote}&quot;
       </blockquote>
 
       {/* Author info */}

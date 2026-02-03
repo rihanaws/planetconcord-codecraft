@@ -43,7 +43,7 @@ export const AccessGrantedEmailTemplate = ({
             </Button>
           </Section>
           <Text style={text}>
-            If you have any questions or need help getting started, please don't
+            If you have any questions or need help getting started, please don&apos;t
             hesitate to reach out to our support team.
           </Text>
           <Text style={footer}>

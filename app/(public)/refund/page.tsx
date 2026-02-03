@@ -63,14 +63,14 @@ export default function RefundPage() {
                   <li>Contact our support team at support@techsci.xyz</li>
                   <li>Include your order number and email address</li>
                   <li>Briefly explain your reason for the refund (optional)</li>
-                  <li>We'll process your request within 2-3 business days</li>
+                  <li>We&apos;ll process your request within 2-3 business days</li>
                 </ol>
               </div>
 
               <div className="p-8 rounded-2xl bg-card/50 backdrop-blur-xl border border-border/50">
                 <h2 className="text-2xl font-bold mb-4">Processing Time</h2>
                 <p className="text-muted-foreground leading-relaxed">
-                  Once your refund request is approved, we'll initiate the refund to your original payment method. Please allow 5-10 business days for the refund to appear in your account, depending on your bank or payment provider.
+                  Once your refund request is approved, we&apos;ll initiate the refund to your original payment method. Please allow 5-10 business days for the refund to appear in your account, depending on your bank or payment provider.
                 </p>
               </div>
 
@@ -90,14 +90,14 @@ export default function RefundPage() {
                   <li>• Requests made after the 30-day period</li>
                   <li>• Accounts terminated for policy violations</li>
                   <li>• Products obtained through unauthorized means</li>
-                  <li>• Duplicate purchases (we'll help you with account recovery instead)</li>
+                  <li>• Duplicate purchases (we&apos;ll help you with account recovery instead)</li>
                 </ul>
               </div>
 
               <div className="p-8 rounded-2xl bg-card/50 backdrop-blur-xl border border-border/50">
                 <h2 className="text-2xl font-bold mb-4">Questions?</h2>
                 <p className="text-muted-foreground leading-relaxed">
-                  If you have any questions about our refund policy, please don&apos;t hesitate to contact our support team at support@techsci.xyz. We're here to help!
+                  If you have any questions about our refund policy, please don&apos;t hesitate to contact our support team at support@techsci.xyz. We&apos;re here to help!
                 </p>
               </div>
             </div>

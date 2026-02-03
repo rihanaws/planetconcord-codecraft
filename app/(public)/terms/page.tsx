@@ -33,7 +33,7 @@ export default function TermsPage() {
               <div className="p-8 rounded-2xl bg-card/50 backdrop-blur-xl border border-border/50">
                 <h2 className="text-2xl font-bold mb-4">1. Acceptance of Terms</h2>
                 <p className="text-muted-foreground leading-relaxed">
-                  By accessing and using the services provided by {COMPANY_INFO.legalName} ("TechSci CodeCraft," "we," "us," or "our"), you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our services.
+                  By accessing and using the services provided by {COMPANY_INFO.legalName} (&quot;TechSci CodeCraft,&quot; &quot;we,&quot; &quot;us,&quot; or &quot;our&quot;), you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our services.
                 </p>
               </div>
 

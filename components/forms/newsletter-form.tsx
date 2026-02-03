@@ -79,7 +79,7 @@ export function NewsletterForm({ className, variant = "default" }: NewsletterFor
           <Check className="h-5 w-5 text-primary" />
         </div>
         <div className="flex-1">
-          <p className="text-sm font-medium">You're subscribed!</p>
+          <p className="text-sm font-medium">You&apos;re subscribed!</p>
           <p className="text-xs text-muted-foreground mt-0.5">
             Check your inbox for confirmation.
           </p>

@@ -74,7 +74,7 @@ async function ProductAccessContent({ slug }: { slug: string }) {
               <div>
                 <h1 className="text-2xl font-semibold">Access Denied</h1>
                 <p className="text-muted-foreground mt-2 max-w-md mx-auto">
-                  You don't have access to this product. Purchase it to unlock all content.
+                  You don&apos;t have access to this product. Purchase it to unlock all content.
                 </p>
               </div>
               <div className="flex gap-3 justify-center mt-6">

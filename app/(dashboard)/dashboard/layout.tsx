@@ -65,7 +65,10 @@ export default function DashboardLayout({
 
   // Close sidebar on route change (mobile)
   useEffect(() => {
-    setIsSidebarOpen(false)
+    if (isSidebarOpen) {
+      setIsSidebarOpen(false)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname])
 
   // Prevent body scroll when mobile sidebar is open

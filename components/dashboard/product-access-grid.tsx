@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -35,6 +36,8 @@ interface ProductAccessGridProps {
 }
 
 export function ProductAccessGrid({ productAccesses }: ProductAccessGridProps) {
+  const [now] = useState(() => Date.now())
+
   if (productAccesses.length === 0) {
     return (
       <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-card/50 backdrop-blur-xl p-12 text-center">
@@ -48,7 +51,7 @@ export function ProductAccessGrid({ productAccesses }: ProductAccessGridProps) {
           <div>
             <h3 className="text-lg font-semibold">No Products Yet</h3>
             <p className="text-sm text-muted-foreground mt-2 max-w-md mx-auto">
-              You haven't purchased any products yet. Browse our collection to get started.
+              You haven&apos;t purchased any products yet. Browse our collection to get started.
             </p>
           </div>
           <Link href="/products">
@@ -70,7 +73,7 @@ export function ProductAccessGrid({ productAccesses }: ProductAccessGridProps) {
         const isActive = access.status === "ACTIVE"
         const isExpiring =
           access.expiresAt &&
-          new Date(access.expiresAt).getTime() - Date.now() < 7 * 24 * 60 * 60 * 1000
+          new Date(access.expiresAt).getTime() - now < 7 * 24 * 60 * 60 * 1000
 
         return (
           <div

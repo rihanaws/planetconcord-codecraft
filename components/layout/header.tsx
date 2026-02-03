@@ -40,7 +40,8 @@ export function Header() {
     if (isMobileMenuOpen) {
       setIsMobileMenuOpen(false)
     }
-  }, [pathname, isMobileMenuOpen])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname])
 
   // Prevent body scroll when mobile menu is open
   useEffect(() => {

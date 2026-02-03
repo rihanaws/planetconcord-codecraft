@@ -43,7 +43,7 @@ export const PurchaseConfirmationEmailTemplate = ({
           </Section>
           <Text style={text}>
             If you have any questions about your purchase or need assistance,
-            please don't hesitate to contact our support team.
+            please don&apos;t hesitate to contact our support team.
           </Text>
           <Text style={footer}>
             Best regards,

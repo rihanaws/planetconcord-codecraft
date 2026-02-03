@@ -34,7 +34,7 @@ export const VerificationEmailTemplate = ({
             <Text style={code}>{otp}</Text>
           </Section>
           <Text style={text}>
-            This code will expire in 10 minutes. If you didn't request this
+            This code will expire in 10 minutes. If you didn&apos;t request this
             code, please ignore this email.
           </Text>
           <Text style={footer}>

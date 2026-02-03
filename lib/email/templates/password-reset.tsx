@@ -34,7 +34,7 @@ export const PasswordResetEmailTemplate = ({
             <Text style={code}>{otp}</Text>
           </Section>
           <Text style={text}>
-            This code will expire in 10 minutes. If you didn't request a
+            This code will expire in 10 minutes. If you didn&apos;t request a
             password reset, please ignore this email or contact support if you
             have concerns.
           </Text>

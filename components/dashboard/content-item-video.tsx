@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
+import Image from "next/image"
 import { Play, Video } from "lucide-react"
 
 type ContentItem = {
@@ -30,7 +30,7 @@ export function ContentItemVideo({ item }: ContentItemVideoProps) {
       return {
         provider: "youtube",
         embedUrl: `https://www.youtube.com/embed/${youtubeMatch[1]}?autoplay=1`,
-        thumbnail: `https://img.youtube.com/vi/${youtubeMatch[1]}/maxresdefault.jpg`,
+        thumbnail: `https://img.youtube.com/vi/${youtubeMatch[1]}/hqdefault.jpg`,
       }
     }
 
@@ -103,10 +103,13 @@ export function ContentItemVideo({ item }: ContentItemVideoProps) {
             className="relative w-full aspect-video rounded-lg overflow-hidden bg-black group/play"
           >
             {videoEmbed.thumbnail && (
-              <img
+              <Image
                 src={videoEmbed.thumbnail}
                 alt={item.title}
-                className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover/play:scale-105"
+                fill
+                priority
+                sizes="(max-width: 640px) 100vw, 50vw"
+                className="object-cover transition-transform duration-300 group-hover/play:scale-105"
               />
             )}
             <div className="absolute inset-0 bg-black/40 transition-colors duration-300 group-hover/play:bg-black/30" />
