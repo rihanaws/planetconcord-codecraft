@@ -1,8 +1,8 @@
 # CLAUDE.md
 
-## Status: Phase 5 Complete ✅
+## Status: Phase 6 Complete ✅
 
-**Phases Complete:** 1-5 (Foundation, Auth, Public Site, Whop Integration, Customer Portal) | **Next:** Phase 6 (Admin Panel)
+**Phases Complete:** 1-6 (Foundation, Auth, Public Site, Whop Integration, Customer Portal, Admin Panel) | **Next:** Phase 7 (Polish & Launch)
 
 ## Tech Stack
 
@@ -153,6 +153,33 @@ DATABASE_URL, NEXTAUTH_URL, NEXTAUTH_SECRET, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SEC
 
 **Auth:** Uses NextAuth v5 `auth()` function (NOT `getServerSession`)
 **Toast:** Sonner library via `hooks/use-toast.tsx`
+
+## Admin Panel (Phase 6)
+
+**Admin Routes:** `/admin`, `/admin/products`, `/admin/products/new`, `/admin/products/[id]/edit`, `/admin/products/[id]/content`, `/admin/users`, `/admin/purchases`, `/admin/access`, `/admin/webhooks`
+
+**Features:**
+- Dashboard: Analytics cards (revenue, customers, products, webhooks), revenue bar chart by product, recent purchases + webhooks feeds
+- Product Management: CRUD with slug auto-generation, JSON array fields (deliverables/features/requirements/faq), content item management (FILE/LINK/TEXT/VIDEO)
+- User Management: Search/filter by role, detail modal with role changer, purchase + access history per user
+- Access Management: Grant (LIFETIME/SUBSCRIPTION with expiry) and revoke with reason, summary stats, CSV export
+- Purchases: Full table with search/status/product filters, CSV export
+- Webhook Logs: Search/filter by status+event, detail modal with full payload viewer, retry failed webhooks
+
+**API Routes:**
+- `GET/POST /api/admin/products` - List / create products
+- `GET/PUT/DELETE /api/admin/products/[id]` - Single product CRUD
+- `POST/PUT/DELETE /api/admin/content` - Content item management
+- `GET /api/admin/users` - List all users
+- `GET/PUT /api/admin/users/[id]` - User detail / role update
+- `GET /api/admin/access` - List all access records
+- `POST /api/admin/access/grant` - Grant product access
+- `POST /api/admin/access/revoke` - Revoke product access
+- `GET /api/admin/webhooks` - List webhook logs
+- `POST /api/admin/webhooks/[id]/retry` - Replay a webhook event
+
+**Auth:** All routes guarded by `proxy.ts` (ADMIN role) + server-side `auth()` double-check
+**Design:** Mirrors dashboard layout exactly — glass-morphic cards, same nav sidebar pattern, Suspense + Skeleton on every page
 
 ## Reference Docs
 
