@@ -1,8 +1,8 @@
 # CLAUDE.md
 
-## Status: Phase 6 Complete ✅
+## Status: Phase 7 Complete ✅ — All Phases Done
 
-**Phases Complete:** 1-6 (Foundation, Auth, Public Site, Whop Integration, Customer Portal, Admin Panel) | **Next:** Phase 7 (Polish & Launch)
+**Phases Complete:** 1-7 (Foundation, Auth, Public Site, Whop Integration, Customer Portal, Admin Panel, Polish & Production)
 
 ## Tech Stack
 
@@ -180,6 +180,35 @@ DATABASE_URL, NEXTAUTH_URL, NEXTAUTH_SECRET, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SEC
 
 **Auth:** All routes guarded by `proxy.ts` (ADMIN role) + server-side `auth()` double-check
 **Design:** Mirrors dashboard layout exactly — glass-morphic cards, same nav sidebar pattern, Suspense + Skeleton on every page
+
+## Polish & Production (Phase 7)
+
+**Security Headers** (`next.config.ts`):
+- Strict-Transport-Security, X-Frame-Options (SAMEORIGIN), X-Content-Type-Options (nosniff)
+- Referrer-Policy (strict-origin-when-cross-origin), Permissions-Policy, X-DNS-Prefetch-Control
+- `poweredBy: false`, `compress: true`
+
+**Error Handling:**
+- `app/not-found.tsx` — custom 404 with glass card, atmospheric gradient, quick-nav links
+- `app/error.tsx` — root error boundary (wraps Header/Footer)
+- Route-group error boundaries: `(public)/error.tsx`, `(auth)/error.tsx`, `(dashboard)/dashboard/error.tsx`, `(admin)/admin/error.tsx`
+- All error pages show error digest ID, Try Again + fallback link
+
+**Image Optimization** (`next.config.ts` `images.remotePatterns`):
+- `*.public.blob.vercel-storage.com` (Vercel Blob uploads)
+- `lh3.googleusercontent.com` (Google OAuth avatars)
+- `img.youtube.com`
+
+**Testing:**
+- Unit (Vitest): `tests/unit/auth-utils.test.ts`, `verify-signature.test.ts`, `validations.test.ts`, `webhook-handler.test.ts`
+- E2E (Playwright): `tests/e2e/auth.spec.ts`, `public-pages.spec.ts`
+- Scripts: `bun run test`, `bun run test:e2e`
+- Config: `vitest.config.ts`, `playwright.config.ts`
+
+**SEO (already in place):**
+- `app/sitemap.ts` — dynamic, includes all products
+- `app/robots.ts` — disallows /api/, /dashboard/, /admin/
+- Root layout metadata: OG tags, Twitter cards, keywords
 
 ## Reference Docs
 
