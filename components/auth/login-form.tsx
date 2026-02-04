@@ -62,7 +62,7 @@ export function LoginForm({ onSuccess, callbackUrl = "/dashboard" }: LoginFormPr
           router.refresh()
         }
       }
-    } catch (err) {
+    } catch {
       setError("An unexpected error occurred. Please try again.")
     } finally {
       setIsLoading(false)
@@ -75,7 +75,7 @@ export function LoginForm({ onSuccess, callbackUrl = "/dashboard" }: LoginFormPr
 
     try {
       await signIn("google", { callbackUrl })
-    } catch (err) {
+    } catch {
       setError("Failed to sign in with Google. Please try again.")
       setIsGoogleLoading(false)
     }

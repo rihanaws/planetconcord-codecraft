@@ -93,9 +93,10 @@ async function ProductAccessContent({ slug }: { slug: string }) {
   }
 
   const isActive = productAccess.status === "ACTIVE"
+  const now = new Date()
   const isExpiring =
     productAccess.expiresAt &&
-    new Date(productAccess.expiresAt).getTime() - Date.now() < 7 * 24 * 60 * 60 * 1000
+    new Date(productAccess.expiresAt).getTime() - now.getTime() < 7 * 24 * 60 * 60 * 1000
 
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-6xl">

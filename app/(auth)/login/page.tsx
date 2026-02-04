@@ -55,7 +55,7 @@ function LoginPageContent() {
         router.push(callbackUrl)
         router.refresh()
       }
-    } catch (err) {
+    } catch {
       setError("An unexpected error occurred. Please try again.")
     } finally {
       setIsLoading(false)
@@ -68,7 +68,7 @@ function LoginPageContent() {
 
     try {
       await signIn("google", { callbackUrl })
-    } catch (err) {
+    } catch {
       setError("Failed to sign in with Google. Please try again.")
       setIsGoogleLoading(false)
     }

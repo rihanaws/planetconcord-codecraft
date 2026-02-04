@@ -22,7 +22,7 @@ interface ProfileFormProps {
   userId: string
 }
 
-export function ProfileForm({ defaultValues, userId }: ProfileFormProps) {
+export function ProfileForm({ defaultValues }: ProfileFormProps) {
   const [isLoading, setIsLoading] = useState(false)
   const { toast } = useToast()
 
@@ -58,7 +58,7 @@ export function ProfileForm({ defaultValues, userId }: ProfileFormProps) {
 
       // Reload to update session
       window.location.reload()
-    } catch (error) {
+    } catch {
       toast({
         title: "Update failed",
         description: "Failed to update profile. Please try again.",

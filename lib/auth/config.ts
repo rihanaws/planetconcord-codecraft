@@ -104,7 +104,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
   // Configure callbacks
   callbacks: {
-    async signIn({ user, account, profile }) {
+    async signIn({ user, account }) {
       // For OAuth providers, mark email as verified
       if (account?.provider === "google") {
         await prisma.user.update({

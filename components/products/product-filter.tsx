@@ -5,7 +5,7 @@ import { Search, SlidersHorizontal } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-import { PRODUCT_CATEGORIES } from "@/lib/constants"
+
 
 interface ProductFilterProps {
   onSearch: (query: string) => void

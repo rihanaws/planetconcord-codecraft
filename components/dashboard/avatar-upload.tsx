@@ -12,7 +12,7 @@ interface AvatarUploadProps {
   userId: string
 }
 
-export function AvatarUpload({ currentImage, userName, userId }: AvatarUploadProps) {
+export function AvatarUpload({ currentImage, userName }: AvatarUploadProps) {
   const [isUploading, setIsUploading] = useState(false)
   const [previewUrl, setPreviewUrl] = useState<string | null>(currentImage)
   const { toast } = useToast()
@@ -77,7 +77,7 @@ export function AvatarUpload({ currentImage, userName, userId }: AvatarUploadPro
         title: "Avatar updated",
         description: "Your profile picture has been updated successfully",
       })
-    } catch (error) {
+    } catch {
       toast({
         title: "Upload failed",
         description: "Failed to upload avatar. Please try again.",

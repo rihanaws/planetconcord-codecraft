@@ -106,7 +106,7 @@ function VerifyEmailPageContent() {
         })
         router.push("/dashboard")
       }, 1000)
-    } catch (err) {
+    } catch {
       setError("An unexpected error occurred. Please try again.")
     } finally {
       setIsVerifying(false)
@@ -133,7 +133,7 @@ function VerifyEmailPageContent() {
 
       setResendCooldown(60) // 60 second cooldown
       setOtp(["", "", "", "", "", ""])
-    } catch (err) {
+    } catch {
       setError("Failed to resend code. Please try again.")
     } finally {
       setIsResending(false)
@@ -175,7 +175,7 @@ function VerifyEmailPageContent() {
           </div>
           <h1 className="text-3xl font-semibold tracking-tight">Verify your email</h1>
           <p className="text-sm text-muted-foreground">
-            We've sent a 6-digit code to <span className="font-medium text-foreground">{email}</span>
+            We&apos;ve sent a 6-digit code to <span className="font-medium text-foreground">{email}</span>
           </p>
         </div>
 

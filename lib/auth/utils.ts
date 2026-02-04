@@ -4,7 +4,6 @@ import { TokenType, UserRole } from "@prisma/client"
 import { auth } from "./config"
 
 const SALT_ROUNDS = 10 // As per plan (line 232)
-const OTP_LENGTH = 6
 const OTP_EXPIRY_MINUTES = 10
 
 // ===========================

@@ -19,7 +19,7 @@ export function OAuthButtons({ callbackUrl = "/dashboard", disabled = false, onE
 
     try {
       await signIn("google", { callbackUrl })
-    } catch (err) {
+    } catch {
       onError?.("Failed to sign in with Google. Please try again.")
       setIsLoading(false)
     }

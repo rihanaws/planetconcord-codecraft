@@ -13,7 +13,7 @@ export function ProductGrid({ products }: ProductGridProps) {
           <div className="text-6xl mb-4">🔍</div>
           <h3 className="text-2xl font-semibold">No products found</h3>
           <p className="text-muted-foreground">
-            Try adjusting your filters or search query to find what you're looking for.
+            Try adjusting your filters or search query to find what you&apos;re looking for.
           </p>
         </div>
       </div>

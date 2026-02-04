@@ -1,7 +1,7 @@
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
 import { Building2, Target, Award, Users } from "lucide-react"
-import { COMPANY_INFO, SITE_CONFIG } from "@/lib/constants"
+import { COMPANY_INFO } from "@/lib/constants"
 
 export const metadata = {
   title: "About Us | TechSci CodeCraft",
@@ -81,7 +81,7 @@ export default function AboutPage() {
                   Founded in {COMPANY_INFO.foundedYear}, TechSci CodeCraft Agency was born from a simple vision: to bridge the gap between cutting-edge technology and practical business solutions.
                 </p>
                 <p>
-                  We've helped over 10,000 businesses transform their digital presence through our carefully crafted products. From email marketing solutions to advanced analytics tools, each product is designed with one goal in mind - your success.
+                  We&apos;ve helped over 10,000 businesses transform their digital presence through our carefully crafted products. From email marketing solutions to advanced analytics tools, each product is designed with one goal in mind - your success.
                 </p>
                 <p>
                   Based in {COMPANY_INFO.address.city}, {COMPANY_INFO.address.state}, we serve customers worldwide, providing instant access to premium digital products backed by exceptional support.

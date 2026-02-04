@@ -1,7 +1,7 @@
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
 import { Shield } from "lucide-react"
-import { COMPANY_INFO } from "@/lib/constants"
+
 
 export const metadata = {
   title: "Privacy Policy | TechSci CodeCraft",

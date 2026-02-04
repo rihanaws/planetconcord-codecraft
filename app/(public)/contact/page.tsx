@@ -28,7 +28,7 @@ export default function ContactPage() {
 
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight">
               <span className="block bg-gradient-to-br from-foreground to-foreground/60 bg-clip-text text-transparent">
-                Let's Start a
+                Let&apos;s Start a
               </span>
               <span className="block bg-gradient-to-br from-primary to-primary/60 bg-clip-text text-transparent mt-2">
                 Conversation
@@ -36,7 +36,7 @@ export default function ContactPage() {
             </h1>
 
             <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto">
-              Have questions? We're here to help. Reach out and we&apos;ll get back to you within 24 hours.
+              Have questions? We&apos;re here to help. Reach out and we&apos;ll get back to you within 24 hours.
             </p>
           </div>
         </section>

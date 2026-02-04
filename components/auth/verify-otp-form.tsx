@@ -113,7 +113,7 @@ export function VerifyOtpForm({ email, onSuccess }: VerifyOtpFormProps) {
           router.push("/dashboard")
         }
       }, 1000)
-    } catch (err) {
+    } catch {
       setError("An unexpected error occurred. Please try again.")
     } finally {
       setIsVerifying(false)
@@ -140,7 +140,7 @@ export function VerifyOtpForm({ email, onSuccess }: VerifyOtpFormProps) {
 
       setResendCooldown(60) // 60 second cooldown
       setOtp(["", "", "", "", "", ""])
-    } catch (err) {
+    } catch {
       setError("Failed to resend code. Please try again.")
     } finally {
       setIsResending(false)

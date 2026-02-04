@@ -63,7 +63,7 @@ export function ForgotPasswordForm({ onSuccess }: ForgotPasswordFormProps) {
           router.push(`/reset-password?email=${encodeURIComponent(data.email)}`)
         }
       }, 1000)
-    } catch (err) {
+    } catch {
       setError("An unexpected error occurred. Please try again.")
     } finally {
       setIsLoading(false)
@@ -78,7 +78,7 @@ export function ForgotPasswordForm({ onSuccess }: ForgotPasswordFormProps) {
         </div>
         <h1 className="text-2xl font-semibold">Check your email</h1>
         <p className="text-muted-foreground">
-          We've sent a password reset code to your email address. Please check your inbox.
+          We&apos;ve sent a password reset code to your email address. Please check your inbox.
         </p>
       </div>
     )
