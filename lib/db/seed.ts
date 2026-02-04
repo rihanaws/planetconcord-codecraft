@@ -91,6 +91,8 @@ With our proven templates and strategies, you'll be able to launch your newslett
           answer: "With our templates, you can launch your newsletter in 48 hours or less."
         }
       ],
+      whopProductId: "plan_8UNXo1N0bptfZ",
+      whopCheckoutUrl: "https://whop.com/checkout/plan_8UNXo1N0bptfZ",
       featured: true,
       popular: true,
     },
@@ -155,6 +157,8 @@ Our clients typically see 2-3x conversion rate improvements within 30 days of im
           answer: "Yes! These principles work across all industries - we've tested them on SaaS, e-commerce, courses, services, and more."
         }
       ],
+      whopProductId: "plan_G48izi0ZI4ObP",
+      whopCheckoutUrl: "https://whop.com/checkout/plan_G48izi0ZI4ObP",
       featured: true,
       popular: false,
     },
@@ -218,6 +222,8 @@ Post consistently for 3 months straight without creative burnout, plus build sus
           answer: "The calendar is flexible! You can adapt it to post 3x/week, 5x/week, or daily - whatever fits your schedule."
         }
       ],
+      whopProductId: "plan_Wl6CH4o7Xqu8j",
+      whopCheckoutUrl: "https://whop.com/checkout/plan_Wl6CH4o7Xqu8j",
       featured: false,
       popular: true,
     },
@@ -292,6 +298,8 @@ Access to the same marketing systems used by 7-figure businesses, updated monthl
           answer: "All calls are recorded and added to the member library within 24 hours."
         }
       ],
+      whopProductId: "plan_XRw3y2MVK0bGV",
+      whopCheckoutUrl: "https://whop.com/checkout/plan_XRw3y2MVK0bGV",
       featured: true,
       popular: true,
     },
@@ -363,6 +371,8 @@ Increase video engagement by 40%+ and generate more qualified leads from your pr
           answer: "Videos are analyzed and then deleted. We only store the analysis results, not the actual video files."
         }
       ],
+      whopProductId: "plan_H5T9fyNzL0Wxp",
+      whopCheckoutUrl: "https://whop.com/checkout/plan_H5T9fyNzL0Wxp",
       featured: false,
       popular: false,
     },
@@ -437,6 +447,8 @@ Average improvement of 40-60% in PageSpeed score, leading to higher conversions 
           answer: "We guarantee measurable improvements. If we can't improve your speed score, we'll refund 100%."
         }
       ],
+      whopProductId: "plan_1qJMDMW3n3REa",
+      whopCheckoutUrl: "https://whop.com/checkout/plan_1qJMDMW3n3REa",
       featured: false,
       popular: false,
     },
@@ -447,7 +459,10 @@ Average improvement of 40-60% in PageSpeed score, leading to higher conversions 
   for (const productData of products) {
     const product = await prisma.product.upsert({
       where: { slug: productData.slug },
-      update: {},
+      update: {
+        whopProductId: productData.whopProductId,
+        whopCheckoutUrl: productData.whopCheckoutUrl,
+      },
       create: productData,
     });
     console.log(`✅ Product created: ${product.name}`);
