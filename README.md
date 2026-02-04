@@ -337,16 +337,16 @@ The database consists of **8 main models**:
 
 ### Test Accounts
 
-```
-Admin Account:
-Email: admin@techsci.xyz
-Password: SecurePassword123!
+Seed passwords are read from environment variables. Set them before running the seed script:
 
-Customer Account:
-Email: customer@example.com
-Password: TestPassword123!
-Access: Email Newsletter Starter Pack
+```bash
+SEED_ADMIN_PASSWORD=<your_value> SEED_CUSTOMER_PASSWORD=<your_value> bun lib/db/seed.ts
 ```
+
+| Role | Email |
+|------|-------|
+| Admin | admin@techsci.xyz |
+| Customer | customer@example.com (has access to Email Newsletter Starter Pack) |
 
 ### Database Management
 

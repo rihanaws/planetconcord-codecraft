@@ -5,8 +5,15 @@ import { PricingType } from "@prisma/client";
 async function main() {
   console.log("🌱 Starting database seed...");
 
+  // Seed passwords must be set via env vars — see .env.example
+  const adminPassword = process.env.SEED_ADMIN_PASSWORD;
+  const customerPwd = process.env.SEED_CUSTOMER_PASSWORD;
+  if (!adminPassword || !customerPwd) {
+    throw new Error("SEED_ADMIN_PASSWORD and SEED_CUSTOMER_PASSWORD must be set before running seed");
+  }
+
   // Create admin user
-  const hashedPassword = await bcrypt.hash("SecurePassword123!", 10);
+  const hashedPassword = await bcrypt.hash(adminPassword, 10);
 
   const admin = await prisma.user.upsert({
     where: { email: "admin@techsci.xyz" },
@@ -447,7 +454,7 @@ Average improvement of 40-60% in PageSpeed score, leading to higher conversions 
   }
 
   // Create test customer with access to first product
-  const customerPassword = await bcrypt.hash("TestPassword123!", 10);
+  const customerPassword = await bcrypt.hash(customerPwd, 10);
 
   const customer = await prisma.user.upsert({
     where: { email: "customer@example.com" },

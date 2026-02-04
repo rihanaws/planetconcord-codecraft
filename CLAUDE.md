@@ -113,8 +113,8 @@ Public Site → Whop Checkout → Payment → Webhook → Auto-Create Account �
 
 ## Test Accounts
 
-Admin: admin@techsci.xyz / SecurePassword123!
-Customer: customer@example.com / TestPassword123!
+Admin: admin@techsci.xyz (password via SEED_ADMIN_PASSWORD)
+Customer: customer@example.com (password via SEED_CUSTOMER_PASSWORD)
 
 ## Env Vars
 
