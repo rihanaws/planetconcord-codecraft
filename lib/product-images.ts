@@ -7,7 +7,7 @@ const PRODUCT_IMAGES: Record<string, string> = {
   "landing-page-cro-boost": "/images/Landing_Page_CRO.png",
   "social-media-content-calendar": "/images/Social_Media_Content_Calendar.png",
   "growth-accelerator-package": "/images/Growth-Analytics.png",
-  "realestate-ai-video-review": "/images/Website_SEO_Audit.png",
+  "realestate-ai-video-review": "/images/RealEstate_AI_Video.png",
   "shopify-speed-surge": "/images/shopify_speed_surge.png",
 }
 
