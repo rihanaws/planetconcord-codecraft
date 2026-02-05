@@ -6,6 +6,8 @@ import { ProductHero } from "@/components/products/product-hero"
 import { ProductFeatures } from "@/components/products/product-features"
 import { ProductFAQ } from "@/components/products/product-faq"
 import { getAllProducts, getProductBySlug } from "@/lib/products"
+import { getProductImageUrl } from "@/lib/product-images"
+import { SITE_CONFIG } from "@/lib/constants"
 
 interface ProductPageProps {
   params: Promise<{
@@ -34,9 +36,28 @@ export default async function ProductPage({ params }: ProductPageProps) {
     ? (typeof product.requirements === 'string' ? JSON.parse(product.requirements) : product.requirements)
     : []
 
+  const productImageUrl = getProductImageUrl(slug)
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.name,
+    description: product.shortDesc || product.description || "",
+    image: productImageUrl ? `${SITE_CONFIG.url}${productImageUrl}` : `${SITE_CONFIG.url}/images/CODE_CRAFT_LOGO.png`,
+    url: `${SITE_CONFIG.url}/products/${slug}`,
+    brand: { "@type": "Organization", name: "TechSci CodeCraft" },
+    offers: {
+      "@type": "Offer",
+      price: product.price.toFixed(2),
+      priceCurrency: "USD",
+      availability: "https://schema.org/InStock",
+    },
+  }
+
   return (
     <>
       <Header />
+      {/* JSON-LD structured data — values are DB-sourced, serialised via JSON.stringify (no raw user input) */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <main>
         {/* Product Hero */}
         <ProductHero product={product} />
@@ -141,13 +162,33 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
   const product = await getProductBySlug(slug)
 
   if (!product) {
-    return {
-      title: "Product Not Found",
-    }
+    return { title: "Product Not Found" }
   }
+
+  const description = product.shortDesc || product.description || ""
+  const productImage = getProductImageUrl(slug)
+  const ogImage = productImage
+    ? { url: productImage, width: 1200, height: 630, alt: product.name }
+    : { url: "/images/CODE_CRAFT_LOGO.png", width: 800, height: 800, alt: "TechSci CodeCraft" }
+  const canonicalUrl = `${SITE_CONFIG.url}/products/${slug}`
 
   return {
     title: `${product.name} | TechSci CodeCraft`,
-    description: product.shortDesc || product.description,
+    description,
+    keywords: [product.name, product.category, "digital product", "TechSci CodeCraft"],
+    openGraph: {
+      title: product.name,
+      description,
+      url: canonicalUrl,
+      type: "website",
+      images: [ogImage],
+      siteName: "TechSci CodeCraft",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: product.name,
+      description,
+      images: [ogImage.url],
+    },
   }
 }

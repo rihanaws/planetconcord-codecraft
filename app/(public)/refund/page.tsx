@@ -6,6 +6,17 @@ import { COMPANY_INFO } from "@/lib/constants"
 export const metadata = {
   title: "Refund Policy | TechSci CodeCraft",
   description: "30-day money-back guarantee on all TechSci CodeCraft digital products.",
+  openGraph: {
+    title: "Refund Policy | TechSci CodeCraft",
+    description: "30-day money-back guarantee on all TechSci CodeCraft digital products.",
+    url: "https://codecraft.techsci.xyz/refund",
+    type: "website",
+    images: [{ url: "/images/CODE_CRAFT_LOGO.png", width: 800, height: 800, alt: "TechSci CodeCraft" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["/images/CODE_CRAFT_LOGO.png"],
+  },
 }
 
 export default function RefundPage() {

@@ -6,6 +6,17 @@ import { COMPANY_INFO } from "@/lib/constants"
 export const metadata = {
   title: "Terms of Service | TechSci CodeCraft",
   description: "Terms of Service for TechSci CodeCraft Agency digital products.",
+  openGraph: {
+    title: "Terms of Service | TechSci CodeCraft",
+    description: "Terms of Service for TechSci CodeCraft Agency digital products.",
+    url: "https://codecraft.techsci.xyz/terms",
+    type: "website",
+    images: [{ url: "/images/CODE_CRAFT_LOGO.png", width: 800, height: 800, alt: "TechSci CodeCraft" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["/images/CODE_CRAFT_LOGO.png"],
+  },
 }
 
 export default function TermsPage() {

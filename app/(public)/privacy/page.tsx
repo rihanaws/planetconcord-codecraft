@@ -6,6 +6,17 @@ import { Shield } from "lucide-react"
 export const metadata = {
   title: "Privacy Policy | TechSci CodeCraft",
   description: "Privacy Policy for TechSci CodeCraft Agency - How we collect, use, and protect your data.",
+  openGraph: {
+    title: "Privacy Policy | TechSci CodeCraft",
+    description: "Privacy Policy for TechSci CodeCraft Agency - How we collect, use, and protect your data.",
+    url: "https://codecraft.techsci.xyz/privacy",
+    type: "website",
+    images: [{ url: "/images/CODE_CRAFT_LOGO.png", width: 800, height: 800, alt: "TechSci CodeCraft" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["/images/CODE_CRAFT_LOGO.png"],
+  },
 }
 
 export default function PrivacyPage() {

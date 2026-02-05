@@ -9,6 +9,17 @@ import { getAllProducts } from "@/lib/products"
 export const metadata = {
   title: "Products | TechSci CodeCraft",
   description: "Browse our collection of premium digital products for marketing, analytics, and development.",
+  openGraph: {
+    title: "Products | TechSci CodeCraft",
+    description: "Browse our collection of premium digital products for marketing, analytics, and development.",
+    url: "https://codecraft.techsci.xyz/products",
+    type: "website",
+    images: [{ url: "/images/CODE_CRAFT_LOGO.png", width: 800, height: 800, alt: "TechSci CodeCraft" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["/images/CODE_CRAFT_LOGO.png"],
+  },
 }
 
 export default async function ProductsPage() {

@@ -91,7 +91,7 @@ export const SEO_DEFAULTS = {
     "business growth",
     "SaaS",
   ],
-  ogImage: "/og-image.png",
+  ogImage: "/images/CODE_CRAFT_LOGO.png",
   twitterHandle: "@techsci",
 } as const;
 

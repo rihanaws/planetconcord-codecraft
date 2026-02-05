@@ -19,6 +19,7 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://codecraft.techsci.xyz"),
   title: {
     default: "TechSci CodeCraft - Premium Digital Products",
     template: "%s | TechSci CodeCraft",
@@ -42,12 +43,14 @@ export const metadata: Metadata = {
     description:
       "Access premium digital products and growth tools designed to accelerate your business.",
     siteName: "TechSci CodeCraft",
+    images: [{ url: "/images/CODE_CRAFT_LOGO.png", width: 800, height: 800, alt: "TechSci CodeCraft" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "TechSci CodeCraft - Premium Digital Products",
     description:
       "Access premium digital products and growth tools designed to accelerate your business.",
+    images: ["/images/CODE_CRAFT_LOGO.png"],
   },
 }
 

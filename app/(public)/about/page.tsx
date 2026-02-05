@@ -6,6 +6,17 @@ import { COMPANY_INFO } from "@/lib/constants"
 export const metadata = {
   title: "About Us | TechSci CodeCraft",
   description: "Learn about TechSci CodeCraft Agency - our mission, values, and commitment to delivering premium digital products.",
+  openGraph: {
+    title: "About Us | TechSci CodeCraft",
+    description: "Learn about TechSci CodeCraft Agency - our mission, values, and commitment to delivering premium digital products.",
+    url: "https://codecraft.techsci.xyz/about",
+    type: "website",
+    images: [{ url: "/images/CODE_CRAFT_LOGO.png", width: 800, height: 800, alt: "TechSci CodeCraft" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["/images/CODE_CRAFT_LOGO.png"],
+  },
 }
 
 export default function AboutPage() {
