@@ -2,6 +2,7 @@ import Link from "next/link"
 import { ArrowRight, Tag } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { formatPrice } from "@/lib/format"
+import { getProductImageUrl } from "@/lib/product-images"
 import type { Product } from "@prisma/client"
 
 interface ProductCardProps {
@@ -21,8 +22,19 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
       >
         {/* Image container */}
         <div className="relative aspect-[16/9] overflow-hidden bg-linear-to-br from-muted/50 to-muted/20">
-          {/* Placeholder gradient background */}
-          <div className="absolute inset-0 bg-linear-to-br from-primary/10 via-accent/10 to-primary/5" />
+          {/* Product image or fallback gradient */}
+          {(() => {
+            const imgUrl = getProductImageUrl(product.slug)
+            return imgUrl ? (
+              <img
+                src={imgUrl}
+                alt={product.name}
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            ) : (
+              <div className="absolute inset-0 bg-linear-to-br from-primary/10 via-accent/10 to-primary/5" />
+            )
+          })()}
 
           {/* Category badge */}
           <div className="absolute top-4 left-4 z-10">
@@ -42,18 +54,6 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
               </div>
             </div>
           )}
-
-          {/* Decorative icon/placeholder */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="relative">
-              <div className="absolute inset-0 bg-primary/20 rounded-2xl blur-2xl" />
-              <div className="relative text-6xl opacity-20">
-                {product.category === "marketing" && "📊"}
-                {product.category === "analytics" && "📈"}
-                {product.category === "development" && "⚡"}
-              </div>
-            </div>
-          </div>
 
           {/* Hover overlay */}
           <div className="absolute inset-0 bg-linear-to-t from-card/90 via-card/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />

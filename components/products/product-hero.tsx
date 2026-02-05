@@ -3,6 +3,7 @@
 import { ExternalLink, Check, Tag, Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { formatPrice } from "@/lib/format"
+import { getProductImageUrl } from "@/lib/product-images"
 import type { Product } from "@prisma/client"
 
 interface ProductHeroProps {
@@ -37,23 +38,22 @@ export function ProductHero({ product }: ProductHeroProps) {
           {/* Left column - Product image */}
           <div className="relative order-2 lg:order-1">
             <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-linear-to-br from-muted/50 to-muted/20 shadow-2xl shadow-primary/10">
-              {/* Placeholder gradient background */}
-              <div className="absolute inset-0 bg-linear-to-br from-primary/20 via-accent/20 to-primary/10" />
+              {/* Product image or fallback gradient */}
+              {(() => {
+                const imgUrl = getProductImageUrl(product.slug)
+                return imgUrl ? (
+                  <img
+                    src={imgUrl}
+                    alt={product.name}
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="absolute inset-0 bg-linear-to-br from-primary/20 via-accent/20 to-primary/10" />
+                )
+              })()}
 
-              {/* Decorative icon */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="relative">
-                  <div className="absolute inset-0 bg-primary/30 rounded-3xl blur-3xl" />
-                  <div className="relative text-8xl opacity-30">
-                    {product.category === "marketing" && "📊"}
-                    {product.category === "analytics" && "📈"}
-                    {product.category === "development" && "⚡"}
-                  </div>
-                </div>
-              </div>
-
-              {/* Glass overlay */}
-              <div className="absolute inset-0 bg-card/10 backdrop-blur-[2px]" />
+              {/* Subtle glass overlay for depth */}
+              <div className="absolute inset-0 bg-card/5 backdrop-blur-[1px]" />
 
               {/* Border glow */}
               <div className="absolute inset-0 rounded-2xl border border-border/50" />

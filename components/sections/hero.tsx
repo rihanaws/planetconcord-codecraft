@@ -12,6 +12,14 @@ export function Hero() {
       <div className="absolute inset-0 -z-10">
         <div className="absolute inset-0 bg-linear-to-br from-background via-muted/20 to-background" />
 
+        {/* Brand banner — subtle texture layer */}
+        <img
+          src="/images/CODE_CRAFT_BANNAR.png"
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 w-full h-full object-cover opacity-[0.12]"
+        />
+
         {/* Pulsing gradient orbs */}
         <div
           className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/5 rounded-full blur-3xl animate-pulse"
