@@ -47,7 +47,7 @@ const nextConfig: NextConfig = {
     ];
   },
 
-  // Performance: compress responses
+  // Performance
   compress: true,
 };
 

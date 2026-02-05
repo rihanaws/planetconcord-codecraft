@@ -115,7 +115,7 @@ export async function handlePaymentSucceeded(
     });
 
     if (existingPurchase) {
-      console.log(`Duplicate payment ignored: ${id}`);
+      console.warn(`Duplicate payment ignored: ${id}`);
       return;
     }
 
@@ -173,7 +173,6 @@ export async function handlePaymentSucceeded(
     }
     });
 
-    console.log(`Payment processed successfully: ${id}`);
   } catch (error) {
     Sentry.captureException(error, {
       tags: { handler: "payment.succeeded", payment_id: id },
@@ -209,7 +208,6 @@ export async function handleMembershipValid(
       },
     });
 
-    console.log(`Membership activated: ${id}`);
   });
 }
 
@@ -239,7 +237,6 @@ export async function handleMembershipInvalid(
       },
     });
 
-    console.log(`Membership expired: ${id}`);
   });
 }
 
@@ -283,7 +280,6 @@ export async function handlePaymentRefunded(
       },
     });
 
-    console.log(`Payment refunded and access revoked: ${original_payment_id}`);
   });
 }
 
@@ -308,6 +304,6 @@ export async function handleWhopWebhook(
       await handlePaymentRefunded(typedEvent as PaymentRefundedEvent);
       break;
     default:
-      console.log(`Unhandled event type`);
+      console.warn(`Unhandled webhook event type: ${(typedEvent as { type?: string }).type}`);
   }
 }

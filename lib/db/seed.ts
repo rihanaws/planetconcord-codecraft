@@ -29,6 +29,28 @@ async function main() {
 
   console.log("✅ Admin user created:", admin.email);
 
+  // Additional admin accounts
+  const additionalAdmins = [
+    { email: "codecraka@gmail.com", name: "Codecraka" },
+    { email: "rihan@afilo.io", name: "Rihan" },
+    { email: "sayem.rihan13@gmail.com", name: "Sayem Rihan" },
+  ];
+
+  for (const adminData of additionalAdmins) {
+    const user = await prisma.user.upsert({
+      where: { email: adminData.email },
+      update: { role: "ADMIN", name: adminData.name },
+      create: {
+        email: adminData.email,
+        password: hashedPassword,
+        role: "ADMIN",
+        emailVerified: new Date(),
+        name: adminData.name,
+      },
+    });
+    console.log("✅ Admin user created:", user.email);
+  }
+
   // Create 6 products
   const products = [
     {
