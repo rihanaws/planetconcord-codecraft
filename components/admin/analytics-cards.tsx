@@ -1,12 +1,17 @@
 "use client"
 
-import { DollarSign, Users, Package, TrendingUp } from "lucide-react"
+import { DollarSign, Users, Package, TrendingUp, FileText, AlertTriangle } from "lucide-react"
 
 interface AnalyticsCardsProps {
   totalRevenueAllTime: number
   totalRevenueThisMonth: number
   activeCustomers: number
   totalProducts: number
+  activeSubscriptions: number
+  expiredSubscriptions: number
+  totalContentItems: number
+  refundCount: number
+  totalPurchases: number
 }
 
 export function AnalyticsCards({
@@ -14,6 +19,11 @@ export function AnalyticsCards({
   totalRevenueThisMonth,
   activeCustomers,
   totalProducts,
+  activeSubscriptions,
+  expiredSubscriptions,
+  totalContentItems,
+  refundCount,
+  totalPurchases,
 }: AnalyticsCardsProps) {
   const stats = [
     {
@@ -37,7 +47,7 @@ export function AnalyticsCards({
     {
       label: "Active Customers",
       value: activeCustomers.toString(),
-      subLabel: "with active access",
+      subLabel: `${activeSubscriptions} active subs · ${expiredSubscriptions} expired`,
       icon: Users,
       gradient: "from-chart-3/20 to-transparent",
       iconColor: "text-chart-3",
@@ -52,10 +62,28 @@ export function AnalyticsCards({
       iconColor: "text-chart-4",
       bgColor: "bg-chart-4/10",
     },
+    {
+      label: "Total Content",
+      value: totalContentItems.toString(),
+      subLabel: "items across all products",
+      icon: FileText,
+      gradient: "from-chart-5/20 to-transparent",
+      iconColor: "text-chart-5",
+      bgColor: "bg-chart-5/10",
+    },
+    {
+      label: "Refund Rate",
+      value: totalPurchases > 0 ? `${((refundCount / totalPurchases) * 100).toFixed(1)}%` : "0%",
+      subLabel: `${refundCount} refund${refundCount !== 1 ? "s" : ""} of ${totalPurchases}`,
+      icon: AlertTriangle,
+      gradient: "from-destructive/20 to-transparent",
+      iconColor: "text-destructive",
+      bgColor: "bg-destructive/10",
+    },
   ]
 
   return (
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+    <div className="grid gap-6 grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
       {stats.map((stat) => {
         const Icon = stat.icon
         return (

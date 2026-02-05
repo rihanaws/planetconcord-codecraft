@@ -20,7 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { Search, Plus, Pencil, Trash2, FileText, ExternalLink } from "lucide-react"
+import { Search, Plus, Pencil, Trash2, FileText, ExternalLink, AlertTriangle, Check } from "lucide-react"
 import { format } from "date-fns"
 import { useToast } from "@/hooks/use-toast"
 
@@ -33,6 +33,7 @@ interface ProductRow {
   category: string
   featured: boolean
   popular: boolean
+  deliverables: string[] | null
   createdAt: Date
   _count: {
     contentItems: number
@@ -214,6 +215,25 @@ export function ProductTable({ products: initialProducts }: ProductTableProps) {
                         <span>{product._count.contentItems} items</span>
                         <span>{product._count.purchases} sales</span>
                         <span>{product._count.productAccess} users</span>
+                        {(() => {
+                          const total = Array.isArray(product.deliverables) ? product.deliverables.length : 0
+                          const have = product._count.contentItems
+                          if (total === 0) return null
+                          if (have < total) {
+                            return (
+                              <span className="inline-flex items-center gap-1 mt-1 text-[10px] px-1.5 py-0.5 rounded-full border border-chart-1 text-chart-1">
+                                <AlertTriangle className="h-3 w-3" />
+                                {total - have} short
+                              </span>
+                            )
+                          }
+                          return (
+                            <span className="inline-flex items-center gap-1 mt-1 text-[10px] px-1.5 py-0.5 rounded-full border border-chart-2 text-chart-2">
+                              <Check className="h-3 w-3" />
+                              Complete
+                            </span>
+                          )
+                        })()}
                       </div>
                     </TableCell>
                     <TableCell className="text-sm text-muted-foreground">

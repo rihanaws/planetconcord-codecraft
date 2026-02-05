@@ -30,6 +30,11 @@ async function getAdminDashboardData() {
     recentPurchases,
     recentWebhooks,
     completedPurchases,
+    activeSubscriptions,
+    expiredSubscriptions,
+    totalContentItems,
+    refundCount,
+    totalPurchases,
   ] = await Promise.all([
     // Total revenue (all time)
     prisma.purchase.aggregate({
@@ -77,6 +82,29 @@ async function getAdminDashboardData() {
       where: { status: "COMPLETED" },
       include: { product: { select: { id: true, name: true } } },
     }),
+
+    // Active subscriptions count
+    prisma.productAccess.count({
+      where: { status: "ACTIVE", accessType: "SUBSCRIPTION" },
+    }),
+
+    // Expired subscriptions count
+    prisma.productAccess.count({
+      where: { status: "EXPIRED", accessType: "SUBSCRIPTION" },
+    }),
+
+    // Total content items
+    prisma.contentItem.count(),
+
+    // Refund count
+    prisma.purchase.count({
+      where: { status: "REFUNDED" },
+    }),
+
+    // Total purchases (completed + refunded)
+    prisma.purchase.count({
+      where: { status: { in: ["COMPLETED", "REFUNDED"] } },
+    }),
   ])
 
   // Aggregate product sales stats
@@ -107,6 +135,11 @@ async function getAdminDashboardData() {
     recentPurchases,
     recentWebhooks,
     productStats,
+    activeSubscriptions,
+    expiredSubscriptions,
+    totalContentItems,
+    refundCount,
+    totalPurchases,
   }
 }
 
@@ -166,6 +199,11 @@ async function AdminDashboardContent() {
         totalRevenueThisMonth={data.totalRevenueThisMonth}
         activeCustomers={data.activeCustomers}
         totalProducts={data.totalProducts}
+        activeSubscriptions={data.activeSubscriptions}
+        expiredSubscriptions={data.expiredSubscriptions}
+        totalContentItems={data.totalContentItems}
+        refundCount={data.refundCount}
+        totalPurchases={data.totalPurchases}
       />
 
       {/* Revenue Chart */}
@@ -194,7 +232,9 @@ function AdminDashboardSkeleton() {
           <Skeleton className="h-9 w-28" />
         </div>
       </div>
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-6 grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
+        <Skeleton className="h-36" />
+        <Skeleton className="h-36" />
         <Skeleton className="h-36" />
         <Skeleton className="h-36" />
         <Skeleton className="h-36" />

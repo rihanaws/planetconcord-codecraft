@@ -1,5 +1,6 @@
 import { Suspense } from "react"
 import { redirect, notFound } from "next/navigation"
+import dynamic from "next/dynamic"
 import { auth } from "@/lib/auth/config"
 import { prisma } from "@/lib/db/prisma"
 import { ContentViewer } from "@/components/dashboard/content-viewer"
@@ -10,6 +11,15 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { AlertCircle, ArrowLeft, Calendar, Shield, ExternalLink } from "lucide-react"
 import { formatDistanceToNow } from "date-fns"
+
+const VideoAnalyzer = dynamic(
+  () => import("@/components/dashboard/video-analyzer").then((m) => m.VideoAnalyzer),
+  { ssr: false }
+)
+const ServiceRequestStatus = dynamic(
+  () => import("@/components/dashboard/service-request-status").then((m) => m.ServiceRequestStatus),
+  { ssr: false }
+)
 
 async function getProductAccess(slug: string, userId: string) {
   const product = await prisma.product.findUnique({
@@ -182,6 +192,22 @@ async function ProductAccessContent({ slug }: { slug: string }) {
               Course Content
             </h2>
             <ContentViewer contentItems={product.contentItems} />
+          </div>
+        )}
+
+        {/* AI Video Analyzer — RealEstate AI Video Review only */}
+        {isActive && slug === "realestate-ai-video-review" && (
+          <div>
+            <h2 className="text-2xl font-semibold tracking-tight mb-6">AI Video Analyzer</h2>
+            <VideoAnalyzer />
+          </div>
+        )}
+
+        {/* Service Request — Shopify Speed Surge only */}
+        {isActive && slug === "shopify-speed-surge" && (
+          <div>
+            <h2 className="text-2xl font-semibold tracking-tight mb-6">Service Request</h2>
+            <ServiceRequestStatus />
           </div>
         )}
 

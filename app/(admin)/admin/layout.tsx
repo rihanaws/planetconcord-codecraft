@@ -15,6 +15,7 @@ import {
   ShieldCheck,
   Webhook,
   Megaphone,
+  ClipboardList,
   Menu,
   X,
   LogOut,
@@ -69,6 +70,11 @@ const ADMIN_NAV = [
     label: "News",
     href: "/admin/news",
     icon: Megaphone,
+  },
+  {
+    label: "Service Requests",
+    href: "/admin/service-requests",
+    icon: ClipboardList,
   },
 ]
 

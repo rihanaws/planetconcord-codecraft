@@ -51,6 +51,19 @@ enum ContentType {
   VIDEO
 }
 
+enum VideoAnalysisStatus {
+  PENDING
+  COMPLETE
+  FAILED
+}
+
+enum ServiceRequestStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETE
+  CANCELLED
+}
+
 // Models
 model User {
   id            String    @id @default(cuid())
@@ -64,10 +77,12 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  accounts      Account[]
-  sessions      Session[]
-  productAccess ProductAccess[]
-  purchases     Purchase[]
+  accounts        Account[]
+  sessions        Session[]
+  productAccess   ProductAccess[]
+  purchases       Purchase[]
+  videoAnalyses   VideoAnalysis[]
+  serviceRequests ServiceRequest[]
 
   @@index([email])
   @@index([role])
@@ -155,10 +170,12 @@ model Product {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  productAccess ProductAccess[]
-  contentItems  ContentItem[]
-  purchases     Purchase[]
-  newsItems     NewsItem[]
+  productAccess   ProductAccess[]
+  contentItems    ContentItem[]
+  purchases       Purchase[]
+  newsItems       NewsItem[]
+  videoAnalyses   VideoAnalysis[]
+  serviceRequests ServiceRequest[]
 
   @@index([slug])
   @@index([category])
@@ -274,4 +291,45 @@ model NewsItem {
   @@index([productId])
   @@index([published])
   @@index([createdAt])
+}
+
+model VideoAnalysis {
+  id              String               @id @default(cuid())
+  userId         String
+  productId       String
+  videoUrl        String
+  notes           String?              @db.Text
+  qualityScore    Int?
+  engagementScore Int?
+  recommendations Json?
+  status          VideoAnalysisStatus  @default(PENDING)
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([productId, createdAt])
+}
+
+model ServiceRequest {
+  id             String               @id @default(cuid())
+  userId        String
+  productId      String
+  shopifyUrl     String
+  notes          String?              @db.Text
+  mustKeepApps   String?              @db.Text
+  status         ServiceRequestStatus @default(PENDING)
+  reportUrl      String?
+  reportFileName String?
+  adminNotes     String?              @db.Text
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([productId, status])
 }

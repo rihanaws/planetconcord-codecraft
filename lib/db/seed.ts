@@ -474,6 +474,262 @@ Average improvement of 40-60% in PageSpeed score, leading to higher conversions 
       featured: false,
       popular: false,
     },
+    {
+      name: "SEO Master Toolkit",
+      slug: "seo-master-toolkit",
+      description: `Dominate search engine rankings with our comprehensive SEO toolkit. Built from real-world audits across hundreds of websites, this toolkit gives you every resource you need to improve organic traffic.
+
+**What You'll Get:**
+- 30-point technical SEO audit checklist
+- On-page optimization playbook
+- 10 backlink outreach email templates
+- Keyword research framework (seed → expand → prioritize)
+- Local SEO playbook for brick-and-mortar businesses
+- Schema markup implementation guide
+
+**Perfect For:**
+- Website owners wanting more organic traffic
+- Digital marketers running SEO campaigns
+- Local businesses competing for search visibility
+- Anyone wanting to understand how search engines work
+
+**Results You Can Expect:**
+Follow our framework and see measurable ranking improvements within 60-90 days. Most users report 30-50% organic traffic growth in the first quarter.`,
+      shortDesc: "Comprehensive SEO toolkit with technical audit checklists, on-page guides, backlink outreach templates, and keyword research frameworks.",
+      price: 299,
+      pricingType: PricingType.ONE_TIME,
+      category: "SEO",
+      deliverables: [
+        "Technical SEO audit checklist (30-point)",
+        "On-page optimization guide",
+        "Backlink outreach templates (10)",
+        "Keyword research framework",
+        "Local SEO playbook",
+        "Schema markup guide",
+      ],
+      features: [
+        "Comprehensive technical + on-page coverage",
+        "Works for any website or niche",
+        "Actionable step-by-step guides",
+        "Real-world outreach email templates",
+        "Includes local SEO for brick-and-mortar businesses",
+      ],
+      requirements: [
+        "A website you want to optimize",
+        "Access to Google Search Console",
+        "Basic understanding of how search engines work",
+      ],
+      faq: [
+        {
+          question: "How long will it take to see results?",
+          answer: "SEO is a long-term game — most users see measurable improvements within 60-90 days of implementing the audit recommendations.",
+        },
+        {
+          question: "Do I need coding skills?",
+          answer: "No! The guides are written for non-technical website owners. Schema markup is the only section that involves code, and we walk you through it step by step.",
+        },
+        {
+          question: "Is this for local or national SEO?",
+          answer: "Both! We include a dedicated Local SEO playbook for businesses targeting geographic areas, plus general guides for national or niche sites.",
+        },
+      ],
+      whopProductId: "",
+      whopCheckoutUrl: "",
+      featured: true,
+      popular: false,
+    },
+    {
+      name: "Email Automation Playbook",
+      slug: "email-automation-playbook",
+      description: `Transform your email marketing with proven automation sequences that nurture leads and drive sales on autopilot. Platform-agnostic — works with any ESP.
+
+**What You'll Get:**
+- 5 copy-paste email sequences (welcome, lead magnet, re-engagement, and more)
+- Welcome series (7-email sequence with timing)
+- Lead magnet delivery flow
+- Re-engagement campaign (5-email win-back)
+- Visual automation workflow diagrams
+- A/B testing guide for emails
+
+**Perfect For:**
+- Small businesses wanting to automate their email marketing
+- Course creators nurturing leads
+- SaaS founders building onboarding flows
+- Anyone with an email list ready to scale
+
+**Results You Can Expect:**
+Proven sequences with real benchmarks: 35%+ open rates on welcome series, 3-5x revenue lift from abandoned cart sequences.`,
+      shortDesc: "Platform-agnostic email automation playbook with copy-paste sequences, workflow diagrams, and A/B testing guides for any ESP.",
+      price: 249,
+      pricingType: PricingType.ONE_TIME,
+      category: "Email",
+      deliverables: [
+        "5 copy-paste email sequences",
+        "Welcome series (7-email)",
+        "Lead magnet delivery flow",
+        "Re-engagement campaign",
+        "Automation workflow diagrams",
+        "A/B testing guide for emails",
+      ],
+      features: [
+        "Platform-agnostic (Mailchimp, ConvertKit, ActiveCampaign, etc.)",
+        "Copy-paste ready email sequences",
+        "Visual workflow diagrams included",
+        "Proven sequences with real open/click benchmarks",
+        "Lifetime access with quarterly updates",
+      ],
+      requirements: [
+        "An email service provider account",
+        "An existing email list (or plan to build one)",
+        "Basic familiarity with your ESP's automation features",
+      ],
+      faq: [
+        {
+          question: "Can I use these with any ESP?",
+          answer: "Yes! All sequences are written in plain text with send-timing guidance. Just copy the subject lines and body copy into your platform's automation builder.",
+        },
+        {
+          question: "How long does it take to set up?",
+          answer: "Most users have their first automation live within 2-3 hours of starting. The welcome series is the easiest to set up first.",
+        },
+        {
+          question: "Will these work for B2B too?",
+          answer: "Absolutely. We include B2B-specific tips in each sequence. The welcome series and re-engagement campaigns work especially well for B2B.",
+        },
+      ],
+      whopProductId: "",
+      whopCheckoutUrl: "",
+      featured: false,
+      popular: true,
+    },
+    {
+      name: "Paid Ads Master Class",
+      slug: "paid-ads-master-class",
+      description: `Master paid advertising across Google, Facebook, Instagram, and TikTok with campaign templates and frameworks used by 7-figure brands. Budget-friendly strategies starting at $500/month.
+
+**What You'll Get:**
+- Google Ads campaign templates (Search + Shopping)
+- Facebook/Instagram creative framework
+- Retargeting playbook (3-stage funnel)
+- Budget allocation calculator
+- Ad copy formula sheet (50+ formulas)
+- Weekly performance reporting template
+
+**Perfect For:**
+- Business owners ready to invest in paid ads
+- Marketing managers scaling ad budgets
+- E-commerce brands looking for more sales
+- Anyone wanting to learn paid advertising from scratch
+
+**Results You Can Expect:**
+Real campaign structures that achieve 3x+ ROAS. Start small at $500/month and scale profitably using our proven frameworks.`,
+      shortDesc: "Complete paid ads playbook covering Google, Facebook, Instagram, and TikTok with campaign templates, budget calculators, and retargeting playbooks.",
+      price: 449,
+      pricingType: PricingType.ONE_TIME,
+      category: "Ads",
+      deliverables: [
+        "Google Ads campaign templates (Search + Shopping)",
+        "Facebook/Instagram creative framework",
+        "Retargeting playbook (3-stage funnel)",
+        "Budget allocation calculator",
+        "Ad copy formula sheet (50+ formulas)",
+        "Weekly performance reporting template",
+      ],
+      features: [
+        "Covers Google, Facebook, Instagram, and TikTok basics",
+        "Budget-friendly strategies starting at $500/month",
+        "Real campaign structures used by 7-figure brands",
+        "Includes creative brief templates for designers",
+        "Ongoing weekly reporting framework",
+      ],
+      requirements: [
+        "A business with a product or service to sell",
+        "A budget of at least $500/month for ad spend",
+        "Access to Google Ads and/or Meta Business Suite",
+      ],
+      faq: [
+        {
+          question: "Do I need prior ad experience?",
+          answer: "No! The playbook starts from absolute basics — setting up accounts, understanding bidding, and writing your first ad. We hold your hand through it all.",
+        },
+        {
+          question: "Can I start with just one platform?",
+          answer: "Yes! We recommend starting with either Google Ads (best for high-intent buyers) or Facebook/Instagram (best for awareness). Pick one and master it first.",
+        },
+        {
+          question: "How much budget do I need to start?",
+          answer: "We recommend $500/month minimum to get statistically meaningful data. Our budget allocation calculator helps you split spend optimally across platforms.",
+        },
+      ],
+      whopProductId: "",
+      whopCheckoutUrl: "",
+      featured: true,
+      popular: true,
+    },
+    {
+      name: "E-Commerce Conversion Kit",
+      slug: "e-commerce-conversion-kit",
+      description: `Increase your e-commerce conversion rate with data-driven frameworks backed by conversion research. Platform-agnostic — works with Shopify, WooCommerce, BigCommerce, and custom stores.
+
+**What You'll Get:**
+- Product page optimization checklist (25-point)
+- Checkout flow improvement guide
+- Cart abandonment email sequence (3-email)
+- Trust signals implementation guide
+- Pricing psychology playbook
+- Mobile conversion optimization guide
+
+**Perfect For:**
+- E-commerce store owners with room to improve
+- Shopify merchants wanting more sales
+- Anyone launching a new online store
+- Marketers optimizing existing funnels
+
+**Results You Can Expect:**
+Industry benchmarks show 2-4x conversion improvements after implementing our full checklist. Even partial implementation typically yields 20-40% lift.`,
+      shortDesc: "Platform-agnostic e-commerce conversion toolkit with product page checklists, pricing psychology, cart recovery emails, and mobile optimization guides.",
+      price: 349,
+      pricingType: PricingType.ONE_TIME,
+      category: "E-Commerce",
+      deliverables: [
+        "Product page optimization checklist (25-point)",
+        "Checkout flow improvement guide",
+        "Cart abandonment email sequence (3-email)",
+        "Trust signals implementation guide",
+        "Pricing psychology playbook",
+        "Mobile conversion optimization guide",
+      ],
+      features: [
+        "Platform-agnostic (Shopify, WooCommerce, BigCommerce, custom)",
+        "Data-driven frameworks backed by conversion research",
+        "Includes before/after case studies",
+        "Cart recovery email templates included",
+        "Covers mobile-first optimization strategies",
+      ],
+      requirements: [
+        "An existing e-commerce store",
+        "Access to your store's analytics (Google Analytics or equivalent)",
+        "Basic ability to edit your store's pages",
+      ],
+      faq: [
+        {
+          question: "Does this work for digital products too?",
+          answer: "Yes! While many examples use physical products, the conversion principles (trust signals, pricing psychology, checkout flow) apply equally to digital products and courses.",
+        },
+        {
+          question: "How much can I expect conversions to improve?",
+          answer: "Results vary, but most stores see 20-40% improvement after implementing the full checklist. Cart recovery emails alone typically recover 5-15% of abandoned carts.",
+        },
+        {
+          question: "Do I need a developer?",
+          answer: "Not for most of it! The checklist and guides are designed for store owners. Only the schema markup section might need developer help, and we provide copy-paste code.",
+        },
+      ],
+      whopProductId: "",
+      whopCheckoutUrl: "",
+      featured: false,
+      popular: false,
+    },
   ];
 
   console.log("📦 Creating products...");
@@ -526,6 +782,34 @@ Average improvement of 40-60% in PageSpeed score, leading to higher conversions 
       { type: "TEXT", title: "Video Optimization Guide", description: "How to score higher on our AI analysis with proven techniques.", textContent: "# Optimizing Your Real Estate Videos\n\n## Lighting\n- Shoot during golden hour (1 hour after sunrise / before sunset)\n- Use natural light — open all curtains\n- Avoid harsh overhead fluorescent lights\n- Score target: 8/10+\n\n## Framing & Composition\n- Use rule of thirds for key rooms\n- Always shoot in landscape (16:9)\n- Include wide establishing shots before close-ups\n- Stabilize your camera — use a tripod or gimbal\n\n## Pacing\n- Keep clips between 3-8 seconds\n- Start with the most impressive room\n- End with the exterior/neighborhood\n- Total video: 60-120 seconds is the sweet spot\n\n## Audio\n- Use upbeat, royalty-free background music\n- Avoid recording ambient noise if it's distracting\n- Add voiceover for key selling points", order: 0 },
       { type: "VIDEO", title: "Real Estate Video Masterclass", description: "Professional techniques for filming stunning property tours.", videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", order: 1 },
       { type: "LINK", title: "Royalty-Free Music for Property Videos", description: "Download free background music optimized for real estate content.", linkUrl: "https://www.pixabay.com/music/", order: 2 },
+    ],
+    "seo-master-toolkit": [
+      { type: "TEXT", title: "Technical SEO Audit Checklist", description: "30-point checklist covering crawlability, indexing, performance, and mobile.", textContent: "# Technical SEO Audit Checklist\n\n## Crawlability (Points 1-8)\n1. **Robots.txt** — Is it accessible at /robots.txt? Are the right pages allowed/disallowed?\n2. **Sitemap** — Is your sitemap submitted to Google Search Console?\n3. **Crawl errors** — Check GSC for any 404s or server errors\n4. **Broken links** — Use a crawler to find internal broken links\n5. **Redirect chains** — Are there 301 chains longer than 1 hop?\n6. **Canonical tags** — Are duplicate pages properly canonicalized?\n7. **Noindex tags** — Are any important pages accidentally noindexed?\n8. **Internal links** — Are orphan pages linked from somewhere?\n\n## Indexing (Points 9-14)\n9. **Index coverage** — How many pages are indexed vs. total?\n10. **Duplicate content** — Run a plagiarism check across your own pages\n11. **Thin content** — Are any indexed pages under 200 words?\n12. **Structured data** — Is schema markup valid and rendering?\n13. **Hreflang** — If multilingual, are hreflang tags correct?\n14. **URL structure** — Are URLs short, descriptive, and hyphenated?\n\n## Performance (Points 15-22)\n15. **Core Web Vitals** — Check LCP, FID, CLS scores\n16. **Page speed** — Mobile load time under 3 seconds?\n17. **Image optimization** — All images compressed and in WebP?\n18. **Render-blocking resources** — Any CSS/JS blocking the above-the-fold?\n19. **Server response time** — Under 200ms?\n20. **Caching** — Browser and server caching enabled?\n21. **Compression** — Gzip or Brotli enabled?\n22. **CDN** — Are static assets served via CDN?\n\n## Mobile (Points 23-30)\n23. **Mobile-friendly test** — Does Google's test pass?\n24. **Viewport meta tag** — Present and correct?\n25. **Touch targets** — All buttons/links at least 48px?\n26. **Font sizes** — Minimum 16px base on mobile?\n27. **Horizontal scrolling** — No overflow on mobile?\n28. **Pop-ups** — Not intrusive on mobile (Google penalty)?\n29. **Interstitials** — None on mobile entry?\n30. **App install banners** — Properly implemented if applicable?", order: 0 },
+      { type: "LINK", title: "Ahrefs SEO Tool", description: "Industry-leading SEO analysis and backlink research platform.", linkUrl: "https://ahrefs.com", order: 1 },
+      { type: "VIDEO", title: "SEO Fundamentals Masterclass", description: "Comprehensive video covering how search engines work and core SEO principles.", videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", order: 2 },
+      { type: "TEXT", title: "Keyword Research Framework", description: "4-step process to find and prioritize keywords that drive traffic.", textContent: "# Keyword Research Framework\n\n## Step 1: Seed Keywords\n- Start with 5-10 topics your business covers\n- Ask: \"What would my ideal customer search for?\"\n- Write down every variation you can think of\n- Example: \"Shopify store\" → shopify store speed, shopify optimization, shopify theme performance\n\n## Step 2: Expand\n- Use Google autocomplete for each seed keyword\n- Check \"People also ask\" boxes\n- Use tools: Ahrefs, Semrush, or free alternatives like Ubersuggest\n- Target: 50-100 keyword candidates\n\n## Step 3: Analyze Intent\nCategorize each keyword by search intent:\n- **Informational**: How to, what is, guide (→ blog post)\n- **Navigational**: Brand names, specific URLs (→ landing page)\n- **Commercial**: Best, review, compare (→ comparison page)\n- **Transactional**: Buy, price, discount (→ product page)\n\n## Step 4: Prioritize\nScore each keyword on:\n- **Volume**: Monthly searches (higher = more potential)\n- **Difficulty**: Competition level (lower = easier to rank)\n- **Intent match**: How well it aligns with what you offer\n- **Business value**: How likely to convert\n\nPrioritize keywords with the best combination of volume + low difficulty + high business value.", order: 3 },
+      { type: "LINK", title: "Google Search Console", description: "Free tool to monitor your site's search performance and fix issues.", linkUrl: "https://search.google.com/search-console", order: 4 },
+    ],
+    "email-automation-playbook": [
+      { type: "TEXT", title: "Welcome Series Blueprint", description: "7-email welcome sequence with subject lines and optimal send timing.", textContent: "# Welcome Series Blueprint\n\n## Email 1: Immediate Delivery (0 min)\n**Subject:** \"Welcome to [Brand] — here's what happens next\"\nGoal: Set expectations, deliver any lead magnet\nKey elements: Thank you, what they'll get, link to resource\n\n## Email 2: The Origin Story (1 hour)\n**Subject:** \"Why we built [Brand]\"\nGoal: Build trust and brand connection\nKey elements: Your story, mission, what makes you different\n\n## Email 3: Quick Win (Day 2)\n**Subject:** \"The one thing that changed everything for us\"\nGoal: Deliver immediate value\nKey elements: One actionable tip, proof of results\n\n## Email 4: Social Proof (Day 3)\n**Subject:** \"What [customer name] did with [product]\"\nGoal: Show results others have achieved\nKey elements: Case study or testimonial, specific numbers\n\n## Email 5: Address Objections (Day 5)\n**Subject:** \"I get it — you're probably wondering...\"\nGoal: Handle common doubts\nKey elements: FAQ format, direct and honest answers\n\n## Email 6: The Offer (Day 7)\n**Subject:** \"Your special invitation\"\nGoal: Convert subscribers to customers\nKey elements: Clear offer, limited-time bonus, CTA\n\n## Email 7: The Gentle Nudge (Day 10)\n**Subject:** \"Still thinking about it?\"\nGoal: Final push for conversion\nKey elements: Reminder of value, urgency, easy CTA\n\n## Timing Tips\n- Emails 1-3: Front-load value to reduce churn\n- Gap between 3-5: Let them absorb\n- Emails 6-7: Close together for urgency", order: 0 },
+      { type: "VIDEO", title: "Automation Setup Masterclass", description: "Step-by-step video on building email automations in popular ESPs.", videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", order: 1 },
+      { type: "LINK", title: "Mailchimp Automation Docs", description: "Official Mailchimp guide to setting up automation workflows.", linkUrl: "https://mailchimp.com/help/automation/", order: 2 },
+      { type: "TEXT", title: "Re-engagement Campaign Playbook", description: "5-email win-back sequence with timing and conditions for inactive subscribers.", textContent: "# Re-engagement Campaign Playbook\n\n## When to Trigger\n- Subscriber hasn't opened an email in 60+ days\n- Or hasn't clicked in 90+ days\n- Run this BEFORE removing them from your list\n\n## Email 1: The Check-In (Day 0)\n**Subject:** \"Haven't heard from you in a while\"\nGoal: Gentle re-engagement\nContent: Acknowledge the gap, remind them of value\n\n## Email 2: What's New (Day 3)\n**Subject:** \"A lot has changed — here's what you missed\"\nGoal: Show they're missing out\nContent: Highlight 3 recent updates/wins\n\n## Email 3: Exclusive Offer (Day 5)\n**Subject:** \"This is just for you\"\nGoal: Incentivize re-engagement\nContent: Free bonus, discount, or exclusive content\n\n## Email 4: Last Chance (Day 8)\n**Subject:** \"Should I remove you from the list?\"\nGoal: Create urgency (honest, not manipulative)\nContent: Clear choice: stay or unsubscribe\n\n## Email 5: Goodbye (Day 12)\n**Subject:** \"I understand\"\nGoal: Leave door open\nContent: Warm goodbye, easy way to come back\n\n## After the Sequence\n- Opened + clicked → back to main list\n- Opened but didn't click → one more email, then remove\n- Never opened → remove from list (protects deliverability)", order: 3 },
+      { type: "LINK", title: "ConvertKit Automations", description: "Learn how to build powerful automations in ConvertKit.", linkUrl: "https://convertkit.com/features/automations", order: 4 },
+    ],
+    "paid-ads-master-class": [
+      { type: "TEXT", title: "Ad Budget Allocation Guide", description: "Framework for splitting ad spend across platforms and funnel stages.", textContent: "# Ad Budget Allocation Guide\n\n## The Golden Rule\nNever put all your budget in one basket. Diversify across platforms AND funnel stages.\n\n## Recommended Split by Platform\n- **Google Ads (Search):** 40% — highest purchase intent\n- **Facebook/Instagram:** 35% — best for awareness + retargeting\n- **TikTok:** 15% — growing audience, lower CPMs\n- **Reserve:** 10% — for testing new ideas\n\n## Split by Funnel Stage\n- **Top of Funnel (Awareness):** 30%\n  - Goal: Reach new audiences\n  - Channels: Facebook/Instagram video ads, TikTok\n- **Middle of Funnel (Consideration):** 40%\n  - Goal: Educate and qualify leads\n  - Channels: Google Search, Facebook/Instagram carousel\n- **Bottom of Funnel (Conversion):** 30%\n  - Goal: Drive purchases\n  - Channels: Google Shopping, retargeting ads\n\n## Starting Budget ($500/month)\n- Google Ads Search: $200\n- Facebook/Instagram: $175\n- Testing budget: $125\n\n## Scaling Rules\n- If ROAS > 3x for 7 days → increase budget by 20%\n- If CPA is 2x target for 3 days → pause and optimize\n- Never increase budget by more than 20% at a time\n- Always keep 10% aside for experimentation", order: 0 },
+      { type: "VIDEO", title: "Google Ads Search Campaigns", description: "Complete walkthrough of setting up and optimizing Google Search campaigns.", videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", order: 1 },
+      { type: "LINK", title: "Meta Ads Library", description: "Browse and research competitor ads across Facebook and Instagram.", linkUrl: "https://www.facebook.com/ads/library/", order: 2 },
+      { type: "TEXT", title: "Retargeting Playbook", description: "3-stage retargeting funnel: awareness retarget, consideration retarget, cart abandonment.", textContent: "# Retargeting Playbook\n\n## Why Retargeting Works\nPeople who visited your site are 10x more likely to convert than cold audiences. Retargeting keeps you top-of-mind.\n\n## Stage 1: Awareness Retarget\n**Audience:** Site visitors who didn't convert (last 30 days)\n**Ad Type:** Video or carousel showing your best content\n**Message:** \"Still thinking about [solution]? Here's why [Brand] is different.\"\n**Frequency:** 3-5x per week\n**Duration:** Show for 7 days after visit\n\n## Stage 2: Consideration Retarget\n**Audience:** People who visited product/pricing pages but didn't buy\n**Ad Type:** Social proof (reviews, case studies)\n**Message:** \"Others are already seeing results with [product].\"\n**Frequency:** 5-7x per week\n**Duration:** Show for 14 days\n\n## Stage 3: Cart Abandonment\n**Audience:** Added to cart but didn't complete purchase\n**Ad Type:** Dynamic product ad + incentive\n**Message:** \"You left something behind — here's 10% off to finish.\"\n**Frequency:** 2-3x per day for first 48 hours, then 1x/day\n**Duration:** 7 days max\n\n## Frequency Caps\nDon't annoy people! Set caps:\n- Awareness: max 5x/week\n- Consideration: max 7x/week\n- Cart abandonment: max 3x/day\n\n## Exclude converted customers from all retargeting!", order: 3 },
+      { type: "VIDEO", title: "Writing High-Converting Ad Copy", description: "Techniques and formulas for writing ad copy that actually converts.", videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", order: 4 },
+    ],
+    "e-commerce-conversion-kit": [
+      { type: "TEXT", title: "Product Page Optimization Checklist", description: "25-point checklist covering hero image, copy, social proof, CTA, trust signals, and mobile.", textContent: "# Product Page Optimization Checklist\n\n## Hero Section (Points 1-5)\n1. **Hero image quality** — High-res, lifestyle shot showing product in use\n2. **Product title** — Clear, includes primary keyword\n3. **Price visibility** — Prominent, no hidden fees mentioned nearby\n4. **Primary CTA** — \"Add to Cart\" button above the fold, high-contrast color\n5. **Social proof snippet** — Star rating + review count near the top\n\n## Copy & Content (Points 6-12)\n6. **Benefit-focused description** — Lead with benefits, not features\n7. **Bullet points** — Key selling points in scannable format\n8. **Storytelling** — Short paragraph about WHY this product matters\n9. **Specifications** — Detailed specs in a collapsible section\n10. **Size/variant guide** — Clear guidance on choosing the right option\n11. **Keyword optimization** — Natural use of target keywords\n12. **Alt text** — Descriptive alt text on all product images\n\n## Social Proof (Points 13-17)\n13. **Reviews section** — Prominently placed, sortable\n14. **Photo reviews** — Encourage and display customer photos\n15. **Review count** — Show total number of reviews\n16. **Verified purchase badge** — Adds credibility\n17. **Video testimonials** — If available, include above the fold\n\n## Trust & Conversion (Points 18-22)\n18. **Money-back guarantee** — Clearly stated with icon\n19. **Shipping info** — Delivery time and free shipping threshold\n20. **Security badges** — SSL, payment method logos\n21. **FAQ accordion** — Common questions answered\n22. **Urgency indicators** — \"Only 3 left\" or \"X people viewing\" (if truthful)\n\n## Mobile (Points 23-25)\n23. **Sticky add-to-cart** — CTA visible while scrolling on mobile\n24. **Image zoom** — Pinch-to-zoom on mobile\n25. **Touch-friendly** — All interactive elements 48px+ tap targets", order: 0 },
+      { type: "VIDEO", title: "Checkout Flow Optimization", description: "Video walkthrough on reducing friction in the checkout experience.", videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", order: 1 },
+      { type: "LINK", title: "Hotjar Heatmaps", description: "See exactly where users click, scroll, and drop off on your pages.", linkUrl: "https://www.hotjar.com", order: 2 },
+      { type: "TEXT", title: "Pricing Psychology Playbook", description: "6 techniques: anchoring, charm pricing, decoy effect, bundling, loss aversion, social proof.", textContent: "# Pricing Psychology Playbook\n\n## Technique 1: Anchoring\nShow a higher \"original\" price crossed out next to your actual price.\n- Before: \"$49\" → After: \"~~$99~~ $49\" — perceived value doubles\n- Works because humans judge value relative to a reference point\n- Be honest: only use real original prices or competitor prices\n\n## Technique 2: Charm Pricing\nPrice just below a round number: $29.99 instead of $30.\n- The \"9\" ending is perceived as significantly less than the round number\n- Works especially well for products under $100\n- For premium products ($500+), use round numbers instead — they signal quality\n\n## Technique 3: The Decoy Effect\nAdd a third option that makes your target option look like the best deal.\n- Basic: $29 (limited features)\n- Premium: $49 (all features) ← your target\n- Enterprise: $47 (same as Premium but slightly less value) ← the decoy\n- People now see Premium as the obvious choice\n\n## Technique 4: Bundling\nGroup products together at a discount to increase average order value.\n- Individual prices: $29 + $19 + $15 = $63\n- Bundle price: $39 (save $24)\n- Perception: incredible value. Reality: higher revenue per customer.\n\n## Technique 5: Loss Aversion\nPeople fear losing more than they enjoy gaining. Frame your pricing around what they'll LOSE by not buying.\n- Instead of: \"Save 30% with our product\"\n- Try: \"Most stores lose $10,000/year from slow checkout — here's how to stop it\"\n\n## Technique 6: Social Proof Pricing\nShow what others are paying happily.\n- \"Join 2,400 stores already optimizing their conversions for $49/month\"\n- Normalizes the purchase decision", order: 3 },
+      { type: "LINK", title: "OptinMonster Cart Recovery", description: "Exit-intent popups and cart recovery tools for e-commerce stores.", linkUrl: "https://optinmonster.com", order: 4 },
     ],
     "shopify-speed-surge": [
       { type: "TEXT", title: "Shopify Speed Optimization Checklist", description: "Complete 30-point checklist to maximize your Shopify store's performance.", textContent: "# Shopify Speed Optimization Checklist\n\n## Images (Points 1-8)\n1. All product images compressed (WebP format preferred)\n2. Lazy loading enabled on all images\n3. Image dimensions match display size\n4. Alt text on every image (also helps SEO)\n5. Hero banner optimized separately\n6. Thumbnail images are small files\n7. No animated GIFs on main pages\n8. CDN serving all images (Shopify does this automatically)\n\n## Code & Apps (Points 9-18)\n9. Audit all installed apps — remove unused ones\n10. Disable any app that adds scripts you don't need\n11. Minify CSS and JavaScript\n12. Remove unused CSS selectors\n13. Defer non-critical JavaScript\n14. Limit third-party tracking scripts to essentials\n15. Use async loading for chat widgets\n16. Check for render-blocking resources\n17. Optimize Liquid template code\n18. Reduce DOM elements on homepage\n\n## Theme & UX (Points 19-26)\n19. Enable browser caching\n20. Use Shopify's built-in speed features\n21. Optimize mobile navigation\n22. Reduce homepage product count (show top 8-12)\n23. Use collection pages instead of infinite scroll\n24. Optimize checkout flow (fewer steps)\n25. Enable prefetching for internal links\n26. Test with Google PageSpeed Insights\n\n## Advanced (Points 27-30)\n27. Enable HTTP/2 (Shopify handles this)\n28. Set up Core Web Vitals monitoring\n29. A/B test page layouts for speed vs. conversion\n30. Schedule monthly speed audits", order: 0 },
