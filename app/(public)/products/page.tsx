@@ -1,4 +1,6 @@
-export const dynamic = "force-dynamic"
+// Revalidate every 10 minutes (600 seconds)
+// Pages are statically generated and served from CDN
+export const revalidate = 600
 
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"

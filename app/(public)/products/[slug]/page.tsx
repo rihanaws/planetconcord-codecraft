@@ -157,6 +157,17 @@ export async function generateStaticParams() {
 }
 
 // Generate metadata for SEO
+// Revalidate product pages every 10 minutes
+export const revalidate = 600
+
+// Pre-generate all product pages at build time
+export async function generateStaticParams() {
+  const products = await getAllProducts()
+  return products.map((product) => ({
+    slug: product.slug,
+  }))
+}
+
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
   const { slug } = await params
   const product = await getProductBySlug(slug)
