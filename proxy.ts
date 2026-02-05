@@ -71,6 +71,11 @@ export default async function proxy(request: NextRequest) {
       loginUrl.searchParams.set("callbackUrl", pathname)
       return NextResponse.redirect(loginUrl)
     }
+
+    // Admin users hitting /dashboard get redirected to /admin
+    if (session.user.role === UserRole.ADMIN && pathname.startsWith("/dashboard")) {
+      return NextResponse.redirect(new URL("/admin", request.url))
+    }
   }
 
   // Check if route requires admin role

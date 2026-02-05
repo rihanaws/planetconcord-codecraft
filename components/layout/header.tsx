@@ -134,16 +134,25 @@ export function Header() {
 
               {/* Auth buttons */}
               {session ? (
-                <Link href="/dashboard">
-                  <Button
-                    size="sm"
-                    className="group relative overflow-hidden"
-                  >
-                    <div className="absolute inset-0 bg-linear-to-r from-transparent via-primary-foreground/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-                    <span className="relative">Dashboard</span>
-                    <ChevronRight className="h-4 w-4 ml-1 transition-transform group-hover:translate-x-1" />
-                  </Button>
-                </Link>
+                <>
+                  {session.user?.role === "ADMIN" && (
+                    <Link href="/admin">
+                      <Button size="sm" variant="outline">
+                        Admin
+                      </Button>
+                    </Link>
+                  )}
+                  <Link href={session.user?.role === "ADMIN" ? "/admin" : "/dashboard"}>
+                    <Button
+                      size="sm"
+                      className="group relative overflow-hidden"
+                    >
+                      <div className="absolute inset-0 bg-linear-to-r from-transparent via-primary-foreground/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                      <span className="relative">Dashboard</span>
+                      <ChevronRight className="h-4 w-4 ml-1 transition-transform group-hover:translate-x-1" />
+                    </Button>
+                  </Link>
+                </>
               ) : (
                 <>
                   <Link href="/login">
@@ -241,13 +250,22 @@ export function Header() {
 
                 {/* Auth buttons */}
                 {session ? (
-                  <Link href="/dashboard" className="block">
-                    <Button size="lg" className="w-full group relative overflow-hidden">
-                      <div className="absolute inset-0 bg-linear-to-r from-transparent via-primary-foreground/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-                      <span className="relative font-medium">Go to Dashboard</span>
-                      <ChevronRight className="h-4 w-4 ml-2 relative transition-transform group-hover:translate-x-1" />
-                    </Button>
-                  </Link>
+                  <div className="space-y-3">
+                    {session.user?.role === "ADMIN" && (
+                      <Link href="/admin" className="block">
+                        <Button variant="outline" size="lg" className="w-full">
+                          <span className="font-medium">Admin Panel</span>
+                        </Button>
+                      </Link>
+                    )}
+                    <Link href={session.user?.role === "ADMIN" ? "/admin" : "/dashboard"} className="block">
+                      <Button size="lg" className="w-full group relative overflow-hidden">
+                        <div className="absolute inset-0 bg-linear-to-r from-transparent via-primary-foreground/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                        <span className="relative font-medium">Go to Dashboard</span>
+                        <ChevronRight className="h-4 w-4 ml-2 relative transition-transform group-hover:translate-x-1" />
+                      </Button>
+                    </Link>
+                  </div>
                 ) : (
                   <div className="space-y-3">
                     <Link href="/login" className="block">
