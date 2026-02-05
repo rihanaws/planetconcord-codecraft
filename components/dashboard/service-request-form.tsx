@@ -22,8 +22,11 @@ interface ServiceRequestRow {
   shopifyUrl: string
   notes: string | null
   mustKeepApps: string | null
-  status: string
+  status: "PENDING" | "IN_PROGRESS" | "COMPLETE" | "CANCELLED"
+  reportUrl: string | null
+  reportFileName: string | null
   createdAt: string
+  product: { name: string } | null
 }
 
 interface ServiceRequestFormProps {

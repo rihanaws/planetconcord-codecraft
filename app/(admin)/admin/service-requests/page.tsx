@@ -37,6 +37,13 @@ async function ServiceRequestsContent() {
 
   const data = await getServiceRequestData()
 
+  // Serialize dates for client component
+  const serializedRequests = data.serviceRequests.map((r) => ({
+    ...r,
+    createdAt: r.createdAt.toISOString(),
+    updatedAt: r.updatedAt.toISOString(),
+  }))
+
   return (
     <div className="space-y-6">
       <div>
@@ -46,7 +53,7 @@ async function ServiceRequestsContent() {
         </p>
       </div>
 
-      <ServiceRequestTable serviceRequests={data.serviceRequests} products={data.products} />
+      <ServiceRequestTable serviceRequests={serializedRequests} products={data.products} />
     </div>
   )
 }

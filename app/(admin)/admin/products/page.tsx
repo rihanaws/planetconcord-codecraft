@@ -32,7 +32,13 @@ async function ProductsContent() {
     redirect("/dashboard?error=unauthorized")
   }
 
-  const products = await getProducts()
+  const rawProducts = await getProducts()
+
+  // Map Prisma Json type to string[] | null for deliverables
+  const products = rawProducts.map((p) => ({
+    ...p,
+    deliverables: Array.isArray(p.deliverables) ? (p.deliverables as string[]) : null,
+  }))
 
   return (
     <div className="space-y-6">

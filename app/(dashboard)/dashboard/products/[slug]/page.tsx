@@ -1,9 +1,10 @@
 import { Suspense } from "react"
 import { redirect, notFound } from "next/navigation"
-import dynamic from "next/dynamic"
 import { auth } from "@/lib/auth/config"
 import { prisma } from "@/lib/db/prisma"
 import { ContentViewer } from "@/components/dashboard/content-viewer"
+import { VideoAnalyzer } from "@/components/dashboard/video-analyzer"
+import { ServiceRequestStatus } from "@/components/dashboard/service-request-status"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Badge } from "@/components/ui/badge"
 import { Alert, AlertDescription } from "@/components/ui/alert"
@@ -11,15 +12,6 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { AlertCircle, ArrowLeft, Calendar, Shield, ExternalLink } from "lucide-react"
 import { formatDistanceToNow } from "date-fns"
-
-const VideoAnalyzer = dynamic(
-  () => import("@/components/dashboard/video-analyzer").then((m) => m.VideoAnalyzer),
-  { ssr: false }
-)
-const ServiceRequestStatus = dynamic(
-  () => import("@/components/dashboard/service-request-status").then((m) => m.ServiceRequestStatus),
-  { ssr: false }
-)
 
 async function getProductAccess(slug: string, userId: string) {
   const product = await prisma.product.findUnique({
