@@ -54,7 +54,7 @@ async function ContentManagementContent({ id }: { id: string }) {
 
       {/* Product summary card */}
       <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-card/50 backdrop-blur-xl p-6">
-        <div className="absolute inset-0 bg-gradient-to-br from-chart-1/10 to-transparent opacity-50" />
+        <div className="absolute inset-0 bg-linear-to-br from-chart-1/10 to-transparent opacity-50" />
         <div className="relative flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="p-3 rounded-xl bg-chart-1/10">

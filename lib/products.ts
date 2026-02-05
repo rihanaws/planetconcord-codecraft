@@ -3,6 +3,7 @@
  * Helper functions for querying and managing products
  */
 
+import { cache } from "react";
 import { prisma } from "@/lib/db/prisma";
 import type { Product } from "@prisma/client";
 
@@ -10,7 +11,7 @@ import type { Product } from "@prisma/client";
  * Get all products from the database
  * @returns Array of all products
  */
-export async function getAllProducts(): Promise<Product[]> {
+export const getAllProducts = cache(async (): Promise<Product[]> => {
   try {
     const products = await prisma.product.findMany({
       orderBy: [
@@ -25,16 +26,16 @@ export async function getAllProducts(): Promise<Product[]> {
     console.error("Error fetching all products:", error);
     return [];
   }
-}
+});
 
 /**
  * Get a single product by its slug
  * @param slug - Product slug (URL-safe identifier)
  * @returns Product or null if not found
  */
-export async function getProductBySlug(
+export const getProductBySlug = cache(async (
   slug: string
-): Promise<Product | null> {
+): Promise<Product | null> => {
   try {
     const product = await prisma.product.findUnique({
       where: { slug },
@@ -45,14 +46,14 @@ export async function getProductBySlug(
     console.error(`Error fetching product with slug ${slug}:`, error);
     return null;
   }
-}
+});
 
 /**
  * Get featured products (for homepage display)
  * @param limit - Maximum number of products to return (default: 3)
  * @returns Array of featured products
  */
-export async function getFeaturedProducts(limit: number = 3): Promise<Product[]> {
+export const getFeaturedProducts = cache(async (limit: number = 3): Promise<Product[]> => {
   try {
     const products = await prisma.product.findMany({
       where: {
@@ -70,7 +71,7 @@ export async function getFeaturedProducts(limit: number = 3): Promise<Product[]>
     console.error("Error fetching featured products:", error);
     return [];
   }
-}
+});
 
 /**
  * Get products by category

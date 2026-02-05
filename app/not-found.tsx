@@ -12,12 +12,12 @@ export default function NotFound() {
             {/* Glass card */}
             <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-card/50 backdrop-blur-xl p-10 text-center">
               {/* Atmospheric gradient */}
-              <div className="absolute inset-0 bg-gradient-to-br from-muted/20 via-transparent to-accent/10" />
+              <div className="absolute inset-0 bg-linear-to-br from-muted/20 via-transparent to-accent/10" />
 
               <div className="relative space-y-6">
                 {/* Large 404 */}
                 <div className="relative">
-                  <span className="text-[9rem] font-bold leading-none tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-foreground/80 to-foreground/20">
+                  <span className="text-[9rem] font-bold leading-none tracking-tighter text-transparent bg-clip-text bg-linear-to-br from-foreground/80 to-foreground/20">
                     404
                   </span>
                 </div>

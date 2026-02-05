@@ -46,7 +46,7 @@ export function Features() {
     <section className="relative py-24 px-4 overflow-hidden">
       {/* Background decoration */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-muted/10 to-background" />
+        <div className="absolute inset-0 bg-linear-to-b from-background via-muted/10 to-background" />
       </div>
 
       <div className="container mx-auto max-w-7xl">
@@ -58,11 +58,11 @@ export function Features() {
           </div>
 
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">
-            <span className="bg-gradient-to-br from-foreground to-foreground/60 bg-clip-text text-transparent">
+            <span className="bg-linear-to-br from-foreground to-foreground/60 bg-clip-text text-transparent">
               Everything You Need to
             </span>
             <br />
-            <span className="bg-gradient-to-br from-primary to-primary/60 bg-clip-text text-transparent">
+            <span className="bg-linear-to-br from-primary to-primary/60 bg-clip-text text-transparent">
               Succeed & Grow
             </span>
           </h2>
@@ -113,7 +113,7 @@ function FeatureCard({
     >
       {/* Gradient overlay on hover */}
       <div
-        className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
+        className={`absolute inset-0 rounded-2xl bg-linear-to-br ${gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
       />
 
       {/* Content */}
@@ -137,13 +137,13 @@ function FeatureCard({
         </div>
 
         {/* Decorative corner accent */}
-        <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-primary/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        <div className="absolute top-0 right-0 w-24 h-24 bg-linear-to-bl from-primary/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       </div>
 
       {/* Border glow effect */}
       <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-primary/50 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-px bg-linear-to-r from-transparent via-primary/50 to-transparent" />
       </div>
     </div>
   )

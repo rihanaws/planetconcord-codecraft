@@ -9,7 +9,7 @@ export function Footer() {
   return (
     <footer className="relative border-t border-border/50 bg-card/30 backdrop-blur-sm">
       {/* Subtle background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent to-muted/20 pointer-events-none" />
+      <div className="absolute inset-0 bg-linear-to-b from-transparent to-muted/20 pointer-events-none" />
 
       <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-12">
@@ -146,7 +146,7 @@ function SocialLink({
       aria-label={label}
     >
       {/* Glow effect on hover */}
-      <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-primary/0 via-primary/0 to-primary/0 opacity-0 group-hover:from-primary/5 group-hover:via-primary/10 group-hover:to-primary/5 group-hover:opacity-100 transition-all duration-300" />
+      <div className="absolute inset-0 rounded-lg bg-linear-to-br from-primary/0 via-primary/0 to-primary/0 opacity-0 group-hover:from-primary/5 group-hover:via-primary/10 group-hover:to-primary/5 group-hover:opacity-100 transition-all duration-300" />
 
       <Icon className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors duration-200 relative z-10" />
     </a>

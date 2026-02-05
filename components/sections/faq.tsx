@@ -46,7 +46,7 @@ export function FAQ() {
     <section className="relative py-24 px-4 overflow-hidden">
       {/* Background decoration */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-muted/10 to-background" />
+        <div className="absolute inset-0 bg-linear-to-b from-background via-muted/10 to-background" />
       </div>
 
       <div className="container mx-auto max-w-4xl">
@@ -58,11 +58,11 @@ export function FAQ() {
           </div>
 
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">
-            <span className="bg-gradient-to-br from-foreground to-foreground/60 bg-clip-text text-transparent">
+            <span className="bg-linear-to-br from-foreground to-foreground/60 bg-clip-text text-transparent">
               Frequently Asked
             </span>
             <br />
-            <span className="bg-gradient-to-br from-primary to-primary/60 bg-clip-text text-transparent">
+            <span className="bg-linear-to-br from-primary to-primary/60 bg-clip-text text-transparent">
               Questions
             </span>
           </h2>
@@ -94,7 +94,7 @@ export function FAQ() {
           </div>
 
           {/* Decorative glow */}
-          <div className="absolute -inset-1 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 rounded-3xl blur-2xl -z-10 opacity-50" />
+          <div className="absolute -inset-1 bg-linear-to-br from-primary/5 via-transparent to-accent/5 rounded-3xl blur-2xl -z-10 opacity-50" />
         </div>
 
         {/* CTA below FAQ */}

@@ -50,7 +50,7 @@ export function DashboardStats({
             className="relative group overflow-hidden rounded-2xl border border-border/50 bg-card/50 backdrop-blur-xl p-6 transition-all duration-300 hover:border-border hover:shadow-lg hover:shadow-primary/5"
           >
             {/* Gradient background */}
-            <div className={`absolute inset-0 bg-gradient-to-br ${stat.gradient} opacity-50`} />
+            <div className={`absolute inset-0 bg-linear-to-br ${stat.gradient} opacity-50`} />
 
             {/* Content */}
             <div className="relative flex items-start justify-between">
@@ -69,7 +69,7 @@ export function DashboardStats({
             </div>
 
             {/* Hover effect */}
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+            <div className="absolute inset-0 bg-linear-to-r from-transparent via-primary/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
           </div>
         )
       })}

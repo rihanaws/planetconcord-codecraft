@@ -14,7 +14,7 @@ export function ProductFeatures({ features }: ProductFeaturesProps) {
       <div className="container mx-auto max-w-4xl">
         <div className="p-8 md:p-10 rounded-2xl bg-card/50 backdrop-blur-xl border border-border/50 shadow-xl shadow-primary/5">
           <h2 className="text-2xl sm:text-3xl font-bold tracking-tight mb-8">
-            <span className="bg-gradient-to-br from-foreground to-foreground/60 bg-clip-text text-transparent">
+            <span className="bg-linear-to-br from-foreground to-foreground/60 bg-clip-text text-transparent">
               Key Features
             </span>
           </h2>

@@ -112,7 +112,7 @@ export function ProfileForm({ defaultValues }: ProfileFormProps) {
           disabled={isLoading || !isDirty}
           className="group relative overflow-hidden"
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary-foreground/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+          <div className="absolute inset-0 bg-linear-to-r from-transparent via-primary-foreground/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
           {isLoading ? (
             <Loader2 className="h-4 w-4 mr-2 animate-spin relative" />
           ) : (

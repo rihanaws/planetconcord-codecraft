@@ -21,7 +21,7 @@ export function ProductHero({ product }: ProductHeroProps) {
     <section className="relative py-16 px-4 overflow-hidden">
       {/* Animated gradient background */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-gradient-to-br from-background via-muted/20 to-background" />
+        <div className="absolute inset-0 bg-linear-to-br from-background via-muted/20 to-background" />
         <div
           className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/5 rounded-full blur-3xl animate-pulse"
           style={{ animationDuration: "4s" }}
@@ -36,9 +36,9 @@ export function ProductHero({ product }: ProductHeroProps) {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left column - Product image */}
           <div className="relative order-2 lg:order-1">
-            <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-gradient-to-br from-muted/50 to-muted/20 shadow-2xl shadow-primary/10">
+            <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-linear-to-br from-muted/50 to-muted/20 shadow-2xl shadow-primary/10">
               {/* Placeholder gradient background */}
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-accent/20 to-primary/10" />
+              <div className="absolute inset-0 bg-linear-to-br from-primary/20 via-accent/20 to-primary/10" />
 
               {/* Decorative icon */}
               <div className="absolute inset-0 flex items-center justify-center">
@@ -81,7 +81,7 @@ export function ProductHero({ product }: ProductHeroProps) {
             {/* Product name */}
             <div>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-tight">
-                <span className="bg-gradient-to-br from-foreground to-foreground/60 bg-clip-text text-transparent">
+                <span className="bg-linear-to-br from-foreground to-foreground/60 bg-clip-text text-transparent">
                   {product.name}
                 </span>
               </h1>
@@ -94,7 +94,7 @@ export function ProductHero({ product }: ProductHeroProps) {
 
             {/* Price */}
             <div className="flex items-baseline gap-3 py-4">
-              <div className="text-5xl font-bold bg-gradient-to-br from-primary to-primary/60 bg-clip-text text-transparent">
+              <div className="text-5xl font-bold bg-linear-to-br from-primary to-primary/60 bg-clip-text text-transparent">
                 {formatPrice(product.price, product.pricingType)}
               </div>
               {product.pricingType === "SUBSCRIPTION" && (
@@ -140,7 +140,7 @@ export function ProductHero({ product }: ProductHeroProps) {
                   size="lg"
                   className="group h-14 px-8 text-base relative overflow-hidden shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/30"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary-foreground/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+                  <div className="absolute inset-0 bg-linear-to-r from-transparent via-primary-foreground/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                   <span className="relative font-semibold">Buy Now on Whop</span>
                   <ExternalLink className="ml-2 h-5 w-5 relative transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 </Button>

@@ -69,7 +69,7 @@ export function ContentItemVideo({ item }: ContentItemVideoProps) {
   return (
     <div className="group relative overflow-hidden rounded-xl border border-border/50 bg-card/50 backdrop-blur-xl transition-all duration-300 hover:border-border hover:shadow-lg hover:shadow-primary/5">
       {/* Gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-chart-4/10 to-transparent opacity-50" />
+      <div className="absolute inset-0 bg-linear-to-br from-chart-4/10 to-transparent opacity-50" />
 
       <div className="relative p-6 space-y-4">
         {/* Header */}
@@ -123,7 +123,7 @@ export function ContentItemVideo({ item }: ContentItemVideoProps) {
       </div>
 
       {/* Hover effect */}
-      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-chart-4/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 pointer-events-none" />
+      <div className="absolute inset-0 bg-linear-to-r from-transparent via-chart-4/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 pointer-events-none" />
     </div>
   )
 }

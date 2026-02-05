@@ -62,6 +62,20 @@ A production-ready digital product marketplace that integrates with Whop for pay
 - Playwright E2E tests: auth flows, public pages, 404, route protection, mobile responsiveness
 - Performance: compressed responses, image optimization (Vercel Blob + Google avatars), X-Powered-By disabled
 
+**Phase 8: reCAPTCHA Enterprise** ✅
+- Invisible reCAPTCHA Enterprise (no visible widget — scores silently on form submit)
+- Script loaded globally in root layout; client hook (`hooks/use-recaptcha.ts`) exposes `executeRecaptcha(action)`
+- Server utility (`lib/recaptcha.ts`) verifies token + score threshold (0.5); fails open in dev
+- Protected forms: SIGNUP, FORGOT_PASSWORD, CONTACT, NEWSLETTER
+
+**Post-Phase Fixes & Optimisations** ✅
+- **Prisma pool exhaustion fix** — Two independent `PrismaMariaDb` adapter instances (one per client) with separate connection limits; prevents pool starvation during concurrent static generation
+- **React `cache()` on product queries** — `getAllProducts`, `getProductBySlug`, `getFeaturedProducts` wrapped in React's `cache()` to deduplicate identical DB calls across 29+ concurrent page renders during build
+- **Sentry init files** — Added `instrumentation-client.ts`, `sentry.server.config.ts`, `sentry.edge.config.ts` (Sentry v10 API: `tracesSampleRate`, no `traces`/`replays`/`ConsoleIntegration`)
+- **Vercel Analytics + Speed Insights** — `@vercel/analytics` and `@vercel/speed-insights` wired into root layout
+- **Tailwind v4 canonical classes** — Project-wide migration: `bg-gradient-to-*` → `bg-linear-to-*`, `translate-x-[-100%]` → `-translate-x-full` (67 files)
+- **`/dashboard/products` page** — Added missing "My Products" route that sidebar nav linked to
+
 ---
 
 ## 📋 Table of Contents
@@ -151,11 +165,14 @@ A production-ready digital product marketplace that integrates with Whop for pay
 - **Google OAuth 2.0** - Social login
 - **bcryptjs** - Password hashing
 
-### **Integrations**
+### **Integrations & Monitoring**
 - **Whop** - Payment processing and webhooks
 - **Resend** - Transactional email service
 - **Vercel Blob** - File storage
-- **Sentry** - Error tracking and monitoring
+- **Sentry** - Error tracking and monitoring (v10, client + server + edge)
+- **Vercel Analytics** - Traffic and performance analytics
+- **Vercel Speed Insights** - Core Web Vitals monitoring
+- **Google reCAPTCHA Enterprise** - Invisible bot protection on all public forms
 
 ### **Development Tools**
 - **ESLint** - Code linting
@@ -204,9 +221,15 @@ techsci-codecraft/
 │   ├── schema.prisma             # Database schema (8 models)
 │   └── migrations/               # Database migrations
 │
+├── hooks/
+│   └── use-recaptcha.ts          # reCAPTCHA Enterprise client hook
+│
 ├── public/                       # Static assets
 ├── proxy.ts                      # Route protection (Next.js 16)
 ├── prisma.config.ts              # Prisma 7 configuration
+├── instrumentation-client.ts     # Sentry client-side init
+├── sentry.server.config.ts       # Sentry server-side init
+├── sentry.edge.config.ts         # Sentry edge-runtime init
 ├── .env.example                  # Environment variables template
 └── CLAUDE.md                     # AI coding assistant instructions
 
@@ -250,6 +273,7 @@ Total: 60+ files, 2000+ lines of backend code, 3000+ lines of frontend code
    - `RESEND_API_KEY` - From Resend dashboard
    - `WHOP_*` - From Whop dashboard
    - `SENTRY_DSN` - From Sentry project
+   - `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` & `RECAPTCHA_API_KEY` - From Google Cloud Console (reCAPTCHA Enterprise)
 
 4. **Generate Prisma Client**
    ```bash
@@ -469,6 +493,7 @@ Monitor Webhooks → View Analytics
 - ✅ Secure session management
 - ✅ Role-based access control
 - ✅ Environment variable validation
+- ✅ reCAPTCHA Enterprise on all public forms (invisible, score-based)
 
 ---
 

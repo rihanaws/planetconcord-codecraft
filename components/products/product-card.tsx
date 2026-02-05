@@ -20,9 +20,9 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
         }}
       >
         {/* Image container */}
-        <div className="relative aspect-[16/9] overflow-hidden bg-gradient-to-br from-muted/50 to-muted/20">
+        <div className="relative aspect-[16/9] overflow-hidden bg-linear-to-br from-muted/50 to-muted/20">
           {/* Placeholder gradient background */}
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-accent/10 to-primary/5" />
+          <div className="absolute inset-0 bg-linear-to-br from-primary/10 via-accent/10 to-primary/5" />
 
           {/* Category badge */}
           <div className="absolute top-4 left-4 z-10">
@@ -56,7 +56,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
           </div>
 
           {/* Hover overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-card/90 via-card/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <div className="absolute inset-0 bg-linear-to-t from-card/90 via-card/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         </div>
 
         {/* Content */}
@@ -75,7 +75,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
           <div className="flex items-center justify-between pt-2">
             {/* Price */}
             <div className="space-y-0.5">
-              <div className="text-2xl font-bold bg-gradient-to-br from-primary to-primary/60 bg-clip-text text-transparent">
+              <div className="text-2xl font-bold bg-linear-to-br from-primary to-primary/60 bg-clip-text text-transparent">
                 {formatPrice(product.price, product.pricingType)}
               </div>
               {product.pricingType === "SUBSCRIPTION" && (
@@ -92,7 +92,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
               asChild
             >
               <div>
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary-foreground/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+                <div className="absolute inset-0 bg-linear-to-r from-transparent via-primary-foreground/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                 <span className="relative text-xs font-semibold">View Details</span>
                 <ArrowRight className="ml-1.5 h-3.5 w-3.5 relative transition-transform group-hover/btn:translate-x-0.5" />
               </div>
@@ -101,12 +101,12 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
         </div>
 
         {/* Hover gradient overlay */}
-        <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/5 via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+        <div className="absolute inset-0 rounded-2xl bg-linear-to-br from-primary/5 via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
         {/* Border glow effect */}
         <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
-          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
-          <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
+          <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-primary/50 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-px bg-linear-to-r from-transparent via-primary/50 to-transparent" />
         </div>
       </div>
     </Link>

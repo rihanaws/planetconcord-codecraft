@@ -50,7 +50,7 @@ export function RecentPurchases({ purchases }: RecentPurchasesProps) {
 
   return (
     <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-card/50 backdrop-blur-xl">
-      <div className="absolute inset-0 bg-gradient-to-br from-muted/10 to-transparent opacity-50" />
+      <div className="absolute inset-0 bg-linear-to-br from-muted/10 to-transparent opacity-50" />
 
       <div className="relative">
         {/* Header */}
@@ -148,7 +148,7 @@ export function RecentWebhooks({ webhooks }: RecentWebhooksProps) {
 
   return (
     <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-card/50 backdrop-blur-xl">
-      <div className="absolute inset-0 bg-gradient-to-br from-muted/10 to-transparent opacity-50" />
+      <div className="absolute inset-0 bg-linear-to-br from-muted/10 to-transparent opacity-50" />
 
       <div className="relative">
         {/* Header */}

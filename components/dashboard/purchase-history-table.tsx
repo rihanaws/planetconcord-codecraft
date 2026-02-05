@@ -106,7 +106,7 @@ export function PurchaseHistoryTable({ purchases }: PurchaseHistoryTableProps) {
     return (
       <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-card/50 backdrop-blur-xl p-12 text-center">
         {/* Gradient background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-muted/20 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-br from-muted/20 to-transparent" />
 
         <div className="relative space-y-4">
           <div className="mx-auto w-16 h-16 rounded-full bg-muted/50 flex items-center justify-center">
@@ -130,7 +130,7 @@ export function PurchaseHistoryTable({ purchases }: PurchaseHistoryTableProps) {
     <div className="space-y-6">
       {/* Filters */}
       <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-card/50 backdrop-blur-xl p-6">
-        <div className="absolute inset-0 bg-gradient-to-br from-muted/10 to-transparent opacity-50" />
+        <div className="absolute inset-0 bg-linear-to-br from-muted/10 to-transparent opacity-50" />
 
         <div className="relative grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {/* Search */}
@@ -180,7 +180,7 @@ export function PurchaseHistoryTable({ purchases }: PurchaseHistoryTableProps) {
       {/* Table */}
       <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-card/50 backdrop-blur-xl">
         {/* Gradient background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-muted/10 to-transparent opacity-50" />
+        <div className="absolute inset-0 bg-linear-to-br from-muted/10 to-transparent opacity-50" />
 
         <div className="relative overflow-x-auto">
           {filteredPurchases.length === 0 ? (

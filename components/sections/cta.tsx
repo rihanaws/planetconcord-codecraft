@@ -9,7 +9,7 @@ export function CTA() {
     <section className="relative py-24 px-4 overflow-hidden">
       {/* Animated gradient background */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-accent/5" />
+        <div className="absolute inset-0 bg-linear-to-br from-primary/5 via-background to-accent/5" />
         <div
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/10 rounded-full blur-3xl animate-pulse"
           style={{ animationDuration: "4s" }}
@@ -21,8 +21,8 @@ export function CTA() {
           {/* Main CTA card */}
           <div className="relative p-12 md:p-16 rounded-3xl bg-card/50 backdrop-blur-xl border border-border/50 shadow-2xl shadow-primary/10 overflow-hidden">
             {/* Decorative gradient overlays */}
-            <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-primary/10 via-transparent to-transparent rounded-3xl" />
-            <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-accent/10 via-transparent to-transparent rounded-3xl" />
+            <div className="absolute top-0 right-0 w-96 h-96 bg-linear-to-bl from-primary/10 via-transparent to-transparent rounded-3xl" />
+            <div className="absolute bottom-0 left-0 w-96 h-96 bg-linear-to-tr from-accent/10 via-transparent to-transparent rounded-3xl" />
 
             {/* Content */}
             <div className="relative text-center space-y-8">
@@ -35,10 +35,10 @@ export function CTA() {
               {/* Headline */}
               <div className="space-y-4">
                 <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
-                  <span className="block bg-gradient-to-br from-foreground to-foreground/60 bg-clip-text text-transparent">
+                  <span className="block bg-linear-to-br from-foreground to-foreground/60 bg-clip-text text-transparent">
                     Ready to Transform
                   </span>
-                  <span className="block bg-gradient-to-br from-primary to-primary/60 bg-clip-text text-transparent mt-2">
+                  <span className="block bg-linear-to-br from-primary to-primary/60 bg-clip-text text-transparent mt-2">
                     Your Business?
                   </span>
                 </h2>
@@ -55,7 +55,7 @@ export function CTA() {
                     size="lg"
                     className="group relative overflow-hidden h-14 px-10 text-lg"
                   >
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary-foreground/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+                    <div className="absolute inset-0 bg-linear-to-r from-transparent via-primary-foreground/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                     <span className="relative font-semibold">Get Started Today</span>
                     <ArrowRight className="ml-2 h-5 w-5 relative transition-transform group-hover:translate-x-1" />
                   </Button>
@@ -67,7 +67,7 @@ export function CTA() {
                     size="lg"
                     className="group h-14 px-10 text-lg relative overflow-hidden"
                   >
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                    <div className="absolute inset-0 bg-linear-to-r from-transparent via-primary/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                     <span className="relative font-semibold">Contact Sales</span>
                   </Button>
                 </Link>
@@ -112,10 +112,10 @@ export function CTA() {
 
             {/* Border glow effect */}
             <div className="absolute inset-0 rounded-3xl opacity-50 pointer-events-none">
-              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
-              <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
-              <div className="absolute inset-y-0 left-0 w-px bg-gradient-to-b from-transparent via-primary/50 to-transparent" />
-              <div className="absolute inset-y-0 right-0 w-px bg-gradient-to-b from-transparent via-primary/50 to-transparent" />
+              <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-primary/50 to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 h-px bg-linear-to-r from-transparent via-primary/50 to-transparent" />
+              <div className="absolute inset-y-0 left-0 w-px bg-linear-to-b from-transparent via-primary/50 to-transparent" />
+              <div className="absolute inset-y-0 right-0 w-px bg-linear-to-b from-transparent via-primary/50 to-transparent" />
             </div>
           </div>
         </div>

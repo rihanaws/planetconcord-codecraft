@@ -23,7 +23,7 @@ export default function RootError({
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="max-w-lg mx-auto">
             <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-card/50 backdrop-blur-xl p-10 text-center">
-              <div className="absolute inset-0 bg-gradient-to-br from-destructive/5 via-transparent to-muted/10" />
+              <div className="absolute inset-0 bg-linear-to-br from-destructive/5 via-transparent to-muted/10" />
 
               <div className="relative space-y-6">
                 {/* Error icon */}

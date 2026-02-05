@@ -40,7 +40,7 @@ export function TrustBadges() {
     <section className="relative py-16 px-4 overflow-hidden">
       {/* Background decoration */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-muted/5 to-background" />
+        <div className="absolute inset-0 bg-linear-to-b from-background via-muted/5 to-background" />
       </div>
 
       <div className="container mx-auto max-w-7xl">

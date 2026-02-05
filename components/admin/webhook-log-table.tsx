@@ -119,7 +119,7 @@ export function WebhookLogTable({ webhooks: initialWebhooks }: WebhookLogTablePr
   if (webhooks.length === 0) {
     return (
       <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-card/50 backdrop-blur-xl p-12 text-center">
-        <div className="absolute inset-0 bg-gradient-to-br from-muted/20 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-br from-muted/20 to-transparent" />
         <div className="relative space-y-4">
           <div className="mx-auto w-16 h-16 rounded-full bg-muted/50 flex items-center justify-center">
             <Webhook className="h-8 w-8 text-muted-foreground" />
@@ -139,7 +139,7 @@ export function WebhookLogTable({ webhooks: initialWebhooks }: WebhookLogTablePr
     <div className="space-y-6">
       {/* Filters */}
       <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-card/50 backdrop-blur-xl p-6">
-        <div className="absolute inset-0 bg-gradient-to-br from-muted/10 to-transparent opacity-50" />
+        <div className="absolute inset-0 bg-linear-to-br from-muted/10 to-transparent opacity-50" />
 
         <div className="relative grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <div className="relative">
@@ -190,7 +190,7 @@ export function WebhookLogTable({ webhooks: initialWebhooks }: WebhookLogTablePr
 
       {/* Table */}
       <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-card/50 backdrop-blur-xl">
-        <div className="absolute inset-0 bg-gradient-to-br from-muted/10 to-transparent opacity-50" />
+        <div className="absolute inset-0 bg-linear-to-br from-muted/10 to-transparent opacity-50" />
 
         <div className="relative overflow-x-auto">
           {filtered.length === 0 ? (

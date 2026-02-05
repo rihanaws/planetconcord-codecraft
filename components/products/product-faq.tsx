@@ -27,7 +27,7 @@ export function ProductFAQ({ faqs }: ProductFAQProps) {
           </div>
 
           <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">
-            <span className="bg-gradient-to-br from-foreground to-foreground/60 bg-clip-text text-transparent">
+            <span className="bg-linear-to-br from-foreground to-foreground/60 bg-clip-text text-transparent">
               Common Questions
             </span>
           </h2>

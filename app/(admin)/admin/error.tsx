@@ -18,7 +18,7 @@ export default function AdminError({
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="max-w-md mx-auto">
         <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-card/50 backdrop-blur-xl p-8 text-center">
-          <div className="absolute inset-0 bg-gradient-to-br from-destructive/5 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-br from-destructive/5 to-transparent" />
 
           <div className="relative space-y-4">
             <div className="mx-auto w-14 h-14 rounded-full bg-destructive/10 border border-destructive/20 flex items-center justify-center">

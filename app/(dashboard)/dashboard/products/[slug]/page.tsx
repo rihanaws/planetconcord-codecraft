@@ -66,7 +66,7 @@ async function ProductAccessContent({ slug }: { slug: string }) {
           </Link>
 
           <div className="relative overflow-hidden rounded-2xl border border-destructive/50 bg-destructive/5 backdrop-blur-xl p-12 text-center">
-            <div className="absolute inset-0 bg-gradient-to-br from-destructive/10 to-transparent" />
+            <div className="absolute inset-0 bg-linear-to-br from-destructive/10 to-transparent" />
             <div className="relative space-y-4">
               <div className="mx-auto w-16 h-16 rounded-full bg-destructive/20 flex items-center justify-center">
                 <Shield className="h-8 w-8 text-destructive" />

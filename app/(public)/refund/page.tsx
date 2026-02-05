@@ -22,11 +22,11 @@ export default function RefundPage() {
               </div>
 
               <h1 className="text-4xl sm:text-5xl font-bold tracking-tight mb-4">
-                <span className="bg-gradient-to-br from-foreground to-foreground/60 bg-clip-text text-transparent">
+                <span className="bg-linear-to-br from-foreground to-foreground/60 bg-clip-text text-transparent">
                   30-Day Money-Back
                 </span>
                 <br />
-                <span className="bg-gradient-to-br from-primary to-primary/60 bg-clip-text text-transparent">
+                <span className="bg-linear-to-br from-primary to-primary/60 bg-clip-text text-transparent">
                   Guarantee
                 </span>
               </h1>

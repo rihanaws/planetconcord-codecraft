@@ -167,7 +167,7 @@ export function ProductForm({ defaultValues, mode }: ProductFormProps) {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
       {/* Basic Info */}
       <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-card/50 backdrop-blur-xl">
-        <div className="absolute inset-0 bg-gradient-to-br from-muted/10 to-transparent opacity-50" />
+        <div className="absolute inset-0 bg-linear-to-br from-muted/10 to-transparent opacity-50" />
         <div className="relative p-6 space-y-6">
           <h3 className="text-xl font-semibold">Basic Information</h3>
 
@@ -220,7 +220,7 @@ export function ProductForm({ defaultValues, mode }: ProductFormProps) {
 
       {/* Pricing & Category */}
       <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-card/50 backdrop-blur-xl">
-        <div className="absolute inset-0 bg-gradient-to-br from-muted/10 to-transparent opacity-50" />
+        <div className="absolute inset-0 bg-linear-to-br from-muted/10 to-transparent opacity-50" />
         <div className="relative p-6 space-y-6">
           <h3 className="text-xl font-semibold">Pricing & Category</h3>
 
@@ -289,7 +289,7 @@ export function ProductForm({ defaultValues, mode }: ProductFormProps) {
 
       {/* Whop Integration */}
       <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-card/50 backdrop-blur-xl">
-        <div className="absolute inset-0 bg-gradient-to-br from-muted/10 to-transparent opacity-50" />
+        <div className="absolute inset-0 bg-linear-to-br from-muted/10 to-transparent opacity-50" />
         <div className="relative p-6 space-y-6">
           <h3 className="text-xl font-semibold">Whop Integration</h3>
 
@@ -308,7 +308,7 @@ export function ProductForm({ defaultValues, mode }: ProductFormProps) {
 
       {/* Deliverables */}
       <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-card/50 backdrop-blur-xl">
-        <div className="absolute inset-0 bg-gradient-to-br from-muted/10 to-transparent opacity-50" />
+        <div className="absolute inset-0 bg-linear-to-br from-muted/10 to-transparent opacity-50" />
         <div className="relative p-6 space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-xl font-semibold">Deliverables</h3>
@@ -337,7 +337,7 @@ export function ProductForm({ defaultValues, mode }: ProductFormProps) {
 
       {/* Features */}
       <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-card/50 backdrop-blur-xl">
-        <div className="absolute inset-0 bg-gradient-to-br from-muted/10 to-transparent opacity-50" />
+        <div className="absolute inset-0 bg-linear-to-br from-muted/10 to-transparent opacity-50" />
         <div className="relative p-6 space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-xl font-semibold">Features</h3>
@@ -366,7 +366,7 @@ export function ProductForm({ defaultValues, mode }: ProductFormProps) {
 
       {/* Requirements */}
       <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-card/50 backdrop-blur-xl">
-        <div className="absolute inset-0 bg-gradient-to-br from-muted/10 to-transparent opacity-50" />
+        <div className="absolute inset-0 bg-linear-to-br from-muted/10 to-transparent opacity-50" />
         <div className="relative p-6 space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-xl font-semibold">Requirements</h3>
@@ -395,7 +395,7 @@ export function ProductForm({ defaultValues, mode }: ProductFormProps) {
 
       {/* FAQ */}
       <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-card/50 backdrop-blur-xl">
-        <div className="absolute inset-0 bg-gradient-to-br from-muted/10 to-transparent opacity-50" />
+        <div className="absolute inset-0 bg-linear-to-br from-muted/10 to-transparent opacity-50" />
         <div className="relative p-6 space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-xl font-semibold">FAQ</h3>
@@ -441,7 +441,7 @@ export function ProductForm({ defaultValues, mode }: ProductFormProps) {
             {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
             {mode === "create" ? "Create Product" : "Save Changes"}
           </span>
-          <span className="absolute inset-0 bg-gradient-to-r from-transparent via-primary-foreground/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+          <span className="absolute inset-0 bg-linear-to-r from-transparent via-primary-foreground/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
         </Button>
       </div>
     </form>

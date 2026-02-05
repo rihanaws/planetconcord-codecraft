@@ -123,7 +123,7 @@ export default function SignupPage() {
     <div className="min-h-screen flex items-center justify-center px-4 py-12 relative overflow-hidden">
       {/* Animated gradient background */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-gradient-to-br from-background via-muted/20 to-background" />
+        <div className="absolute inset-0 bg-linear-to-br from-background via-muted/20 to-background" />
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-3xl animate-pulse"
              style={{ animationDuration: "4s" }} />
         <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-accent/10 rounded-full blur-3xl animate-pulse"
@@ -157,7 +157,7 @@ export default function SignupPage() {
             onClick={handleGoogleSignIn}
             disabled={isGoogleLoading || isLoading}
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+            <div className="absolute inset-0 bg-linear-to-r from-transparent via-primary/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
             {isGoogleLoading ? (
               <Loader2 className="h-4 w-4 animate-spin" />
             ) : (
@@ -305,7 +305,7 @@ export default function SignupPage() {
               className="w-full h-11 group relative overflow-hidden"
               disabled={isLoading || isGoogleLoading}
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary-foreground/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+              <div className="absolute inset-0 bg-linear-to-r from-transparent via-primary-foreground/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
               {isLoading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (

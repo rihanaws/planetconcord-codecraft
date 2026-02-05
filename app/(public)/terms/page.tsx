@@ -22,7 +22,7 @@ export default function TermsPage() {
               </div>
 
               <h1 className="text-4xl sm:text-5xl font-bold tracking-tight mb-4">
-                <span className="bg-gradient-to-br from-foreground to-foreground/60 bg-clip-text text-transparent">
+                <span className="bg-linear-to-br from-foreground to-foreground/60 bg-clip-text text-transparent">
                   Terms of Service
                 </span>
               </h1>

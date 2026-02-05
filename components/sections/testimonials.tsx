@@ -34,7 +34,7 @@ export function Testimonials() {
     <section className="relative py-24 px-4 overflow-hidden">
       {/* Background decoration */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-gradient-to-b from-muted/10 via-background to-muted/10" />
+        <div className="absolute inset-0 bg-linear-to-b from-muted/10 via-background to-muted/10" />
       </div>
 
       <div className="container mx-auto max-w-7xl">
@@ -46,11 +46,11 @@ export function Testimonials() {
           </div>
 
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">
-            <span className="bg-gradient-to-br from-foreground to-foreground/60 bg-clip-text text-transparent">
+            <span className="bg-linear-to-br from-foreground to-foreground/60 bg-clip-text text-transparent">
               What Our Customers
             </span>
             <br />
-            <span className="bg-gradient-to-br from-primary to-primary/60 bg-clip-text text-transparent">
+            <span className="bg-linear-to-br from-primary to-primary/60 bg-clip-text text-transparent">
               Say About Us
             </span>
           </h2>
@@ -74,19 +74,19 @@ export function Testimonials() {
         {/* Bottom stats */}
         <div className="mt-16 grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-4xl mx-auto">
           <div className="text-center space-y-2">
-            <div className="text-3xl md:text-4xl font-bold bg-gradient-to-br from-primary to-primary/60 bg-clip-text text-transparent">
+            <div className="text-3xl md:text-4xl font-bold bg-linear-to-br from-primary to-primary/60 bg-clip-text text-transparent">
               10,000+
             </div>
             <div className="text-sm text-muted-foreground">Happy Customers</div>
           </div>
           <div className="text-center space-y-2">
-            <div className="text-3xl md:text-4xl font-bold bg-gradient-to-br from-primary to-primary/60 bg-clip-text text-transparent">
+            <div className="text-3xl md:text-4xl font-bold bg-linear-to-br from-primary to-primary/60 bg-clip-text text-transparent">
               4.9/5
             </div>
             <div className="text-sm text-muted-foreground">Average Rating</div>
           </div>
           <div className="text-center space-y-2">
-            <div className="text-3xl md:text-4xl font-bold bg-gradient-to-br from-primary to-primary/60 bg-clip-text text-transparent">
+            <div className="text-3xl md:text-4xl font-bold bg-linear-to-br from-primary to-primary/60 bg-clip-text text-transparent">
               99%
             </div>
             <div className="text-sm text-muted-foreground">Satisfaction Rate</div>
@@ -139,7 +139,7 @@ function TestimonialCard({
         {/* Avatar */}
         <div className="relative flex-shrink-0">
           <div className="absolute inset-0 bg-primary/20 rounded-full blur-sm" />
-          <div className="relative flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 border border-border/50">
+          <div className="relative flex items-center justify-center w-12 h-12 rounded-full bg-linear-to-br from-primary/20 to-accent/20 border border-border/50">
             <span className="text-sm font-semibold text-primary">
               {testimonial.avatar}
             </span>
@@ -161,12 +161,12 @@ function TestimonialCard({
       </div>
 
       {/* Hover gradient overlay */}
-      <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/5 via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+      <div className="absolute inset-0 rounded-2xl bg-linear-to-br from-primary/5 via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
       {/* Border glow effect */}
       <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-primary/50 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-px bg-linear-to-r from-transparent via-primary/50 to-transparent" />
       </div>
     </div>
   )

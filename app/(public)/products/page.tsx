@@ -19,7 +19,7 @@ export default async function ProductsPage() {
         {/* Page header */}
         <section className="relative py-16 px-4 overflow-hidden">
           <div className="absolute inset-0 -z-10">
-            <div className="absolute inset-0 bg-gradient-to-b from-background via-muted/10 to-background" />
+            <div className="absolute inset-0 bg-linear-to-b from-background via-muted/10 to-background" />
           </div>
 
           <div className="container mx-auto max-w-7xl">
@@ -30,10 +30,10 @@ export default async function ProductsPage() {
               </div>
 
               <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight">
-                <span className="block bg-gradient-to-br from-foreground to-foreground/60 bg-clip-text text-transparent">
+                <span className="block bg-linear-to-br from-foreground to-foreground/60 bg-clip-text text-transparent">
                   Premium Digital
                 </span>
-                <span className="block bg-gradient-to-br from-primary to-primary/60 bg-clip-text text-transparent mt-2">
+                <span className="block bg-linear-to-br from-primary to-primary/60 bg-clip-text text-transparent mt-2">
                   Products
                 </span>
               </h1>

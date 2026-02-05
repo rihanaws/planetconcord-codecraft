@@ -67,7 +67,7 @@ export function AccessManagement({ users, products, accessRecords }: AccessManag
       <div className="grid gap-6 md:grid-cols-3">
         {/* Active count */}
         <div className="relative group overflow-hidden rounded-2xl border border-border/50 bg-card/50 backdrop-blur-xl p-6 transition-all duration-300 hover:border-border hover:shadow-lg hover:shadow-primary/5">
-          <div className="absolute inset-0 bg-gradient-to-br from-chart-2/20 to-transparent opacity-50" />
+          <div className="absolute inset-0 bg-linear-to-br from-chart-2/20 to-transparent opacity-50" />
           <div className="relative flex items-start justify-between">
             <div className="space-y-1">
               <p className="text-sm font-medium text-muted-foreground">Active Access</p>
@@ -81,7 +81,7 @@ export function AccessManagement({ users, products, accessRecords }: AccessManag
 
         {/* Revoked count */}
         <div className="relative group overflow-hidden rounded-2xl border border-border/50 bg-card/50 backdrop-blur-xl p-6 transition-all duration-300 hover:border-border hover:shadow-lg hover:shadow-primary/5">
-          <div className="absolute inset-0 bg-gradient-to-br from-chart-5/20 to-transparent opacity-50" />
+          <div className="absolute inset-0 bg-linear-to-br from-chart-5/20 to-transparent opacity-50" />
           <div className="relative flex items-start justify-between">
             <div className="space-y-1">
               <p className="text-sm font-medium text-muted-foreground">Revoked / Expired</p>
@@ -95,7 +95,7 @@ export function AccessManagement({ users, products, accessRecords }: AccessManag
 
         {/* Actions */}
         <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-card/50 backdrop-blur-xl p-6 flex flex-col items-center justify-center gap-3">
-          <div className="absolute inset-0 bg-gradient-to-br from-muted/10 to-transparent opacity-50" />
+          <div className="absolute inset-0 bg-linear-to-br from-muted/10 to-transparent opacity-50" />
           <div className="relative flex flex-col gap-2 w-full">
             <Button
               onClick={() => setShowGrantDialog(true)}
@@ -105,7 +105,7 @@ export function AccessManagement({ users, products, accessRecords }: AccessManag
                 <ShieldCheck className="h-4 w-4" />
                 Grant Access
               </span>
-              <span className="absolute inset-0 bg-gradient-to-r from-transparent via-primary-foreground/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+              <span className="absolute inset-0 bg-linear-to-r from-transparent via-primary-foreground/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
             </Button>
             <Button variant="outline" onClick={exportToCSV} className="w-full">
               <Download className="h-4 w-4 mr-2" />

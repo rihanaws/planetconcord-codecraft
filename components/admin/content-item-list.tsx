@@ -104,7 +104,7 @@ export function ContentItemList({ productId, initialItems }: ContentItemListProp
     return (
       <div className="space-y-4">
         <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-card/50 backdrop-blur-xl p-12 text-center">
-          <div className="absolute inset-0 bg-gradient-to-br from-muted/20 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-br from-muted/20 to-transparent" />
           <div className="relative space-y-4">
             <div className="mx-auto w-16 h-16 rounded-full bg-muted/50 flex items-center justify-center">
               <FileText className="h-8 w-8 text-muted-foreground" />
@@ -119,7 +119,7 @@ export function ContentItemList({ productId, initialItems }: ContentItemListProp
               <span className="relative flex items-center gap-2">
                 <Plus className="h-4 w-4" /> Add Content
               </span>
-              <span className="absolute inset-0 bg-gradient-to-r from-transparent via-primary-foreground/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+              <span className="absolute inset-0 bg-linear-to-r from-transparent via-primary-foreground/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
             </Button>
           </div>
         </div>
@@ -136,7 +136,7 @@ export function ContentItemList({ productId, initialItems }: ContentItemListProp
             key={item.id}
             className="relative overflow-hidden rounded-2xl border border-border/50 bg-card/50 backdrop-blur-xl transition-all duration-300 hover:border-border hover:shadow-lg hover:shadow-primary/5"
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-muted/10 to-transparent opacity-50" />
+            <div className="absolute inset-0 bg-linear-to-br from-muted/10 to-transparent opacity-50" />
 
             <div className="relative flex items-center gap-4 p-4">
               {/* Drag handle (visual only) */}
@@ -190,7 +190,7 @@ export function ContentItemList({ productId, initialItems }: ContentItemListProp
       {/* Add Content Form or Button */}
       {showForm ? (
         <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-card/50 backdrop-blur-xl p-6">
-          <div className="absolute inset-0 bg-gradient-to-br from-chart-1/10 to-transparent opacity-50" />
+          <div className="absolute inset-0 bg-linear-to-br from-chart-1/10 to-transparent opacity-50" />
           <div className="relative">
             <h3 className="text-lg font-semibold mb-4">Add New Content Item</h3>
             <ContentItemForm

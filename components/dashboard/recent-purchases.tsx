@@ -34,7 +34,7 @@ export function RecentPurchases({ purchases }: RecentPurchasesProps) {
     return (
       <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-card/50 backdrop-blur-xl p-12 text-center">
         {/* Gradient background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-muted/20 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-br from-muted/20 to-transparent" />
 
         <div className="relative space-y-4">
           <div className="mx-auto w-16 h-16 rounded-full bg-muted/50 flex items-center justify-center">
@@ -68,7 +68,7 @@ export function RecentPurchases({ purchases }: RecentPurchasesProps) {
     <div className="space-y-4">
       <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-card/50 backdrop-blur-xl">
         {/* Gradient background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-muted/10 to-transparent opacity-50" />
+        <div className="absolute inset-0 bg-linear-to-br from-muted/10 to-transparent opacity-50" />
 
         <div className="relative overflow-x-auto">
           <Table>

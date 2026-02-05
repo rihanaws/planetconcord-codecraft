@@ -51,7 +51,7 @@ async function ProfileContent() {
 
       {/* Profile Info Section */}
       <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-card/50 backdrop-blur-xl">
-        <div className="absolute inset-0 bg-gradient-to-br from-muted/10 to-transparent opacity-50" />
+        <div className="absolute inset-0 bg-linear-to-br from-muted/10 to-transparent opacity-50" />
 
         <div className="relative p-6 space-y-6">
           <div className="flex items-center gap-3">
@@ -90,7 +90,7 @@ async function ProfileContent() {
 
       {/* Connected Accounts Section */}
       <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-card/50 backdrop-blur-xl">
-        <div className="absolute inset-0 bg-gradient-to-br from-chart-2/10 to-transparent opacity-50" />
+        <div className="absolute inset-0 bg-linear-to-br from-chart-2/10 to-transparent opacity-50" />
 
         <div className="relative p-6 space-y-6">
           <div className="flex items-center gap-3">
@@ -139,7 +139,7 @@ async function ProfileContent() {
 
       {/* Account Security Section */}
       <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-card/50 backdrop-blur-xl">
-        <div className="absolute inset-0 bg-gradient-to-br from-chart-3/10 to-transparent opacity-50" />
+        <div className="absolute inset-0 bg-linear-to-br from-chart-3/10 to-transparent opacity-50" />
 
         <div className="relative p-6 space-y-6">
           <div className="flex items-center gap-3">

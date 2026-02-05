@@ -17,7 +17,7 @@ export function RevenueChart({ productStats }: RevenueChartProps) {
   if (productStats.length === 0) {
     return (
       <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-card/50 backdrop-blur-xl p-12 text-center">
-        <div className="absolute inset-0 bg-gradient-to-br from-muted/10 to-transparent opacity-50" />
+        <div className="absolute inset-0 bg-linear-to-br from-muted/10 to-transparent opacity-50" />
         <div className="relative space-y-4">
           <div className="mx-auto w-16 h-16 rounded-full bg-muted/50 flex items-center justify-center">
             <Package className="h-8 w-8 text-muted-foreground" />
@@ -37,7 +37,7 @@ export function RevenueChart({ productStats }: RevenueChartProps) {
 
   return (
     <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-card/50 backdrop-blur-xl">
-      <div className="absolute inset-0 bg-gradient-to-br from-chart-1/10 to-transparent opacity-50" />
+      <div className="absolute inset-0 bg-linear-to-br from-chart-1/10 to-transparent opacity-50" />
 
       <div className="relative p-6 space-y-6">
         {/* Header */}

@@ -10,7 +10,7 @@ export function Hero() {
     <section className="relative min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 py-20 overflow-hidden">
       {/* Animated gradient background */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-gradient-to-br from-background via-muted/20 to-background" />
+        <div className="absolute inset-0 bg-linear-to-br from-background via-muted/20 to-background" />
 
         {/* Pulsing gradient orbs */}
         <div
@@ -50,10 +50,10 @@ export function Hero() {
             className="space-y-4"
           >
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight">
-              <span className="block bg-gradient-to-br from-foreground via-foreground to-foreground/60 bg-clip-text text-transparent">
+              <span className="block bg-linear-to-br from-foreground via-foreground to-foreground/60 bg-clip-text text-transparent">
                 Elevate Your
               </span>
-              <span className="block bg-gradient-to-br from-primary via-primary to-primary/60 bg-clip-text text-transparent mt-2">
+              <span className="block bg-linear-to-br from-primary via-primary to-primary/60 bg-clip-text text-transparent mt-2">
                 Digital Presence
               </span>
             </h1>
@@ -81,7 +81,7 @@ export function Hero() {
                 size="lg"
                 className="group relative overflow-hidden h-12 px-8 text-base"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary-foreground/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+                <div className="absolute inset-0 bg-linear-to-r from-transparent via-primary-foreground/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                 <Zap className="h-5 w-5 mr-2 relative" />
                 <span className="relative font-semibold">Browse Products</span>
                 <ArrowRight className="ml-2 h-5 w-5 relative transition-transform group-hover:translate-x-1" />
@@ -94,7 +94,7 @@ export function Hero() {
                 size="lg"
                 className="group h-12 px-8 text-base relative overflow-hidden"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                <div className="absolute inset-0 bg-linear-to-r from-transparent via-primary/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                 <span className="relative font-semibold">Learn More</span>
               </Button>
             </Link>

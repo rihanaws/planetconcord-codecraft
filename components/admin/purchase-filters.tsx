@@ -45,7 +45,7 @@ export function PurchaseFilters({
     <div className="space-y-4">
       {/* Filter Bar */}
       <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-card/50 backdrop-blur-xl p-6">
-        <div className="absolute inset-0 bg-gradient-to-br from-muted/10 to-transparent opacity-50" />
+        <div className="absolute inset-0 bg-linear-to-br from-muted/10 to-transparent opacity-50" />
 
         <div className="relative grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {/* Search */}
