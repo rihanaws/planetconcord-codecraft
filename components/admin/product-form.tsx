@@ -32,6 +32,7 @@ const productFormSchema = z.object({
   category: z.string().min(1, "Category is required"),
   whopProductId: z.string().optional(),
   whopCheckoutUrl: z.string().optional(),
+  discordInviteUrl: z.string().optional(),
   featured: z.boolean().optional(),
   popular: z.boolean().optional(),
 })
@@ -86,6 +87,7 @@ export function ProductForm({ defaultValues, mode }: ProductFormProps) {
       category: "",
       whopProductId: "",
       whopCheckoutUrl: "",
+      discordInviteUrl: "",
       featured: false,
       popular: false,
     },
@@ -302,6 +304,20 @@ export function ProductForm({ defaultValues, mode }: ProductFormProps) {
               <Label htmlFor="whopCheckoutUrl">Whop Checkout URL (optional)</Label>
               <Input id="whopCheckoutUrl" placeholder="https://whop.com/..." {...register("whopCheckoutUrl")} />
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Community */}
+      <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-card/50 backdrop-blur-xl">
+        <div className="absolute inset-0 bg-linear-to-br from-muted/10 to-transparent opacity-50" />
+        <div className="relative p-6 space-y-6">
+          <h3 className="text-xl font-semibold">Community</h3>
+
+          <div className="space-y-2">
+            <Label htmlFor="discordInviteUrl">Discord Invite URL (optional)</Label>
+            <Input id="discordInviteUrl" placeholder="https://discord.gg/xxxxx" {...register("discordInviteUrl")} />
+            <p className="text-xs text-muted-foreground">Buyers will see this link in their dashboard and purchase confirmation email.</p>
           </div>
         </div>
       </div>

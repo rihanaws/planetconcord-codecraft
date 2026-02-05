@@ -156,7 +156,8 @@ export async function handlePaymentSucceeded(
         user.email,
         user.name || "Valued Customer",
         product.name,
-        dashboardUrl
+        dashboardUrl,
+        product.discordInviteUrl || undefined
       );
 
       // Access granted

@@ -5,6 +5,7 @@ import { prisma } from "@/lib/db/prisma"
 import { DashboardStats } from "@/components/dashboard/stats-cards"
 import { ProductAccessGrid } from "@/components/dashboard/product-access-grid"
 import { RecentPurchases } from "@/components/dashboard/recent-purchases"
+import { NewsFeed } from "@/components/dashboard/news-feed"
 import { Skeleton } from "@/components/ui/skeleton"
 
 async function getDashboardData(userId: string) {
@@ -67,10 +68,29 @@ async function getDashboardData(userId: string) {
     }),
   ])
 
+  // Fetch news: global (productId IS NULL) + product-specific for owned products
+  const ownedProductIds = productAccesses
+    .filter((pa) => pa.status === "ACTIVE")
+    .map((pa) => pa.productId)
+
+  const newsItems = await prisma.newsItem.findMany({
+    where: {
+      published: true,
+      OR: [
+        { productId: null },
+        { productId: { in: ownedProductIds } },
+      ],
+    },
+    include: { product: { select: { name: true } } },
+    orderBy: { createdAt: "desc" },
+    take: 5,
+  })
+
   return {
     productAccesses,
     purchases,
     stats,
+    newsItems,
   }
 }
 
@@ -112,6 +132,12 @@ async function DashboardContent() {
       <div>
         <h2 className="text-2xl font-semibold tracking-tight mb-6">Recent Purchases</h2>
         <RecentPurchases purchases={data.purchases} />
+      </div>
+
+      {/* News & Updates */}
+      <div>
+        <h2 className="text-2xl font-semibold tracking-tight mb-6">News &amp; Updates</h2>
+        <NewsFeed newsItems={data.newsItems} />
       </div>
     </div>
   )

@@ -144,6 +144,9 @@ model Product {
   requirements Json? // Array of requirements
   faq          Json? // Array of FAQ items
 
+  // Community
+  discordInviteUrl String?
+
   // Display
   image        String?
   featured     Boolean @default(false)
@@ -155,6 +158,7 @@ model Product {
   productAccess ProductAccess[]
   contentItems  ContentItem[]
   purchases     Purchase[]
+  newsItems     NewsItem[]
 
   @@index([slug])
   @@index([category])
@@ -252,5 +256,22 @@ model WebhookLog {
 
   @@index([event])
   @@index([processed])
+  @@index([createdAt])
+}
+
+model NewsItem {
+  id        String   @id @default(cuid())
+  title     String
+  body      String   @db.Text
+  productId String?
+  published Boolean  @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  product Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  @@index([productId])
+  @@index([published])
   @@index([createdAt])
 }

@@ -14,12 +14,14 @@ interface PurchaseConfirmationEmailProps {
   name: string
   productName: string
   productUrl: string
+  discordInviteUrl?: string
 }
 
 export const PurchaseConfirmationEmailTemplate = ({
   name,
   productName,
   productUrl,
+  discordInviteUrl,
 }: PurchaseConfirmationEmailProps) => {
   return (
     <Html>
@@ -41,6 +43,18 @@ export const PurchaseConfirmationEmailTemplate = ({
               Access Your Product
             </Button>
           </Section>
+          {discordInviteUrl && (
+            <>
+              <Text style={text}>
+                <strong>Join our community!</strong> Connect with other members, get support, and stay up to date with the latest tips and updates.
+              </Text>
+              <Section style={buttonContainer}>
+                <Button style={discordButton} href={discordInviteUrl}>
+                  Join Discord Community
+                </Button>
+              </Section>
+            </>
+          )}
           <Text style={text}>
             If you have any questions about your purchase or need assistance,
             please don&apos;t hesitate to contact our support team.
@@ -91,6 +105,18 @@ const buttonContainer = {
 
 const button = {
   backgroundColor: "#000",
+  borderRadius: "6px",
+  color: "#fff",
+  fontSize: "16px",
+  fontWeight: "bold",
+  textDecoration: "none",
+  textAlign: "center" as const,
+  display: "block",
+  padding: "12px 20px",
+}
+
+const discordButton = {
+  backgroundColor: "#5865F2",
   borderRadius: "6px",
   color: "#fff",
   fontSize: "16px",

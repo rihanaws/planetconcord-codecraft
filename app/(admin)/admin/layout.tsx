@@ -14,6 +14,7 @@ import {
   Receipt,
   ShieldCheck,
   Webhook,
+  Megaphone,
   Menu,
   X,
   LogOut,
@@ -63,6 +64,11 @@ const ADMIN_NAV = [
     label: "Webhooks",
     href: "/admin/webhooks",
     icon: Webhook,
+  },
+  {
+    label: "News",
+    href: "/admin/news",
+    icon: Megaphone,
   },
 ]
 

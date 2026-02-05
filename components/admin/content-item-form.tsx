@@ -63,16 +63,17 @@ export function ContentItemForm({ productId, onSuccess, onCancel }: ContentItemF
     const file = e.target.files?.[0]
     if (!file) return
 
-    if (file.size > 5 * 1024 * 1024) {
-      toast({ title: "File too large", description: "Max 5MB allowed", variant: "destructive" })
+    if (file.size > 50 * 1024 * 1024) {
+      toast({ title: "File too large", description: "Max 50MB allowed", variant: "destructive" })
       return
     }
 
     setIsUploading(true)
     const formData = new FormData()
     formData.append("file", file)
+    formData.append("productId", productId)
 
-    const res = await fetch("/api/user/avatar", {
+    const res = await fetch("/api/admin/content/upload", {
       method: "POST",
       body: formData,
     })
@@ -182,7 +183,7 @@ export function ContentItemForm({ productId, onSuccess, onCancel }: ContentItemF
               <label className="cursor-pointer">
                 <div className="flex flex-col items-center gap-2">
                   <Upload className="h-6 w-6 text-muted-foreground" />
-                  <p className="text-sm text-muted-foreground">Click to upload file (max 5MB)</p>
+                  <p className="text-sm text-muted-foreground">Click to upload file (max 50MB)</p>
                 </div>
                 <input type="file" className="sr-only" onChange={handleFileUpload} disabled={isUploading} />
               </label>

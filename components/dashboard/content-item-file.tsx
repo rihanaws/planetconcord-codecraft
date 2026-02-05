@@ -25,9 +25,7 @@ export function ContentItemFile({ item }: ContentItemFileProps) {
   }
 
   const handleDownload = () => {
-    if (item.fileUrl) {
-      window.open(item.fileUrl, "_blank")
-    }
+    window.location.href = `/api/content/download/${item.id}`
   }
 
   return (

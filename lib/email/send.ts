@@ -96,7 +96,8 @@ export async function sendPurchaseConfirmationEmail(
   to: string,
   name: string,
   productName: string,
-  productUrl: string
+  productUrl: string,
+  discordInviteUrl?: string
 ) {
   try {
     const { data, error } = await resend.emails.send({
@@ -107,6 +108,7 @@ export async function sendPurchaseConfirmationEmail(
         name,
         productName,
         productUrl,
+        discordInviteUrl,
       }),
     })
 
