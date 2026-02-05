@@ -5,6 +5,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next"
 import { AuthProvider } from "@/components/layout/auth-provider"
 import { ThemeProvider } from "@/components/providers/theme-provider"
 import { Toaster } from "@/components/ui/sonner"
+import { ConsentBanner } from "@/components/consent-banner"
 import "./globals.css"
 
 const geistSans = Geist({
@@ -62,6 +63,12 @@ export default function RootLayout({
           src={`https://www.google.com/recaptcha/enterprise.js?render=${process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}`}
           async
         />
+        {/* GTM Consent Mode default — must run before GTM loads */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied'});`,
+          }}
+        />
         {/* Google Tag Manager - env var is build-time controlled, not user input */}
         <script
           dangerouslySetInnerHTML={{
@@ -92,6 +99,7 @@ export default function RootLayout({
             <Toaster />
           </ThemeProvider>
         </AuthProvider>
+        <ConsentBanner />
         <Analytics />
         <SpeedInsights />
       </body>
