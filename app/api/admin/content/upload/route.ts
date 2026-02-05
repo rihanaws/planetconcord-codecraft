@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/lib/auth/config"
 import { prisma } from "@/lib/db/prisma"
+import { UserRole } from "@prisma/client"
 import { put } from "@vercel/blob"
 
 const MAX_FILE_SIZE = 50 * 1024 * 1024 // 50MB
@@ -12,7 +13,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
-  if (session.user.role !== "ADMIN") {
+  if (session.user.role !== UserRole.ADMIN) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 })
   }
 

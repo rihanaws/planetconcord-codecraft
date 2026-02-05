@@ -57,6 +57,7 @@ export function ContentItemForm({ productId, onSuccess, onCancel }: ContentItemF
     },
   })
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const contentType = watch("type")
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {

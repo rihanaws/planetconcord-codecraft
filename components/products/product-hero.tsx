@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import { ExternalLink, Check, Tag, Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { formatPrice } from "@/lib/format"
@@ -42,10 +43,13 @@ export function ProductHero({ product }: ProductHeroProps) {
               {(() => {
                 const imgUrl = getProductImageUrl(product.slug)
                 return imgUrl ? (
-                  <img
+                  <Image
                     src={imgUrl}
                     alt={product.name}
-                    className="absolute inset-0 w-full h-full object-cover"
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    priority
                   />
                 ) : (
                   <div className="absolute inset-0 bg-linear-to-br from-primary/20 via-accent/20 to-primary/10" />

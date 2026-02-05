@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { auth } from "@/lib/auth/config"
 import { prisma } from "@/lib/db/prisma"
 import { UserRole, ContentType } from "@prisma/client"
+import { del } from "@vercel/blob"
 import { z } from "zod"
 
 // --- POST /api/admin/content ---
@@ -177,6 +178,16 @@ export async function DELETE(request: Request) {
   const existing = await prisma.contentItem.findUnique({ where: { id: body.id } })
   if (!existing) {
     return NextResponse.json({ error: "Content item not found" }, { status: 404 })
+  }
+
+  // Clean up Blob file before removing the DB row
+  if (existing.type === "FILE" && existing.fileUrl) {
+    try {
+      await del(existing.fileUrl)
+    } catch {
+      // Log but don't fail the delete — orphaned blob is non-critical
+      console.warn(`Failed to delete blob file: ${existing.fileUrl}`)
+    }
   }
 
   await prisma.contentItem.delete({ where: { id: body.id } })

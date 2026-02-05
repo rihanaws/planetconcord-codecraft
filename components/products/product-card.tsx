@@ -1,4 +1,5 @@
 import Link from "next/link"
+import Image from "next/image"
 import { ArrowRight, Tag } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { formatPrice } from "@/lib/format"
@@ -26,10 +27,12 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
           {(() => {
             const imgUrl = getProductImageUrl(product.slug)
             return imgUrl ? (
-              <img
+              <Image
                 src={imgUrl}
                 alt={product.name}
-                className="absolute inset-0 w-full h-full object-cover"
+                fill
+                className="object-cover"
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               />
             ) : (
               <div className="absolute inset-0 bg-linear-to-br from-primary/10 via-accent/10 to-primary/5" />

@@ -60,6 +60,9 @@ export function useConsent(): ConsentState {
   const [preferences, setPreferences] = useState<ConsentPreferences | null>(null)
   const [hydrated, setHydrated] = useState(false)
 
+  // Hydration effect: reads persisted consent from localStorage and syncs to GTM.
+  // setState here is intentional — this is a one-time hydration sync, not a render loop.
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     const stored = read()
     if (stored) {
@@ -68,6 +71,7 @@ export function useConsent(): ConsentState {
     }
     setHydrated(true)
   }, [])
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const acceptAll = useCallback(() => {
     const prefs: ConsentPreferences = { analytics: true }

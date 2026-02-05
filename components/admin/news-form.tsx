@@ -72,6 +72,10 @@ export function NewsForm({ products, defaultValues, onSubmit, onCancel }: NewsFo
         },
   })
 
+  // eslint-disable-next-line react-hooks/incompatible-library
+  const watchedProductId = watch("productId")
+  const watchedPublished = watch("published")
+
   const onFormSubmit = async (values: NewsFormValues) => {
     setIsLoading(true)
 
@@ -148,7 +152,7 @@ export function NewsForm({ products, defaultValues, onSubmit, onCancel }: NewsFo
             <div className="space-y-2">
               <Label>Scope</Label>
               <Select
-                value={watch("productId") || "GLOBAL"}
+                value={watchedProductId || "GLOBAL"}
                 onValueChange={(val) => setValue("productId", val === "GLOBAL" ? "" : val)}
               >
                 <SelectTrigger>
@@ -178,7 +182,7 @@ export function NewsForm({ products, defaultValues, onSubmit, onCancel }: NewsFo
                   <span className="text-sm font-medium">Published</span>
                 </label>
                 <span className="text-xs text-muted-foreground">
-                  {watch("published") ? "Visible to customers" : "Draft — not visible"}
+                  {watchedPublished ? "Visible to customers" : "Draft — not visible"}
                 </span>
               </div>
             </div>

@@ -93,6 +93,9 @@ export function ProductForm({ defaultValues, mode }: ProductFormProps) {
     },
   })
 
+  // eslint-disable-next-line react-hooks/incompatible-library
+  const watchedPricingType = watch("pricingType")
+
   // Auto-generate slug from name (create mode only)
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value
@@ -243,7 +246,7 @@ export function ProductForm({ defaultValues, mode }: ProductFormProps) {
             <div className="space-y-2">
               <Label>Pricing Type</Label>
               <Select
-                value={watch("pricingType")}
+                value={watchedPricingType}
                 onValueChange={(val) => setValue("pricingType", val as "ONE_TIME" | "SUBSCRIPTION")}
               >
                 <SelectTrigger>

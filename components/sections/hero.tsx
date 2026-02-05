@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Sparkles, Zap } from "lucide-react"
@@ -13,11 +14,13 @@ export function Hero() {
         <div className="absolute inset-0 bg-linear-to-br from-background via-muted/20 to-background" />
 
         {/* Brand banner — subtle texture layer */}
-        <img
+        <Image
           src="/images/CODE_CRAFT_BANNAR.png"
           alt=""
           aria-hidden="true"
-          className="absolute inset-0 w-full h-full object-cover opacity-[0.12]"
+          fill
+          className="object-cover opacity-[0.12]"
+          sizes="100vw"
         />
 
         {/* Pulsing gradient orbs */}

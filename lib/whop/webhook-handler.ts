@@ -8,6 +8,7 @@ import { prisma } from "@/lib/db/prisma";
 import {
   sendPurchaseConfirmationEmail,
   sendAccessGrantedEmail,
+  sendSubscriptionExpiringEmail,
 } from "@/lib/email/send";
 import { hashPassword } from "@/lib/auth/utils";
 import { UserRole, AccessStatus, PurchaseStatus, AccessType } from "@prisma/client";
@@ -131,19 +132,29 @@ export async function handlePaymentSucceeded(
       },
     });
 
-    // Grant product access
+    // Grant product access (upsert: reactivate if previously expired/revoked)
     const expiresAt =
       product.pricingType === "SUBSCRIPTION"
         ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days
         : null;
 
-    await tx.productAccess.create({
-      data: {
+    await tx.productAccess.upsert({
+      where: {
+        userId_productId: { userId: user.id, productId: product.id },
+      },
+      create: {
         userId: user.id,
         productId: product.id,
         status: AccessStatus.ACTIVE,
         accessType: product.pricingType === "SUBSCRIPTION" ? AccessType.SUBSCRIPTION : AccessType.LIFETIME,
         expiresAt,
+      },
+      update: {
+        status: AccessStatus.ACTIVE,
+        accessType: product.pricingType === "SUBSCRIPTION" ? AccessType.SUBSCRIPTION : AccessType.LIFETIME,
+        expiresAt,
+        revokedAt: null,
+        revokedReason: null,
       },
     });
 
@@ -221,24 +232,47 @@ export async function handleMembershipInvalid(
 ): Promise<void> {
   const { id } = event.data;
 
-  await prisma.$transaction(async (tx) => {
-    const productAccess = await tx.productAccess.findFirst({
+  const productAccess = await prisma.$transaction(async (tx) => {
+    const access = await tx.productAccess.findFirst({
       where: { whopMembershipId: id },
+      include: { product: true, user: true },
     });
 
-    if (!productAccess) {
+    if (!access) {
       throw new Error(`ProductAccess not found for membership: ${id}`);
     }
 
     await tx.productAccess.update({
-      where: { id: productAccess.id },
+      where: { id: access.id },
       data: {
         status: AccessStatus.EXPIRED,
         revokedAt: new Date(),
       },
     });
 
+    return access;
   });
+
+  // Notify user that their subscription has expired
+  try {
+    const renewUrl = `${process.env.NEXTAUTH_URL}/products/${productAccess.product.slug}`;
+    const expiryDate = new Date().toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+
+    await sendSubscriptionExpiringEmail(
+      productAccess.user.email,
+      productAccess.user.name || "Valued Customer",
+      productAccess.product.name,
+      expiryDate,
+      renewUrl
+    );
+  } catch (emailError) {
+    console.error("Failed to send subscription expiring email:", emailError);
+    Sentry.captureException(emailError);
+  }
 }
 
 /**
