@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 import { Alert } from "@/components/ui/alert"
 import { Loader2, User, Mail, Lock, ArrowRight, AlertCircle, CheckCircle2 } from "lucide-react"
+import { useRecaptcha } from "@/hooks/use-recaptcha"
 
 const signupSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -35,6 +36,8 @@ export default function SignupPage() {
   const [isGoogleLoading, setIsGoogleLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
+
+  const { executeRecaptcha } = useRecaptcha()
 
   const {
     register,
@@ -61,10 +64,12 @@ export default function SignupPage() {
     setError(null)
 
     try {
+      const recaptchaToken = await executeRecaptcha("SIGNUP")
+
       const response = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, recaptchaToken }),
       })
 
       const result = await response.json()

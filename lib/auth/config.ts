@@ -105,10 +105,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   // Configure callbacks
   callbacks: {
     async signIn({ user, account }) {
-      // For OAuth providers, mark email as verified
-      if (account?.provider === "google") {
-        await prisma.user.update({
-          where: { id: user.id },
+      // For OAuth providers, mark email as verified.
+      // Uses updateMany because with database sessions the adapter may not have
+      // created the user row yet when signIn fires — update() would throw.
+      if (account?.provider === "google" && user.email) {
+        await prisma.user.updateMany({
+          where: { email: user.email },
           data: { emailVerified: new Date() },
         })
       }

@@ -1,657 +1,132 @@
 # Development Sessions - TechSci CodeCraft Agency
 
-This file tracks development progress across sessions for the TechSci CodeCraft digital product marketplace.
+---
+
+## 📅 Sessions 1-7 — Phases 1-7
+**Dates:** 2026-02-02 to 2026-02-03
+**Status:** ✅ ALL COMPLETE
+
+All 7 core phases delivered and deployed:
+1. Foundation & Database
+2. Authentication System
+3. Public Website
+4. Whop Integration
+5. Customer Portal
+6. Admin Panel
+7. Polish & Production
+
+See commit history for full details. Latest Phase 7 commit: `a773f12`
 
 ---
 
-## 📅 Session 1 - Foundation & Database Setup
-**Date:** 2026-02-02
+## 📅 Session 8 — Production Fixes + reCAPTCHA Enterprise
+**Date:** 2026-02-04
 **Status:** ✅ COMPLETED
 **Branch:** main
-**Commit:** c2c526f - feat: Complete Phase 1 - Foundation & Database Setup
 
-### Completed Tasks
+### What Was Done
 
-#### 1. Project Setup ✅
-- Installed all Phase 1 dependencies
-- Configured Bun as package manager
-- Set up TypeScript with strict mode
-- Installed shadcn/ui components (22 components)
+#### 1. Vercel Env Vars — Full Audit & Fix ✅
+**Problem:** Most vars were set to Development only. Several bad vars existed.
 
-#### 2. Database Configuration ✅
-- **Database:** MySQL on Hostinger (srv1833.hstgr.io:3306)
-- **ORM:** Prisma 7.3.0 with @prisma/adapter-mariadb
-- **Schema:** 8 comprehensive models
-  - User, Account, Session, VerificationToken (Authentication)
-  - Product, ProductAccess, Purchase (Business Logic)
-  - ContentItem, WebhookLog (Content & Monitoring)
-- **Configuration:** prisma.config.ts for Prisma 7
-- **Client:** lib/db/prisma.ts with MariaDB adapter
+**Removed from Vercel:**
+- `GOOGLE_REDIRECT_URI` — was `localhost:3000`, broke production OAuth. NextAuth handles this automatically with `trustHost: true`
+- `NEXT_PUBLIC_GOOGLE_CLIENT_ID` — redundant, code uses server-side `GOOGLE_CLIENT_ID`
 
-#### 3. Database Seeding ✅
-```bash
-# Seeded Data
-✅ Admin user: admin@techsci.xyz (Password: SecurePassword123!)
-✅ Test customer: customer@example.com (Password: TestPassword123!)
-✅ 6 Premium Digital Products:
-   - Email Newsletter Starter Pack ($149 one-time)
-   - Landing Page CRO Boost ($597 one-time)
-   - Social Media Content Calendar ($199 one-time)
-   - Growth Accelerator Package ($599.67/mo subscription)
-   - RealEstate AI Video Review ($29.99/mo subscription)
-   - Shopify Speed Surge ($500 one-time)
-✅ Product access granted to test customer (Email Newsletter Starter Pack)
-```
+**Added to Production + Preview (were Development-only):**
+SENTRY_DSN, WHOP_API_KEY, WHOP_COMPANY_ID, UPSTASH_REDIS_REST_URL, UPSTASH_REDIS_REST_TOKEN, NEXT_PUBLIC_SITE_NAME, NEXT_PUBLIC_APP_URL, ADMIN_EMAIL, CONTACT_EMAIL, RESEND_FROM_EMAIL, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET
 
----
+**Added to all 3 envs (was completely missing):**
+WHOP_WEBHOOK_SECRET → set to real secret `ws_3dbd555ca0af0f0841b3c0dd2c928b6e3a9261f4be3320595568e878a17b56f5`
 
-## 📅 Session 2 - Authentication System
-**Date:** 2026-02-02
-**Status:** ✅ COMPLETED
-**Branch:** main
-**Commit:** 2786c10 - feat: Complete Phase 2 - Authentication System
+#### 2. Google OAuth Keys — Rotated ✅
+Old client ID/secret replaced with new ones across `.env.local`, `.env`, and all Vercel environments.
 
-### Completed Tasks
+**New Client ID:** `829539499949-tvo2ter1le8b5trj9b03d74fv9i83014.apps.googleusercontent.com`
 
-#### 1. NextAuth.js v5 Configuration ✅
-- **Core Authentication** (`lib/auth/auth.ts`):
-  - NextAuth v5 with database sessions via Prisma adapter
-  - Google OAuth 2.0 provider with auto email verification
-  - Credentials provider for email/password authentication
-  - Session callbacks for role-based access control (CUSTOMER/ADMIN)
-  - JWT callbacks for token management
-  - Custom pages configuration (login, signup, verify, etc.)
-  - 30-day session expiry with 24-hour update interval
+**Google Cloud Console configured with:**
+- Authorized JavaScript Origins: `https://codecraft.techsci.xyz`, `https://techsci-codecraft.vercel.app`
+- Authorized Redirect URIs: `https://codecraft.techsci.xyz/api/auth/callback/google`, `https://techsci-codecraft.vercel.app/api/auth/callback/google`
 
-- **API Route Handler** (`app/api/auth/[...nextauth]/route.ts`):
-  - GET/POST handlers for NextAuth
-  - OAuth callback handling
-  - Session management endpoints
+#### 3. Google OAuth — AccessDenied Bug Fix ✅
+**Problem:** `login?error=AccessDenied` after Google redirected back successfully.
 
-#### 2. Authentication Utilities ✅
-- **Password Management** (`lib/auth/password.ts`):
-  - bcryptjs password hashing (12 rounds)
-  - Password strength validation (uppercase, lowercase, numbers, special chars)
-  - Secure password comparison
+**Root cause:** `lib/auth/config.ts` `signIn` callback was calling `prisma.user.update({ where: { id: user.id } })`. With NextAuth v5 database sessions, the Prisma adapter creates the user row AFTER `signIn` fires. The update threw (user not found), NextAuth caught the unhandled error silently, returned AccessDenied.
 
-- **OTP System** (`lib/auth/otp.ts`):
-  - 6-digit OTP generation
-  - 10-minute expiry window
-  - Database token storage with automatic cleanup
-  - Verification with error handling
+**Fix:** Changed to `prisma.user.updateMany({ where: { email: user.email } })` — no-op if row doesn't exist yet (0 rows matched, no throw). Sets `emailVerified` correctly once the adapter creates the row.
 
-- **Session Helpers** (`lib/auth/session.ts`):
-  - getCurrentUser(), getSession()
-  - isAuthenticated(), isAdmin()
-  - requireAuth(), requireAdmin()
-  - Role-based access control utilities
+**File:** `lib/auth/config.ts` lines 107-114
 
-#### 3. Email Service with Resend ✅
-- **Email Infrastructure** (`lib/email/send.ts`):
-  - Resend API integration
-  - Error handling and logging
-  - Transaction email sending utilities
+#### 4. Google reCAPTCHA Enterprise — Full Implementation ✅
+Invisible reCAPTCHA Enterprise on all public-facing forms. No CAPTCHA box shown to users — scores silently.
 
-- **React Email Templates** (4 templates created):
-  - `verification-email.tsx` - 6-digit OTP code with 10-minute expiry
-  - `welcome-email.tsx` - Welcome message with dashboard link
-  - `password-reset-email.tsx` - Password reset OTP
-  - `purchase-confirmation-email.tsx` - Product access notification
+**New files:**
+- `lib/recaptcha.ts` — server utility. POSTs to Google assessment API, checks score >= 0.5. Fails open in dev if env vars missing.
+- `hooks/use-recaptcha.ts` — client hook. Wraps `grecaptcha.enterprise.execute()`.
 
-All templates feature:
-- Professional design with consistent branding
-- Responsive layout
-- OKLCH color system
-- Call-to-action buttons
-- Company branding (TechSci CodeCraft)
+**Modified — script load:**
+- `app/layout.tsx` — Enterprise script in `<head>` (invisible)
 
-#### 4. Authentication API Routes ✅
-Six API routes created with full validation:
+**Modified — 4 client forms:**
 
-- **POST /api/auth/signup** - User registration
-  - Zod schema validation
-  - Password strength check
-  - Email uniqueness verification
-  - User creation with hashed password
-  - OTP generation and email delivery
-  - Success response with userId
+| File | Action |
+|------|--------|
+| `app/(auth)/signup/page.tsx` | SIGNUP |
+| `app/(auth)/forgot-password/page.tsx` | FORGOT_PASSWORD |
+| `components/forms/contact-form.tsx` | CONTACT |
+| `components/forms/newsletter-form.tsx` | NEWSLETTER |
 
-- **POST /api/auth/verify-email** - OTP verification
-  - 6-digit code validation
-  - Token expiry check
-  - Email verification marking
-  - Success/error responses
+**Modified — 4 API routes (server verify before processing):**
 
-- **POST /api/auth/resend-otp** - Resend verification code
-  - Rate limiting (60-second cooldown)
-  - User existence check
-  - New OTP generation
-  - Email delivery
+| Route | Action |
+|-------|--------|
+| `app/api/auth/register/route.ts` | SIGNUP |
+| `app/api/auth/forgot-password/route.ts` | FORGOT_PASSWORD |
+| `app/api/contact/route.ts` | CONTACT |
+| `app/api/newsletter/route.ts` | NEWSLETTER |
 
-- **POST /api/auth/forgot-password** - Password reset request
-  - Email validation
-  - User lookup
-  - OAuth account detection
-  - OTP generation and email
+**New env vars (all 3 Vercel envs + local):**
+- `NEXT_PUBLIC_RECAPTCHA_SITE_KEY=6Lf0rmAsAAAAAOugl9XHvb7ztBq7kEUAwDbcYTCk`
+- `RECAPTCHA_API_KEY=AIzaSyDjV2iRqGXo6iLbcHEP5fAEnGmdXgBQuuc`
 
-- **POST /api/auth/reset-password** - Complete password reset
-  - OTP verification
-  - Password strength validation
-  - Password hashing
-  - Database update
+**reCAPTCHA config:**
+- Site Key: `6Lf0rmAsAAAAAOugl9XHvb7ztBq7kEUAwDbcYTCk`
+- Project ID: `shining-courage-465501-i8`
+- Assessment endpoint: `https://recaptchaenterprise.googleapis.com/v1/projects/shining-courage-465501-i8/assessments?key=<API_KEY>`
+- Score threshold: 0.5
 
-- **GET/POST /api/auth/[...nextauth]** - NextAuth handlers
-  - OAuth callbacks
-  - Session management
-  - Login/logout endpoints
+#### 5. Deployments ✅
+Multiple production deploys during the session. All changes live at `https://codecraft.techsci.xyz`.
 
-All routes include:
-- Zod schema validation
-- Error handling with try-catch
-- Detailed error messages
-- Security best practices
+### Bugs Fixed This Session
+1. **Vercel env vars missing from Production/Preview** — most vars were Development-only
+2. **WHOP_WEBHOOK_SECRET placeholder** — was `your_whop_webhook_secret_here`, set to real secret
+3. **Google OAuth redirect_uri_mismatch** — Google Cloud had path as `/api/auth/google/callback` instead of correct `/api/auth/callback/google`
+4. **Google OAuth AccessDenied** — `prisma.user.update` crash in `signIn` callback, fixed with `updateMany`
 
-#### 5. Authentication Pages (Production-Grade UI) ✅
-Five authentication pages with refined minimalist design:
-
-- **Login Page** (`/login`):
-  - Google OAuth button with shimmer animation
-  - Email/password form with validation
-  - "Forgot password?" link
-  - Link to signup page
-  - Loading states for both OAuth and form submission
-  - Error alert display
-  - Animated gradient backgrounds
-  - Glass-morphic card design
-
-- **Signup Page** (`/signup`):
-  - Google OAuth button
-  - Registration form (name, email, password)
-  - Real-time password strength indicators (5 checks)
-  - Password validation feedback
-  - Success state with redirect to verification
-  - Form validation with react-hook-form + zod
-  - Consistent design with login page
-
-- **Email Verification Page** (`/verify-email`):
-  - 6-digit OTP input with auto-focus
-  - Auto-advance to next input
-  - Paste support for full code
-  - Resend OTP button with 60s cooldown
-  - OTP expiry warning (10 minutes)
-  - Success state with auto-redirect
-  - Verification status display
-
-- **Forgot Password Page** (`/forgot-password`):
-  - Email input form
-  - Back to login button
-  - Success state with redirect
-  - Clean, minimal design
-  - Error handling
-
-- **Reset Password Page** (`/reset-password`):
-  - OTP input (6-digit code)
-  - New password field with strength indicators
-  - Confirm password field
-  - Password match validation
-  - Success state with auto-redirect to login
-  - Form validation
-
-**Design Features (All Pages):**
-- Animated gradient backgrounds with pulse effects
-- Glass-morphic cards (backdrop blur, subtle shadows)
-- Smooth transitions (200ms duration)
-- Hover states with gradient shimmer
-- Loading states with spinners
-- Error alerts with icons
-- Success states with checkmark animations
-- Dark mode support (fully themed)
-- Mobile responsive (mobile-first approach)
-- Accessibility (ARIA labels, keyboard navigation)
-
-#### 6. Route Protection with proxy.ts ✅
-- **File Created:** `proxy.ts` (Next.js 16 - NOT middleware.ts)
-
-**Route Protection Logic:**
-- **Public Routes:** `/`, `/products/*`, `/login`, `/signup`, `/verify-email`, `/forgot-password`, `/reset-password`, `/about`, `/contact`, `/terms`, `/privacy`
-- **Protected Routes:** `/dashboard/*` - Requires authentication, redirects to `/login` with callback URL
-- **Admin Routes:** `/admin/*` - Requires ADMIN role, redirects to `/dashboard` if not admin
-- **API Routes:** Skipped (have their own protection)
-- **Static Files:** Skipped (images, fonts, etc.)
-
-**Features:**
-- Session-based authentication check
-- Role-based access control
-- Redirect authenticated users away from auth pages
-- Callback URL preservation for post-login redirect
-- Next.js 16 compatible proxy configuration
-
-#### 7. Infrastructure & Providers ✅
-- **Session Provider** (`components/providers/session-provider.tsx`):
-  - NextAuth SessionProvider wrapper
-  - Client-side session context
-
-- **Theme Provider** (`components/providers/theme-provider.tsx`):
-  - next-themes integration
-  - Dark mode support
-  - System theme detection
-
-- **Root Layout Updates** (`app/layout.tsx`):
-  - Wrapped app with SessionProvider
-  - Added ThemeProvider with system theme detection
-  - Added Toaster for notifications (Sonner)
-  - Updated metadata for SEO:
-    - Dynamic title template
-    - Professional description
-    - OpenGraph tags
-    - Twitter card tags
-  - Geist fonts configuration (Sans + Mono)
-
-#### 8. Documentation Updates ✅
-- **CLAUDE.md:**
-  - Updated implementation status to Phase 2 complete
-  - Added Phase 2 achievements summary
-  - Updated project status line
-
-- **README.md:**
-  - Added Implementation Status section with phase progress
-  - Updated table of contents
-  - Added Phase 2 completion indicators
-
-### Technical Achievements
-
-**Files Created:** 27 files
-- 4 library modules (auth, password, otp, session)
-- 6 API routes (signup, verify, resend, forgot, reset, NextAuth)
-- 5 authentication pages
-- 4 email templates
-- 2 provider components
-- 1 route protection file (proxy.ts)
-- 1 auth layout
-- Updated: CLAUDE.md, README.md, app/layout.tsx
-
-**Code Statistics:**
-- ~2,800 lines of production-ready TypeScript/TSX
-- 100% type-safe with strict mode
-- Full Zod validation on all API routes
-- Complete error handling
-- Security best practices throughout
-
-**Design System:**
-- Consistent OKLCH color palette
-- Refined minimalist aesthetic
-- Animated gradients and glass-morphic effects
-- Smooth micro-interactions
-- Full dark mode support
-- Mobile-first responsive design
-
-### Issues Resolved
-
-1. **NextAuth.js v5 Type Extensions**
-   - Extended Session and User types for role support
-   - Proper TypeScript declaration merging
-
-2. **OTP Email Delivery**
-   - Integrated Resend with React Email templates
-   - Professional email design with branding
-
-3. **Route Protection in Next.js 16**
-   - Used proxy.ts (NOT middleware.ts)
-   - Proper session checking and redirects
-
-4. **Password Security**
-   - Strong validation rules
-   - bcryptjs hashing with 12 rounds
-   - Secure comparison functions
-
----
-
-## 📅 Session 3 - Public Website (NEXT)
-**Status:** 🚧 IN PROGRESS
-**Target Date:** TBD
-
-### ⚠️ CRITICAL INSTRUCTIONS - MUST READ BEFORE STARTING
-
-**🎯 STRICT ADHERENCE TO MAIN PLAN REQUIRED**
-
-You MUST follow the main implementation plan located at:
-`.claude/plans/dapper-nibbling-mango.md` (Phase 3: Lines 306-417)
-
-**NO DEVIATIONS ALLOWED** - Implement exactly as specified in the plan.
-
-### Mandatory Workflow for Phase 3
-
-**For EVERY component, page, or feature in Phase 3:**
-
-1. **📖 Read the Main Plan First**
-   - Open `.claude/plans/dapper-nibbling-mango.md`
-   - Read Phase 3 section (lines 306-417) completely
-   - Understand exact file structure, naming, and requirements
-   - Follow the plan EXACTLY - no improvisation
-
-2. **🎨 Use frontend-design Skill**
-   - Run `frontend-design` skill for ALL UI components/pages
-   - Reference existing auth pages for design consistency
-   - Match OKLCH color palette exactly
-   - Use same typography (Geist Sans/Mono)
-   - Apply consistent spacing (4/8/12/16/24/32/48px)
-   - Maintain glass-morphic design aesthetic
-   - Keep transitions at 200ms
-
-3. **🔧 Use Serena for Implementation**
-   - Use Serena's symbolic tools for ALL code creation/editing
-   - Run `find_symbol` to understand existing patterns
-   - Use `get_symbols_overview` before modifying files
-   - Follow project conventions exactly
-   - Use `replace_symbol_body` for modifications
-   - Never create duplicate code
-
-4. **✅ Verification Before Completion**
-   For EACH file created, verify:
-   - [ ] File path matches plan exactly
-   - [ ] File name matches plan exactly
-   - [ ] Component structure follows plan
-   - [ ] All required props/functions included per plan
-   - [ ] Design matches existing auth pages
-   - [ ] Colors are OKLCH from globals.css
-   - [ ] Typography uses Geist Sans/Mono
-   - [ ] Spacing follows established scale
-   - [ ] Dark mode works correctly
-   - [ ] Mobile responsive
-   - [ ] No console errors
-   - [ ] TypeScript strict mode passes
-
-### ❌ FORBIDDEN Actions
-
-**DO NOT:**
-- ❌ Deviate from file names in the plan
-- ❌ Change folder structure from the plan
-- ❌ Skip any components mentioned in the plan
-- ❌ Add extra features not in the plan
-- ❌ Use different naming conventions
-- ❌ Create alternative implementations
-- ❌ Improvise or "improve" the plan
-- ❌ Merge components that are separate in plan
-- ❌ Split components that are single in plan
-
-### Goals - EXACT IMPLEMENTATION PER MAIN PLAN
-
-#### Phase 3: Public Website (From Plan Lines 306-417)
-
-**3.1 Public Layout & Navigation**
-
-EXACT FILES TO CREATE (as per plan):
-
-- [ ] `components/layout/header.tsx` - Public header
-  - Logo, nav menu (Products, About, Contact)
-  - Login/Signup buttons
-  - Dark mode toggle
-  - Mobile hamburger menu
-
-- [ ] `components/layout/footer.tsx` - Site footer
-  - Links (Products, About, Terms, Privacy, Refund, Contact)
-  - Copyright, social links
-  - Newsletter signup form
-
-- [ ] `components/layout/mobile-menu.tsx` - Mobile navigation drawer
-
-**3.2 Homepage (`app/page.tsx`)**
-
-HOMEPAGE SECTIONS (as per plan):
-- [ ] Hero: Headline, subheading, CTA buttons
-- [ ] Features: 4-6 key benefits with icons
-- [ ] Products: Featured products grid (3 cards)
-- [ ] Social Proof: Testimonials or trust badges
-- [ ] FAQ: Common questions accordion
-- [ ] CTA: Final conversion section
-
-EXACT COMPONENTS TO CREATE (as per plan):
-- [ ] `components/sections/hero.tsx`
-- [ ] `components/sections/features.tsx`
-- [ ] `components/sections/testimonials.tsx`
-- [ ] `components/sections/faq.tsx`
-- [ ] `components/sections/cta.tsx`
-- [ ] `components/sections/trust-badges.tsx`
-
-**3.3 Product Pages (Route Group: `app/(public)/products/`)**
-
-⚠️ IMPORTANT: Create route group folder `app/(public)/` as per plan
-
-EXACT PAGES TO CREATE:
-- [ ] `app/(public)/products/page.tsx` - Product listing
-  - Grid of all 6 products
-  - Category filters (Marketing, Analytics, Development)
-  - Search bar
-  - Sorting (price, popularity)
-
-- [ ] `app/(public)/products/[slug]/page.tsx` - Product detail
-  - Product hero (name, price, image)
-  - Full description
-  - Deliverables list
-  - Features checklist
-  - Requirements
-  - FAQ accordion
-  - "Buy Now" button → Redirect to Whop checkout
-
-EXACT COMPONENTS TO CREATE (as per plan):
-- [ ] `components/products/product-card.tsx` - Grid item
-- [ ] `components/products/product-grid.tsx` - Grid layout
-- [ ] `components/products/product-filter.tsx` - Category/search filters
-- [ ] `components/products/product-hero.tsx` - Detail page hero
-- [ ] `components/products/product-features.tsx` - Features section
-- [ ] `components/products/product-faq.tsx` - FAQ section
-
-**3.4 Other Public Pages (`app/(public)/`)**
-
-EXACT PAGES TO CREATE:
-- [ ] `app/(public)/about/page.tsx` - About TechSci CodeCraft Agency
-- [ ] `app/(public)/contact/page.tsx` - Contact form (sends via Resend)
-- [ ] `app/(public)/terms/page.tsx` - Terms of Service
-- [ ] `app/(public)/privacy/page.tsx` - Privacy Policy
-- [ ] `app/(public)/refund/page.tsx` - Refund Policy
-
-**3.5 Product Data & Utilities**
-
-EXACT FILES TO CREATE (as per plan):
-- [ ] `lib/products.ts` - Product data helpers
-  - getAllProducts()
-  - getProductBySlug(slug)
-  - getFeaturedProducts()
-  - getProductsByCategory(category)
-
-- [ ] `lib/constants.ts` - Site configuration
-  - Site name, URLs
-  - Contact emails
-  - Social links
-  - Product categories
-
-**3.6 Forms**
-
-EXACT COMPONENTS TO CREATE:
-- [ ] `components/forms/contact-form.tsx` - Contact page form
-- [ ] `components/forms/newsletter-form.tsx` - Newsletter signup (footer)
-
-Both with validation, rate limiting, Sentry tracking (as per plan)
-
-**3.7 SEO & Metadata**
-
-AS PER PLAN:
-- [ ] Dynamic metadata for all pages
-- [ ] OG images for social sharing
-- [ ] Structured data (JSON-LD) for products
-- [ ] Sitemap generation
-- [ ] Robots.txt generation
-
-Note: Plan doesn't specify exact file paths for sitemap/robots - implement as Next.js 16 standard
-
-### Critical Files Checklist (FROM PLAN - Lines 408-416)
-
-**MUST CREATE EXACTLY THESE FILES:**
-
-Layout Components:
-- [ ] `components/layout/header.tsx`
-- [ ] `components/layout/footer.tsx`
-- [ ] `components/layout/mobile-menu.tsx` (plan line 324)
-
-Homepage:
-- [ ] `app/page.tsx`
-
-Section Components (6 files):
-- [ ] `components/sections/hero.tsx`
-- [ ] `components/sections/features.tsx`
-- [ ] `components/sections/testimonials.tsx`
-- [ ] `components/sections/faq.tsx`
-- [ ] `components/sections/cta.tsx`
-- [ ] `components/sections/trust-badges.tsx`
-
-Product Pages:
-- [ ] `app/(public)/products/page.tsx`
-- [ ] `app/(public)/products/[slug]/page.tsx`
-
-Product Components (6 files):
-- [ ] `components/products/product-card.tsx`
-- [ ] `components/products/product-grid.tsx`
-- [ ] `components/products/product-filter.tsx`
-- [ ] `components/products/product-hero.tsx`
-- [ ] `components/products/product-features.tsx`
-- [ ] `components/products/product-faq.tsx`
-
-Other Public Pages (5 files):
-- [ ] `app/(public)/about/page.tsx`
-- [ ] `app/(public)/contact/page.tsx`
-- [ ] `app/(public)/terms/page.tsx`
-- [ ] `app/(public)/privacy/page.tsx`
-- [ ] `app/(public)/refund/page.tsx`
-
-Utilities (2 files):
-- [ ] `lib/products.ts`
-- [ ] `lib/constants.ts`
-
-Forms (2 files):
-- [ ] `components/forms/contact-form.tsx`
-- [ ] `components/forms/newsletter-form.tsx`
-
-**TOTAL: 29 files to create for Phase 3**
-
-### Prerequisites
-
-Before starting Phase 3:
-- ✅ Design system established (auth pages as reference)
-- ✅ Color palette defined (OKLCH)
-- ✅ Typography configured (Geist fonts)
-- ✅ shadcn/ui components available
-- ⏳ Product images (6 product hero images needed)
-- ⏳ Company logo
-- ⏳ Favicon
-
-### Testing Checklist
-
-Once Phase 3 is complete:
-- [ ] All pages load without errors
-- [ ] Navigation works (desktop + mobile)
-- [ ] Product listing shows all 6 products
-- [ ] Product detail pages display correctly
-- [ ] Filters work (category, search, sort)
-- [ ] Contact form submits successfully
-- [ ] Newsletter signup works
-- [ ] All links work (internal + external)
-- [ ] Mobile responsive (all pages)
-- [ ] Dark mode works (all pages)
-- [ ] Design is consistent with auth pages
-- [ ] SEO metadata present
-- [ ] Lighthouse score 90+
-
----
-
-## 📝 Notes for Future Sessions
-
-### Database Access
-```bash
-# Connect to database
-mysql -h srv1833.hstgr.io -P 3306 -u u646485450_codecraftagent -p'S5lCjW1CPHL@r**m' u646485450_codecraftagent
-
-# View data in GUI
-bunx prisma studio
-```
-
-### Test Accounts
-```
-Admin:
-Email: admin@techsci.xyz
-Password: SecurePassword123!
-Role: ADMIN
-
-Customer:
-Email: customer@example.com
-Password: TestPassword123!
-Role: CUSTOMER
-Access: Email Newsletter Starter Pack (ACTIVE, LIFETIME)
-```
-
-### Important Reminders
-
-1. **FOLLOW THE MAIN PLAN EXACTLY**
-   - Reference: `.claude/plans/dapper-nibbling-mango.md`
-   - Phase 3: Lines 306-417
-   - NO deviations, NO improvisation, NO "improvements"
-   - File names must match plan exactly
-   - Folder structure must match plan exactly
-   - Component count must match plan exactly (29 files)
-
-2. **Mandatory Tools Usage**
-   - MUST use `frontend-design` skill for ALL UI components/pages
-   - MUST use Serena for ALL code implementation
-   - Read plan before starting each component
-   - Verify against plan after completing each component
-
-3. **Design Consistency Requirements**
-   - Match existing auth pages aesthetic EXACTLY
-   - Use OKLCH colors from globals.css
-   - Use Geist Sans/Mono fonts only
-   - Spacing: 4/8/12/16/24/32/48px scale
-   - Transitions: 200ms duration
-   - Glass-morphic design elements
-   - Full dark mode support
-   - Mobile-first responsive
-
-4. **Next.js 16 & Tech Stack**
-   - Route groups: Use `app/(public)/` as per plan
-   - Tailwind v4: CSS-only (NO config file)
-   - shadcn/ui: Use existing components
-   - Forms: react-hook-form + Zod validation
-   - Rate limiting: As per plan requirements
-   - Sentry: Error tracking on all routes
-
-5. **Git Workflow**
-   - .env* files excluded from git
-   - Check status before committing
-   - Use descriptive commit messages
-   - Push after each major milestone
-   - Reference plan in commit messages
-
-### Remaining Phases
-
-- **Phase 3:** Public Website (homepage, product pages, legal) 🚧
-- **Phase 4:** Whop Integration (webhook handler, payment processing)
-- **Phase 5:** Customer Portal (dashboard, content access)
-- **Phase 6:** Admin Panel (product/user management)
-- **Phase 7:** Polish & Production (Sentry, testing, deployment)
+### Lessons Learned (added to CLAUDE.md)
+- NextAuth v5 callback path: `/api/auth/callback/google` NOT `/api/auth/google/callback`
+- Never use `prisma.user.update` in NextAuth `signIn` callback with db sessions — user may not exist yet
+- Never set `GOOGLE_REDIRECT_URI` — NextAuth + `trustHost: true` auto-generates it
+- `NEXT_PUBLIC_GOOGLE_CLIENT_ID` is redundant — only `GOOGLE_CLIENT_ID` (server) is needed
+- Vercel `env add` reads value from stdin: `echo -n "value" | npx vercel env add NAME env --force`
 
 ---
 
 ## 📊 Progress Tracker
 
-| Phase | Status | Progress | Completion Date |
-|-------|--------|----------|-----------------|
-| Phase 1: Foundation & Database | ✅ Complete | 100% | 2026-02-02 |
-| Phase 2: Authentication System | ✅ Complete | 100% | 2026-02-02 |
-| Phase 3: Public Website | 🚧 In Progress | 0% | TBD |
-| Phase 4: Whop Integration | ⏳ Not Started | 0% | TBD |
-| Phase 5: Customer Portal | ⏳ Not Started | 0% | TBD |
-| Phase 6: Admin Panel | ⏳ Not Started | 0% | TBD |
-| Phase 7: Polish & Production | ⏳ Not Started | 0% | TBD |
+| Phase | Status | Completion Date |
+|-------|--------|-----------------|
+| Phase 1: Foundation & Database | ✅ Complete | 2026-02-02 |
+| Phase 2: Authentication System | ✅ Complete | 2026-02-02 |
+| Phase 3: Public Website | ✅ Complete | 2026-02-03 |
+| Phase 4: Whop Integration | ✅ Complete | 2026-02-03 |
+| Phase 5: Customer Portal | ✅ Complete | 2026-02-03 |
+| Phase 6: Admin Panel | ✅ Complete | 2026-02-03 |
+| Phase 7: Polish & Production | ✅ Complete | 2026-02-03 |
+| Phase 8: reCAPTCHA + Prod Fixes | ✅ Complete | 2026-02-04 |
 
-**Overall Progress:** 29% (2/7 phases complete)
+**Overall Progress:** 100% (8/8 phases complete)
 
 ---
 
@@ -663,9 +138,10 @@ Access: Email Newsletter Starter Pack (ACTIVE, LIFETIME)
 - **Resend Dashboard:** https://resend.com/
 - **Whop Dashboard:** https://whop.com/
 - **Sentry Dashboard:** https://sentry.io/
+- **Vercel Dashboard:** https://vercel.com/techsci/techsci-codecraft
 
 ---
 
-**Last Updated:** 2026-02-02
+**Last Updated:** 2026-02-04
 **Current Branch:** main
-**Latest Commit:** 2786c10 - feat: Complete Phase 2 - Authentication System
+**Latest deployed commit:** f7dd87b (+ uncommitted reCAPTCHA + auth fix changes)

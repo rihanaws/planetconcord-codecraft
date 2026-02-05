@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { cn } from "@/lib/utils"
 import { Loader2, Send, Check, Mail, User, MessageSquare } from "lucide-react"
+import { useRecaptcha } from "@/hooks/use-recaptcha"
 
 const contactSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -20,6 +21,7 @@ const contactSchema = z.object({
 type ContactFormData = z.infer<typeof contactSchema>
 
 export function ContactForm() {
+  const { executeRecaptcha } = useRecaptcha()
   const [isLoading, setIsLoading] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -38,10 +40,12 @@ export function ContactForm() {
     setError(null)
 
     try {
+      const recaptchaToken = await executeRecaptcha("CONTACT")
+
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, recaptchaToken }),
       })
 
       const result = await response.json()

@@ -4,15 +4,23 @@ import { createOTPToken } from "@/lib/auth/utils"
 import { sendPasswordResetEmail } from "@/lib/email/send"
 import { TokenType } from "@prisma/client"
 import { z } from "zod"
+import { verifyRecaptcha } from "@/lib/recaptcha"
 
 const forgotPasswordSchema = z.object({
   email: z.string().email(),
+  recaptchaToken: z.string(),
 })
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { email } = forgotPasswordSchema.parse(body)
+    const { email, recaptchaToken } = forgotPasswordSchema.parse(body)
+
+    // Verify reCAPTCHA
+    const recaptcha = await verifyRecaptcha(recaptchaToken, "FORGOT_PASSWORD")
+    if (!recaptcha.success) {
+      return NextResponse.json({ error: recaptcha.error || "Security check failed" }, { status: 403 })
+    }
 
     // Check if user exists
     const user = await prisma.user.findUnique({

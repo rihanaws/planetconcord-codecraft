@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
 import { Resend } from "resend"
+import { verifyRecaptcha } from "@/lib/recaptcha"
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
@@ -9,6 +10,7 @@ const contactSchema = z.object({
   email: z.string().email(),
   subject: z.string().min(5),
   message: z.string().min(20),
+  recaptchaToken: z.string(),
 })
 
 // Simple rate limiting
@@ -40,7 +42,16 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const { name, email, subject, message } = validationResult.data
+    const { name, email, subject, message, recaptchaToken } = validationResult.data
+
+    // Verify reCAPTCHA
+    const recaptcha = await verifyRecaptcha(recaptchaToken, "CONTACT")
+    if (!recaptcha.success) {
+      return NextResponse.json(
+        { success: false, message: recaptcha.error || "Security check failed" },
+        { status: 403 }
+      )
+    }
 
     if (!checkRateLimit(email)) {
       return NextResponse.json(

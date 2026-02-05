@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
 import { Resend } from "resend"
+import { verifyRecaptcha } from "@/lib/recaptcha"
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
 // Validation schema
 const newsletterSchema = z.object({
   email: z.string().email("Invalid email address"),
+  recaptchaToken: z.string(),
 })
 
 // Simple in-memory rate limiting (replace with Redis in production)
@@ -47,7 +49,16 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const { email } = validationResult.data
+    const { email, recaptchaToken } = validationResult.data
+
+    // Verify reCAPTCHA
+    const recaptcha = await verifyRecaptcha(recaptchaToken, "NEWSLETTER")
+    if (!recaptcha.success) {
+      return NextResponse.json(
+        { success: false, message: recaptcha.error || "Security check failed" },
+        { status: 403 }
+      )
+    }
 
     // Rate limiting - 5 requests per day per email
     if (!checkRateLimit(email, 5, 24 * 60 * 60 * 1000)) {

@@ -1,8 +1,8 @@
 # CLAUDE.md
 
-## Status: Phase 7 Complete ✅ — All Phases Done
+## Status: Phase 8 Complete ✅ — All Phases Done + reCAPTCHA + Production Fixes
 
-**Phases Complete:** 1-7 (Foundation, Auth, Public Site, Whop Integration, Customer Portal, Admin Panel, Polish & Production)
+**Phases Complete:** 1-8 (Foundation, Auth, Public Site, Whop Integration, Customer Portal, Admin Panel, Polish & Production, reCAPTCHA Enterprise)
 
 ## Tech Stack
 
@@ -110,6 +110,9 @@ Public Site → Whop Checkout → Payment → Webhook → Auto-Create Account �
 - ❌ Importing Prisma in client components
 - ❌ Not awaiting `params` in dynamic routes
 - ❌ Inconsistent design
+- ❌ `prisma.user.update` in NextAuth `signIn` callback — user row may not exist yet with db sessions. Use `updateMany({ where: { email } })` instead
+- ❌ Setting `GOOGLE_REDIRECT_URI` anywhere — NextAuth + `trustHost: true` handles it automatically
+- ❌ Using `NEXT_PUBLIC_GOOGLE_CLIENT_ID` — redundant, server-side `GOOGLE_CLIENT_ID` is all that's needed
 
 ## Test Accounts
 
@@ -118,7 +121,35 @@ Customer: customer@example.com (password via SEED_CUSTOMER_PASSWORD)
 
 ## Env Vars
 
-DATABASE_URL, NEXTAUTH_URL, NEXTAUTH_SECRET, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, RESEND_API_KEY, WHOP_WEBHOOK_SECRET, WHOP_API_KEY, WHOP_COMPANY_ID
+All set on Vercel across Production, Preview, Development.
+
+**Core:**
+DATABASE_URL, NEXTAUTH_URL, NEXTAUTH_SECRET
+
+**Auth:**
+GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET
+
+**reCAPTCHA Enterprise:**
+NEXT_PUBLIC_RECAPTCHA_SITE_KEY, RECAPTCHA_API_KEY
+
+**Email:**
+RESEND_API_KEY, RESEND_FROM_EMAIL
+
+**Whop:**
+WHOP_WEBHOOK_SECRET, WHOP_API_KEY, WHOP_COMPANY_ID
+
+**Services:**
+BLOB_READ_WRITE_TOKEN (auto-injected by Vercel Blob), SENTRY_DSN, UPSTASH_REDIS_REST_URL, UPSTASH_REDIS_REST_TOKEN
+
+**App:**
+NEXT_PUBLIC_APP_URL, NEXT_PUBLIC_SITE_NAME, ADMIN_EMAIL, CONTACT_EMAIL
+
+**Local-only (do NOT set on Vercel):**
+SEED_ADMIN_PASSWORD, SEED_CUSTOMER_PASSWORD (used only by `bun lib/db/seed.ts`)
+
+**Removed from Vercel (were breaking things):**
+- `GOOGLE_REDIRECT_URI` — NextAuth handles this automatically; hardcoding localhost breaks prod OAuth
+- `NEXT_PUBLIC_GOOGLE_CLIENT_ID` — redundant, code uses server-side `GOOGLE_CLIENT_ID`
 
 ## Whop Integration (Phase 4)
 
@@ -209,6 +240,22 @@ DATABASE_URL, NEXTAUTH_URL, NEXTAUTH_SECRET, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SEC
 - `app/sitemap.ts` — dynamic, includes all products
 - `app/robots.ts` — disallows /api/, /dashboard/, /admin/
 - Root layout metadata: OG tags, Twitter cards, keywords
+
+## reCAPTCHA Enterprise (Phase 8)
+
+- **Invisible** — no widget rendered, scores silently on form submit
+- Script loaded globally in `app/layout.tsx` `<head>`
+- Client hook: `hooks/use-recaptcha.ts` → `executeRecaptcha(action)`
+- Server utility: `lib/recaptcha.ts` → `verifyRecaptcha(token, action)` — score threshold 0.5, fails open in dev
+- **Protected forms:** SIGNUP (`signup`), FORGOT_PASSWORD (`forgot-password`), CONTACT (`contact-form`), NEWSLETTER (`newsletter-form`)
+- Each form passes `recaptchaToken` in the POST body; each API route verifies it before processing
+
+## Google OAuth — Known Issues & Fixes
+
+- NextAuth v5 callback path is `/api/auth/callback/google` (NOT `/api/auth/google/callback`)
+- Google Cloud Console redirect URIs must match exactly — path order matters
+- `signIn` callback fires BEFORE Prisma adapter creates the user row → use `updateMany` not `update`
+- App must be **published** in Google Cloud Console OAuth consent screen, not just in testing mode
 
 ## Reference Docs
 

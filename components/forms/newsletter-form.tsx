@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
 import { Loader2, Mail, Check, ArrowRight } from "lucide-react"
+import { useRecaptcha } from "@/hooks/use-recaptcha"
 
 const newsletterSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -21,6 +22,7 @@ interface NewsletterFormProps {
 }
 
 export function NewsletterForm({ className, variant = "default" }: NewsletterFormProps) {
+  const { executeRecaptcha } = useRecaptcha()
   const [isLoading, setIsLoading] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -39,12 +41,14 @@ export function NewsletterForm({ className, variant = "default" }: NewsletterFor
     setError(null)
 
     try {
+      const recaptchaToken = await executeRecaptcha("NEWSLETTER")
+
       const response = await fetch("/api/newsletter", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, recaptchaToken }),
       })
 
       const result = await response.json()

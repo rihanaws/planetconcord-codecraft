@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Alert } from "@/components/ui/alert"
 import { Loader2, Mail, ArrowRight, AlertCircle, CheckCircle2, ArrowLeft } from "lucide-react"
+import { useRecaptcha } from "@/hooks/use-recaptcha"
 
 const forgotPasswordSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -25,6 +26,8 @@ export default function ForgotPasswordPage() {
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
 
+  const { executeRecaptcha } = useRecaptcha()
+
   const {
     register,
     handleSubmit,
@@ -38,10 +41,12 @@ export default function ForgotPasswordPage() {
     setError(null)
 
     try {
+      const recaptchaToken = await executeRecaptcha("FORGOT_PASSWORD")
+
       const response = await fetch("/api/auth/forgot-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, recaptchaToken }),
       })
 
       const result = await response.json()

@@ -4,11 +4,13 @@ import { hashPassword, validatePasswordStrength, createOTPToken } from "@/lib/au
 import { sendVerificationEmail } from "@/lib/email/send"
 import { TokenType } from "@prisma/client"
 import { z } from "zod"
+import { verifyRecaptcha } from "@/lib/recaptcha"
 
 const registerSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
   password: z.string().min(8, "Password must be at least 8 characters"),
+  recaptchaToken: z.string(),
 })
 
 /**
@@ -17,7 +19,13 @@ const registerSchema = z.object({
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { name, email, password } = registerSchema.parse(body)
+    const { name, email, password, recaptchaToken } = registerSchema.parse(body)
+
+    // Verify reCAPTCHA
+    const recaptcha = await verifyRecaptcha(recaptchaToken, "SIGNUP")
+    if (!recaptcha.success) {
+      return NextResponse.json({ error: recaptcha.error || "Security check failed" }, { status: 403 })
+    }
 
     // Validate password strength
     const passwordValidation = validatePasswordStrength(password)
