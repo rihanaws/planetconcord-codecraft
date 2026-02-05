@@ -19,10 +19,17 @@ const dbConfig = {
 
 // Prisma 7 requires adapter for MySQL connections.
 // Each client gets its own adapter so their pools are independent.
+// connectTimeout: max ms to establish a new TCP connection to MySQL.
+// idleTimeout: close idle connections after this many ms (keeps pool lean).
 export const prisma =
   globalForPrisma.prisma ??
   new PrismaClient({
-    adapter: new PrismaMariaDb({ ...dbConfig, connectionLimit: 10 }),
+    adapter: new PrismaMariaDb({
+      ...dbConfig,
+      connectionLimit: 15,
+      connectTimeout: 5000,
+      idleTimeout: 30000,
+    }),
     log:
       process.env.NODE_ENV === "development"
         ? ["query", "error", "warn"]
@@ -33,7 +40,12 @@ export const prisma =
 export const prismaForAuth =
   globalForPrisma.prismaForAuth ??
   new PrismaClient({
-    adapter: new PrismaMariaDb({ ...dbConfig, connectionLimit: 5 }),
+    adapter: new PrismaMariaDb({
+      ...dbConfig,
+      connectionLimit: 5,
+      connectTimeout: 5000,
+      idleTimeout: 30000,
+    }),
     log:
       process.env.NODE_ENV === "development"
         ? ["query", "error", "warn"]

@@ -7,21 +7,35 @@ import { cache } from "react";
 import { prisma } from "@/lib/db/prisma";
 import type { Product } from "@prisma/client";
 
+/** Retry a fn up to `attempts` times with a short delay between tries. */
+async function withRetry<T>(fn: () => Promise<T>, attempts = 3, delayMs = 500): Promise<T> {
+  let lastError: unknown;
+  for (let i = 0; i < attempts; i++) {
+    try {
+      return await fn();
+    } catch (err) {
+      lastError = err;
+      if (i < attempts - 1) await new Promise((r) => setTimeout(r, delayMs * (i + 1)));
+    }
+  }
+  throw lastError;
+}
+
 /**
  * Get all products from the database
  * @returns Array of all products
  */
 export const getAllProducts = cache(async (): Promise<Product[]> => {
   try {
-    const products = await prisma.product.findMany({
-      orderBy: [
-        { featured: "desc" }, // Featured products first
-        { popular: "desc" }, // Then popular products
-        { createdAt: "desc" }, // Then newest
-      ],
-    });
-
-    return products;
+    return await withRetry(() =>
+      prisma.product.findMany({
+        orderBy: [
+          { featured: "desc" },
+          { popular: "desc" },
+          { createdAt: "desc" },
+        ],
+      })
+    );
   } catch (error) {
     console.error("Error fetching all products:", error);
     return [];
@@ -37,11 +51,9 @@ export const getProductBySlug = cache(async (
   slug: string
 ): Promise<Product | null> => {
   try {
-    const product = await prisma.product.findUnique({
-      where: { slug },
-    });
-
-    return product;
+    return await withRetry(() =>
+      prisma.product.findUnique({ where: { slug } })
+    );
   } catch (error) {
     console.error(`Error fetching product with slug ${slug}:`, error);
     return null;
@@ -55,18 +67,16 @@ export const getProductBySlug = cache(async (
  */
 export const getFeaturedProducts = cache(async (limit: number = 3): Promise<Product[]> => {
   try {
-    const products = await prisma.product.findMany({
-      where: {
-        featured: true,
-      },
-      orderBy: [
-        { popular: "desc" },
-        { createdAt: "desc" },
-      ],
-      take: limit,
-    });
-
-    return products;
+    return await withRetry(() =>
+      prisma.product.findMany({
+        where: { featured: true },
+        orderBy: [
+          { popular: "desc" },
+          { createdAt: "desc" },
+        ],
+        take: limit,
+      })
+    );
   } catch (error) {
     console.error("Error fetching featured products:", error);
     return [];

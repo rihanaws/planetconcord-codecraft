@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic"
+
 import { MetadataRoute } from 'next'
 import { getAllProducts } from '@/lib/products'
 import { SITE_CONFIG } from '@/lib/constants'
