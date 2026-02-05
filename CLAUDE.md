@@ -1,9 +1,12 @@
 # CLAUDE.md
 
-## Status: All Phases Complete ✅ + Session 9 Post-Launch Fixes
+## Status: All Phases Complete ✅ + Phase 10 + PayPal + Cron Jobs
 
-**Phases Complete:** 1-8 (Foundation, Auth, Public Site, Whop, Customer Portal, Admin Panel, Polish, reCAPTCHA)
+**Phases Complete:** 1-10 (Foundation → Auth → Public Site → Whop → Customer Portal → Admin Panel → Polish → reCAPTCHA → Discord/Content/News → AI Video Analyzer / Service Requests / 4 New Products / Admin Upgrades)
 **Session 9 fixes:** Sentry init, pool timeout, `/dashboard/products`, Tailwind v4 classes, Vercel Analytics, reCAPTCHA prod key
+**Post-Phase 10:** PayPal live + sandbox keys, 3 cron jobs (subscription cleanup, video analysis cleanup, webhook retry queue)
+**Phase 10:** AI Video Analyzer (OpenAI gpt-4o-mini), Service Request Portal, 4 new products, admin analytics upgrades
+**PayPal:** Sandbox credentials wired in `.env.local` (No-Code Checkout ready)
 
 ## Tech Stack
 
@@ -21,6 +24,8 @@
 - Resend (emails from noreply@techsci.xyz)
 - @vercel/analytics + @vercel/speed-insights
 - Google reCAPTCHA Enterprise (invisible, score 0.5 threshold)
+- OpenAI (`openai` package, gpt-4o-mini for video analysis)
+- PayPal SDK (sandbox No-Code Checkout — env-switched via NEXT_PUBLIC_PAYPAL_ENV)
 
 ## Commands
 
@@ -164,7 +169,21 @@ RESEND_API_KEY, RESEND_FROM_EMAIL
 WHOP_WEBHOOK_SECRET, WHOP_API_KEY, WHOP_COMPANY_ID
 
 **Services:**
-BLOB_READ_WRITE_TOKEN (auto-injected by Vercel Blob), SENTRY_DSN, UPSTASH_REDIS_REST_URL, UPSTASH_REDIS_REST_TOKEN
+BLOB_READ_WRITE_TOKEN (auto-injected by Vercel Blob), SENTRY_DSN, UPSTASH_REDIS_REST_URL, UPSTASH_REDIS_REST_TOKEN, OPENAI_API_KEY, CRON_SECRET
+
+**Cron Jobs (Vercel Pro):**
+- `/api/cron/cleanup-subscriptions` — every 6 h. Expires ACTIVE ProductAccess past expiresAt, sends expiry email.
+- `/api/cron/cleanup-video-analyses` — every 5 min. Fails PENDING VideoAnalysis older than 5 min.
+- `/api/cron/retry-webhooks` — every 15 min. Re-runs failed WebhookLog entries (within 24 h window, max 10 per run).
+- Auth: `Authorization: Bearer $CRON_SECRET` header (auto-injected by Vercel).
+
+**PayPal (live keys active on Vercel Production):**
+PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET, NEXT_PUBLIC_PAYPAL_ENV (`production` on prod, `sandbox` on preview/dev), PAYPAL_WEBHOOK_ID (`8ED47441RE716080D`). App: TechSci-Web-CodeCraft. Sandbox creds kept commented in .env.local for local testing.
+- Webhook URL: `https://codecraft.techsci.xyz/api/webhooks/paypal`
+- Events: PAYMENT.SALE.COMPLETED, PAYMENT.SALE.REFUNDED
+- Verification: Uses PayPal's verification API (not HMAC)
+- Metadata: Pass `custom` field with JSON: `{productSlug, customerEmail, customerName}`
+- Schema: Purchase model has `paypalPaymentId` field (unique index)
 
 **App:**
 NEXT_PUBLIC_APP_URL, NEXT_PUBLIC_SITE_NAME, ADMIN_EMAIL, CONTACT_EMAIL

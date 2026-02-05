@@ -216,9 +216,10 @@ model Purchase {
   amount        Float
   status        PurchaseStatus @default(PENDING)
 
-  // Whop integration
-  whopPaymentId String? @unique
-  whopData      Json?   // Store full webhook payload
+  // Payment gateway integration
+  whopPaymentId   String? @unique
+  whopData        Json?   // Store full webhook payload
+  paypalPaymentId String? @unique
 
   completedAt DateTime?
   refundedAt  DateTime?
@@ -232,6 +233,7 @@ model Purchase {
   @@index([productId])
   @@index([status])
   @@index([whopPaymentId])
+  @@index([paypalPaymentId])
 }
 
 model ContentItem {

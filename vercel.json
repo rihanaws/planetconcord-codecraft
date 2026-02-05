@@ -1,0 +1,16 @@
+{
+  "crons": [
+    {
+      "matchers": ["/api/cron/cleanup-subscriptions"],
+      "schedule": "0 */6 * * *"
+    },
+    {
+      "matchers": ["/api/cron/cleanup-video-analyses"],
+      "schedule": "*/5 * * * *"
+    },
+    {
+      "matchers": ["/api/cron/retry-webhooks"],
+      "schedule": "*/15 * * * *"
+    }
+  ]
+}
