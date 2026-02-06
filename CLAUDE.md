@@ -1,11 +1,11 @@
 # CLAUDE.md
 
-## Status (Updated 2026-02-05)
-All 10 phases complete + PayPal + Cron + Prisma Accelerate + ISR optimization.
-**Commit:** `d40c270` | **Live:** https://codecraft.techsci.xyz | **Products:** 10
+## Status (Updated 2026-02-06)
+All 10 phases complete + PayPal + Cron + Neon PostgreSQL + ISR optimization.
+**Live:** https://codecraft.techsci.xyz | **Products:** 10
 
 ## Stack
-Next.js 16.1.6 (App Router), React 19, TypeScript, Bun, Tailwind v4, Prisma 7 + MariaDB adapter, MySQL (Hostinger), NextAuth v5, Zod v4, Sentry v10, Resend, Vercel Analytics, reCAPTCHA Enterprise, OpenAI, PayPal SDK, @prisma/extension-accelerate
+Next.js 16.1.6 (App Router), React 19, TypeScript, Bun, Tailwind v4, Prisma 7 + Neon adapter, PostgreSQL (Neon), NextAuth v5, Zod v4, Sentry v10, Resend, Vercel Analytics, reCAPTCHA Enterprise, OpenAI, PayPal SDK
 
 ## Commands
 ```bash
@@ -19,7 +19,7 @@ bunx prisma db push | bunx prisma studio | bun lib/db/seed.ts
 
 **Tailwind v4:** NO config file; `bg-linear-to-*` not `bg-gradient-to-*`; `-translate-x-full` not `translate-x-[-100%]`
 
-**Prisma 7:** MariaDB adapter; independent pools (15 main, 5 auth); React `cache()` on reads; Accelerate for Vercel (checks `PRISMA_DATABASE_URL`)
+**Prisma 7:** Neon adapter (`@prisma/adapter-neon`); serverless-optimized with connection pooling; React `cache()` on reads
 
 **NextAuth v5:** `auth()` not `getServerSession`; callback: `/api/auth/callback/google`; `updateMany` in signIn
 
@@ -83,7 +83,7 @@ Auth: `Authorization: Bearer $CRON_SECRET` (auto-injected)
 
 ## Env Vars (All 3 Vercel Envs)
 
-**Core:** DATABASE_URL, NEXTAUTH_URL, NEXTAUTH_SECRET
+**Core:** DATABASE_URL (Neon pooled connection), NEXTAUTH_URL, NEXTAUTH_SECRET
 
 **Auth:** GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET
 
@@ -97,13 +97,11 @@ Auth: `Authorization: Bearer $CRON_SECRET` (auto-injected)
 
 **PayPal:** PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET, NEXT_PUBLIC_PAYPAL_ENV (`production` prod, `sandbox` preview/dev), PAYPAL_WEBHOOK_ID
 
-**Prisma:** PRISMA_DATABASE_URL (Accelerate connection pooler for Vercel builds)
-
 **App:** NEXT_PUBLIC_APP_URL, NEXT_PUBLIC_SITE_NAME, ADMIN_EMAIL, CONTACT_EMAIL, NEXT_PUBLIC_GTM_ID, NEXT_PUBLIC_GA_MEASUREMENT_ID
 
 **Local-only:** SEED_ADMIN_PASSWORD, SEED_CUSTOMER_PASSWORD
 
-**Removed:** GOOGLE_REDIRECT_URI, NEXT_PUBLIC_GOOGLE_CLIENT_ID
+**Removed:** GOOGLE_REDIRECT_URI, NEXT_PUBLIC_GOOGLE_CLIENT_ID, PRISMA_DATABASE_URL (no longer needed — Neon pooling is native)
 
 ## Performance
 
@@ -112,10 +110,11 @@ Auth: `Authorization: Bearer $CRON_SECRET` (auto-injected)
 - `/products/[slug]` - revalidate: 600 + generateStaticParams (pre-generate all)
 - CDN-cached, ~30ms vs ~300ms server-rendered
 
-**Prisma Accelerate:**
-- Connection pooler for Vercel builds
-- Prevents pool timeout errors (10 parallel workers)
-- Falls back to direct MySQL locally
+**Neon PostgreSQL:**
+- Native serverless driver with connection pooling
+- Purpose-built for Vercel and serverless environments
+- Single connection string for all environments (local + Vercel)
+- Eliminates connection timeout issues from previous MySQL setup
 
 ## Phase 10 Features
 
@@ -147,3 +146,4 @@ Admin: admin@techsci.xyz | Customer: customer@example.com (passwords via SEED_*_
 - PayPal webhook: use verification API with OAuth2 token, not HMAC
 - PayPal metadata: pass via `custom` field as JSON string
 - Next.js 15+: no `dynamic()` with `ssr: false` in server components
+- Neon: use pooled connection string (`-pooler`) for all environments; regenerate Prisma Client after schema provider change

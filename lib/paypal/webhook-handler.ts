@@ -10,8 +10,13 @@ import {
   sendAccessGrantedEmail,
 } from "@/lib/email/send"
 import { hashPassword } from "@/lib/auth/utils"
-import { UserRole, AccessStatus, PurchaseStatus, AccessType, PrismaClient } from "@prisma/client"
+import { UserRole, AccessStatus, PurchaseStatus, AccessType } from "@prisma/client"
 import * as Sentry from "@sentry/nextjs"
+
+type TransactionClient = Omit<
+  typeof prisma,
+  "$connect" | "$disconnect" | "$on" | "$transaction" | "$extends"
+>
 
 interface PayPalResource {
   id: string
@@ -72,7 +77,7 @@ export async function handlePaymentSaleCompleted(
 
     const paymentAmount = parseFloat(amount.total)
 
-    await prisma.$transaction(async (tx: PrismaClient) => {
+    await prisma.$transaction(async (tx: TransactionClient) => {
       // Find product by slug
       const product = await tx.product.findUnique({
         where: { slug: metadata.productSlug },
@@ -200,7 +205,7 @@ export async function handlePaymentSaleRefunded(
 ): Promise<void> {
   const { sale_id } = event.resource
 
-  await prisma.$transaction(async (tx: PrismaClient) => {
+  await prisma.$transaction(async (tx: TransactionClient) => {
     const purchase = await tx.purchase.findFirst({
       where: { paypalPaymentId: sale_id },
     })

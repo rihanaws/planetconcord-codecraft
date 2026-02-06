@@ -28,7 +28,7 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
-  serverExternalPackages: ['@prisma/client', '@prisma/adapter-mariadb', 'mariadb'],
+  serverExternalPackages: ['@prisma/client', '@prisma/adapter-neon'],
 
   images: {
     remotePatterns: [
