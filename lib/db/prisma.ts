@@ -17,6 +17,9 @@ let prismaForAuth: any
 
 if (useAccelerate) {
   // Accelerate connection (Vercel) — uses connection pooler
+  // Set DATABASE_URL to PRISMA_DATABASE_URL for Accelerate
+  process.env.DATABASE_URL = process.env.PRISMA_DATABASE_URL
+
   prisma =
     globalForPrisma.prisma ??
     new PrismaClient({

@@ -75,7 +75,6 @@ export async function handlePaymentSucceeded(
 
   try {
     // Start transaction
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     await prisma.$transaction(async (tx: any) => {
     // Find product by Whop product ID or slug
     const product = await tx.product.findFirst({
@@ -204,7 +203,6 @@ export async function handleMembershipValid(
 ): Promise<void> {
   const { id, valid_until } = event.data;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   await prisma.$transaction(async (tx: any) => {
     const productAccess = await tx.productAccess.findFirst({
       where: { whopMembershipId: id },
@@ -235,8 +233,7 @@ export async function handleMembershipInvalid(
 ): Promise<void> {
   const { id } = event.data;
 
-  const productAccess = // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  await prisma.$transaction(async (tx: any) => {
+  const productAccess = await prisma.$transaction(async (tx: any) => {
     const access = await tx.productAccess.findFirst({
       where: { whopMembershipId: id },
       include: { product: true, user: true },
@@ -288,7 +285,6 @@ export async function handlePaymentRefunded(
 ): Promise<void> {
   const { original_payment_id } = event.data;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   await prisma.$transaction(async (tx: any) => {
     const purchase = await tx.purchase.findUnique({
       where: { whopPaymentId: original_payment_id },
