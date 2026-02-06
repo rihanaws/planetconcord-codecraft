@@ -34,7 +34,8 @@ async function getDashboardData(userId: string) {
     }),
 
     // Calculate stats
-    prisma.$transaction(async (tx) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    prisma.$transaction(async (tx: any) => {
       const totalProducts = await tx.productAccess.count({
         where: {
           userId,
@@ -70,8 +71,8 @@ async function getDashboardData(userId: string) {
 
   // Fetch news: global (productId IS NULL) + product-specific for owned products
   const ownedProductIds = productAccesses
-    .filter((pa) => pa.status === "ACTIVE")
-    .map((pa) => pa.productId)
+    .filter((pa: (typeof productAccesses)[0]) => pa.status === "ACTIVE")
+    .map((pa: (typeof productAccesses)[0]) => pa.productId)
 
   const newsItems = await prisma.newsItem.findMany({
     where: {

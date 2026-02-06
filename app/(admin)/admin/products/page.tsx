@@ -35,7 +35,7 @@ async function ProductsContent() {
   const rawProducts = await getProducts()
 
   // Map Prisma Json type to string[] | null for deliverables
-  const products = rawProducts.map((p) => ({
+  const products = rawProducts.map((p: (typeof rawProducts)[0]) => ({
     ...p,
     deliverables: Array.isArray(p.deliverables) ? (p.deliverables as string[]) : null,
   }))

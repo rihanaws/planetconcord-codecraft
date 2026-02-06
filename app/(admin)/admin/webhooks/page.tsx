@@ -27,7 +27,7 @@ async function WebhooksContent() {
   const rawWebhooks = await getWebhooks()
 
   // Normalize payload: JsonValue can be null, component expects Record<string, unknown>
-  const webhooks = rawWebhooks.map((w) => ({
+  const webhooks = rawWebhooks.map((w: (typeof rawWebhooks)[0]) => ({
     ...w,
     payload: (w.payload as Record<string, unknown>) ?? {},
   }))

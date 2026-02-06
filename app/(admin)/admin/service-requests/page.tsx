@@ -38,7 +38,7 @@ async function ServiceRequestsContent() {
   const data = await getServiceRequestData()
 
   // Serialize dates for client component
-  const serializedRequests = data.serviceRequests.map((r) => ({
+  const serializedRequests = data.serviceRequests.map((r: (typeof data.serviceRequests)[0]) => ({
     ...r,
     createdAt: r.createdAt.toISOString(),
     updatedAt: r.updatedAt.toISOString(),

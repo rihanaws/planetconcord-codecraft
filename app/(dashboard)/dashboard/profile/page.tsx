@@ -113,7 +113,7 @@ async function ProfileContent() {
                 No OAuth providers connected
               </p>
             ) : (
-              user.accounts.map((account) => (
+              user.accounts.map((account: (typeof user.accounts)[0]) => (
                 <div
                   key={account.provider}
                   className="flex items-center justify-between p-4 rounded-lg bg-accent/30 border border-border/30"
