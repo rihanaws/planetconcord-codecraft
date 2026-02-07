@@ -38,8 +38,8 @@ export function ProductFAQ({ faqs }: ProductFAQProps) {
             <Accordion type="single" collapsible className="w-full space-y-1">
               {faqs.map((faq, index) => (
                 <AccordionItem
-                  key={index}
-                  value={`item-${index}`}
+                  key={`product-faq-${index}-${faq.question.slice(0, 20)}`}
+                  value={`product-faq-${index}`}
                   className="group border-b border-border/50 last:border-b-0 transition-colors duration-200 hover:border-border"
                 >
                   <AccordionTrigger className="py-5 px-4 -mx-4 rounded-lg hover:bg-accent/30 hover:no-underline transition-all duration-200 text-left font-semibold">
