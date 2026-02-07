@@ -147,3 +147,15 @@ Admin: admin@techsci.xyz | Customer: customer@example.com (passwords via SEED_*_
 - PayPal metadata: pass via `custom` field as JSON string
 - Next.js 15+: no `dynamic()` with `ssr: false` in server components
 - Neon: use pooled connection string (`-pooler`) for all environments; regenerate Prisma Client after schema provider change
+- Radix UI Accordion: hydration mismatches are expected (useId() generates different IDs on SSR vs client); use `suppressHydrationWarning` on Trigger/Content components
+
+## Recent Migrations (2026-02-06)
+
+**Database: MySQL → PostgreSQL (Neon)**
+- Migrated from Hostinger MySQL to Neon PostgreSQL
+- Removed: `@prisma/adapter-mariadb`, `mariadb`, `@prisma/extension-accelerate`
+- Added: `@prisma/adapter-neon`
+- Schema: Changed `provider = "mysql"` to `provider = "postgresql"`
+- Env: Updated `DATABASE_URL` to Neon pooled connection (all envs)
+- Benefits: Native serverless connection pooling, eliminates timeout errors, simpler codebase
+- Commits: `d7be1cf` (migration), `2a430de` (hydration fix)
