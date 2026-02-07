@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
 import { Resend } from "resend"
 import { verifyRecaptcha } from "@/lib/recaptcha"
+import { contactRateLimit, checkRedisRateLimit } from "@/lib/rate-limit"
+import * as Sentry from "@sentry/nextjs"
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
@@ -12,23 +14,6 @@ const contactSchema = z.object({
   message: z.string().min(20),
   recaptchaToken: z.string(),
 })
-
-// Simple rate limiting
-const rateLimitMap = new Map<string, { count: number; resetAt: number }>()
-
-function checkRateLimit(identifier: string): boolean {
-  const now = Date.now()
-  const record = rateLimitMap.get(identifier)
-
-  if (!record || now > record.resetAt) {
-    rateLimitMap.set(identifier, { count: 1, resetAt: now + 60 * 60 * 1000 }) // 1 hour
-    return true
-  }
-
-  if (record.count >= 3) return false
-  record.count++
-  return true
-}
 
 export async function POST(request: NextRequest) {
   try {
@@ -53,7 +38,8 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    if (!checkRateLimit(email)) {
+    const rateLimit = await checkRedisRateLimit(contactRateLimit, email)
+    if (!rateLimit.allowed) {
       return NextResponse.json(
         { success: false, message: "Too many requests. Please try again later." },
         { status: 429 }
@@ -77,6 +63,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: true, message: "Message sent successfully!" })
   } catch (error) {
     console.error("Contact form error:", error)
+    Sentry.captureException(error, { tags: { route: "contact" } })
     return NextResponse.json(
       { success: false, message: "Failed to send message" },
       { status: 500 }

@@ -5,6 +5,7 @@ import { sendVerificationEmail } from "@/lib/email/send"
 import { TokenType } from "@prisma/client"
 import { z } from "zod"
 import { verifyRecaptcha } from "@/lib/recaptcha"
+import * as Sentry from "@sentry/nextjs"
 
 const registerSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -19,7 +20,11 @@ const registerSchema = z.object({
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { name, email, password, recaptchaToken } = registerSchema.parse(body)
+    const parsed = registerSchema.parse(body)
+    const name = parsed.name.trim()
+    const email = parsed.email.toLowerCase().trim()
+    const password = parsed.password
+    const recaptchaToken = parsed.recaptchaToken
 
     // Verify reCAPTCHA
     const recaptcha = await verifyRecaptcha(recaptchaToken, "SIGNUP")
@@ -81,6 +86,7 @@ export async function POST(request: NextRequest) {
     }
 
     console.error("Register error:", error)
+    Sentry.captureException(error, { tags: { route: "auth/register" } })
     return NextResponse.json(
       { error: "Failed to create account" },
       { status: 500 }

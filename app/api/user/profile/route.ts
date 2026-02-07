@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/lib/auth/config"
 import { prisma } from "@/lib/db/prisma"
 import { z } from "zod"
+import * as Sentry from "@sentry/nextjs"
 
 const profileUpdateSchema = z.object({
   name: z.string().min(1, "Name is required").max(100, "Name is too long"),
@@ -29,7 +30,8 @@ export async function PUT(req: NextRequest) {
       )
     }
 
-    const { name, email } = result.data
+    const name = result.data.name.trim()
+    const email = result.data.email.toLowerCase().trim()
 
     // Check if email is already taken by another user
     if (email !== session.user.email) {
@@ -72,6 +74,7 @@ export async function PUT(req: NextRequest) {
     })
   } catch (error) {
     console.error("Profile update error:", error)
+    Sentry.captureException(error, { tags: { route: "user/profile" } })
     return NextResponse.json(
       { error: "Failed to update profile" },
       { status: 500 }

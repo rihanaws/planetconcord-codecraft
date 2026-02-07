@@ -4,6 +4,8 @@ import { createOTPToken } from "@/lib/auth/utils"
 import { sendVerificationEmail } from "@/lib/email/send"
 import { TokenType } from "@prisma/client"
 import { z } from "zod"
+import { authRateLimit, checkRedisRateLimit } from "@/lib/rate-limit"
+import * as Sentry from "@sentry/nextjs"
 
 const sendOTPSchema = z.object({
   email: z.string().email(),
@@ -15,6 +17,13 @@ const sendOTPSchema = z.object({
  */
 export async function POST(request: NextRequest) {
   try {
+    // Rate limiting
+    const ip = request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip") || "unknown"
+    const rateLimit = await checkRedisRateLimit(authRateLimit, ip)
+    if (!rateLimit.allowed) {
+      return NextResponse.json({ error: "Too many requests. Please try again later." }, { status: 429 })
+    }
+
     const body = await request.json()
     const { email } = sendOTPSchema.parse(body)
 
@@ -56,6 +65,7 @@ export async function POST(request: NextRequest) {
     }
 
     console.error("Send OTP error:", error)
+    Sentry.captureException(error, { tags: { route: "verify-email" } })
     return NextResponse.json(
       { error: "Failed to send verification code" },
       { status: 500 }

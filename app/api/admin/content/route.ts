@@ -4,6 +4,7 @@ import { prisma } from "@/lib/db/prisma"
 import { UserRole, ContentType } from "@prisma/client"
 import { del } from "@vercel/blob"
 import { z } from "zod"
+import * as Sentry from "@sentry/nextjs"
 
 // --- POST /api/admin/content ---
 
@@ -22,75 +23,81 @@ const createContentSchema = z.object({
 })
 
 export async function POST(request: Request) {
-  const session = await auth()
+  try {
+    const session = await auth()
 
-  if (!session?.user?.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-  }
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
 
-  if (session.user.role !== UserRole.ADMIN) {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 })
-  }
+    if (session.user.role !== UserRole.ADMIN) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+    }
 
-  const body: unknown = await request.json()
-  const parsed = createContentSchema.safeParse(body)
+    const body: unknown = await request.json()
+    const parsed = createContentSchema.safeParse(body)
 
-  if (!parsed.success) {
-    return NextResponse.json(
-      { error: "Validation failed", issues: parsed.error.issues },
-      { status: 400 }
-    )
-  }
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: "Validation failed", issues: parsed.error.issues },
+        { status: 400 }
+      )
+    }
 
-  const data = parsed.data
+    const data = parsed.data
 
-  // Verify product exists
-  const product = await prisma.product.findUnique({ where: { id: data.productId } })
-  if (!product) {
-    return NextResponse.json({ error: "Product not found" }, { status: 404 })
-  }
+    // Verify product exists
+    const product = await prisma.product.findUnique({ where: { id: data.productId } })
+    if (!product) {
+      return NextResponse.json({ error: "Product not found" }, { status: 404 })
+    }
 
-  // Validate type-specific fields
-  if (data.type === "FILE" && !data.fileUrl) {
-    return NextResponse.json({ error: "File URL is required for FILE type" }, { status: 400 })
-  }
-  if (data.type === "LINK" && !data.linkUrl) {
-    return NextResponse.json({ error: "Link URL is required for LINK type" }, { status: 400 })
-  }
-  if (data.type === "TEXT" && !data.textContent) {
-    return NextResponse.json({ error: "Text content is required for TEXT type" }, { status: 400 })
-  }
-  if (data.type === "VIDEO" && !data.videoUrl) {
-    return NextResponse.json({ error: "Video URL is required for VIDEO type" }, { status: 400 })
-  }
+    // Validate type-specific fields
+    if (data.type === "FILE" && !data.fileUrl) {
+      return NextResponse.json({ error: "File URL is required for FILE type" }, { status: 400 })
+    }
+    if (data.type === "LINK" && !data.linkUrl) {
+      return NextResponse.json({ error: "Link URL is required for LINK type" }, { status: 400 })
+    }
+    if (data.type === "TEXT" && !data.textContent) {
+      return NextResponse.json({ error: "Text content is required for TEXT type" }, { status: 400 })
+    }
+    if (data.type === "VIDEO" && !data.videoUrl) {
+      return NextResponse.json({ error: "Video URL is required for VIDEO type" }, { status: 400 })
+    }
 
-  // Determine next order if not specified
-  let order = data.order
-  if (order === undefined) {
-    const maxOrder = await prisma.contentItem.aggregate({
-      where: { productId: data.productId },
-      _max: { order: true },
+    // Determine next order if not specified
+    let order = data.order
+    if (order === undefined) {
+      const maxOrder = await prisma.contentItem.aggregate({
+        where: { productId: data.productId },
+        _max: { order: true },
+      })
+      order = (maxOrder._max.order || 0) + 1
+    }
+
+    const contentItem = await prisma.contentItem.create({
+      data: {
+        productId: data.productId,
+        type: data.type as ContentType,
+        title: data.title,
+        description: data.description || null,
+        fileUrl: data.fileUrl || null,
+        fileName: data.fileName || null,
+        fileSize: data.fileSize || null,
+        linkUrl: data.linkUrl || null,
+        textContent: data.textContent || null,
+        videoUrl: data.videoUrl || null,
+        order,
+      },
     })
-    order = (maxOrder._max.order || 0) + 1
+
+    return NextResponse.json(contentItem, { status: 201 })
+  } catch (error) {
+    console.error("Admin content POST error:", error)
+    Sentry.captureException(error, { tags: { route: "admin/content", method: "POST" } })
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
-
-  const contentItem = await prisma.contentItem.create({
-    data: {
-      productId: data.productId,
-      type: data.type as ContentType,
-      title: data.title,
-      description: data.description || null,
-      fileUrl: data.fileUrl || null,
-      fileName: data.fileName || null,
-      fileSize: data.fileSize || null,
-      linkUrl: data.linkUrl || null,
-      textContent: data.textContent || null,
-      videoUrl: data.videoUrl || null,
-      order,
-    },
-  })
-
-  return NextResponse.json(contentItem, { status: 201 })
 }
 
 // --- PUT /api/admin/content ---
@@ -110,87 +117,99 @@ const updateContentSchema = z.object({
 })
 
 export async function PUT(request: Request) {
-  const session = await auth()
+  try {
+    const session = await auth()
 
-  if (!session?.user?.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
+
+    if (session.user.role !== UserRole.ADMIN) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+    }
+
+    const body: unknown = await request.json()
+    const parsed = updateContentSchema.safeParse(body)
+
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: "Validation failed", issues: parsed.error.issues },
+        { status: 400 }
+      )
+    }
+
+    const data = parsed.data
+
+    const existing = await prisma.contentItem.findUnique({ where: { id: data.id } })
+    if (!existing) {
+      return NextResponse.json({ error: "Content item not found" }, { status: 404 })
+    }
+
+    const updated = await prisma.contentItem.update({
+      where: { id: data.id },
+      data: {
+        title: data.title,
+        description: data.description ?? existing.description,
+        fileUrl: data.fileUrl ?? existing.fileUrl,
+        fileName: data.fileName ?? existing.fileName,
+        fileSize: data.fileSize ?? existing.fileSize,
+        linkUrl: data.linkUrl ?? existing.linkUrl,
+        textContent: data.textContent ?? existing.textContent,
+        videoUrl: data.videoUrl ?? existing.videoUrl,
+        order: data.order ?? existing.order,
+      },
+    })
+
+    return NextResponse.json(updated)
+  } catch (error) {
+    console.error("Admin content PUT error:", error)
+    Sentry.captureException(error, { tags: { route: "admin/content", method: "PUT" } })
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
-
-  if (session.user.role !== UserRole.ADMIN) {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 })
-  }
-
-  const body: unknown = await request.json()
-  const parsed = updateContentSchema.safeParse(body)
-
-  if (!parsed.success) {
-    return NextResponse.json(
-      { error: "Validation failed", issues: parsed.error.issues },
-      { status: 400 }
-    )
-  }
-
-  const data = parsed.data
-
-  const existing = await prisma.contentItem.findUnique({ where: { id: data.id } })
-  if (!existing) {
-    return NextResponse.json({ error: "Content item not found" }, { status: 404 })
-  }
-
-  const updated = await prisma.contentItem.update({
-    where: { id: data.id },
-    data: {
-      title: data.title,
-      description: data.description ?? existing.description,
-      fileUrl: data.fileUrl ?? existing.fileUrl,
-      fileName: data.fileName ?? existing.fileName,
-      fileSize: data.fileSize ?? existing.fileSize,
-      linkUrl: data.linkUrl ?? existing.linkUrl,
-      textContent: data.textContent ?? existing.textContent,
-      videoUrl: data.videoUrl ?? existing.videoUrl,
-      order: data.order ?? existing.order,
-    },
-  })
-
-  return NextResponse.json(updated)
 }
 
 // --- DELETE /api/admin/content ---
 // Body: { id }
 
 export async function DELETE(request: Request) {
-  const session = await auth()
+  try {
+    const session = await auth()
 
-  if (!session?.user?.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-  }
-
-  if (session.user.role !== UserRole.ADMIN) {
-    return NextResponse.json({ error: "Forbidden" }, { status: 403 })
-  }
-
-  const body: { id?: string } = await request.json()
-
-  if (!body.id) {
-    return NextResponse.json({ error: "Content item ID is required" }, { status: 400 })
-  }
-
-  const existing = await prisma.contentItem.findUnique({ where: { id: body.id } })
-  if (!existing) {
-    return NextResponse.json({ error: "Content item not found" }, { status: 404 })
-  }
-
-  // Clean up Blob file before removing the DB row
-  if (existing.type === "FILE" && existing.fileUrl) {
-    try {
-      await del(existing.fileUrl)
-    } catch {
-      // Log but don't fail the delete — orphaned blob is non-critical
-      console.warn(`Failed to delete blob file: ${existing.fileUrl}`)
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
+
+    if (session.user.role !== UserRole.ADMIN) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+    }
+
+    const body: { id?: string } = await request.json()
+
+    if (!body.id) {
+      return NextResponse.json({ error: "Content item ID is required" }, { status: 400 })
+    }
+
+    const existing = await prisma.contentItem.findUnique({ where: { id: body.id } })
+    if (!existing) {
+      return NextResponse.json({ error: "Content item not found" }, { status: 404 })
+    }
+
+    // Clean up Blob file before removing the DB row
+    if (existing.type === "FILE" && existing.fileUrl) {
+      try {
+        await del(existing.fileUrl)
+      } catch {
+        // Log but don't fail the delete — orphaned blob is non-critical
+        console.warn(`Failed to delete blob file: ${existing.fileUrl}`)
+      }
+    }
+
+    await prisma.contentItem.delete({ where: { id: body.id } })
+
+    return NextResponse.json({ message: "Content item deleted successfully" })
+  } catch (error) {
+    console.error("Admin content DELETE error:", error)
+    Sentry.captureException(error, { tags: { route: "admin/content", method: "DELETE" } })
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
-
-  await prisma.contentItem.delete({ where: { id: body.id } })
-
-  return NextResponse.json({ message: "Content item deleted successfully" })
 }

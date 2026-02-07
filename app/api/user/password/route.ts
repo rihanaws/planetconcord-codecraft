@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth/config"
 import { prisma } from "@/lib/db/prisma"
 import { comparePasswords, hashPassword } from "@/lib/auth/utils"
 import { z } from "zod"
+import * as Sentry from "@sentry/nextjs"
 
 const passwordChangeSchema = z.object({
   currentPassword: z.string().min(1, "Current password is required"),
@@ -75,6 +76,7 @@ export async function PUT(req: NextRequest) {
     })
   } catch (error) {
     console.error("Password change error:", error)
+    Sentry.captureException(error, { tags: { route: "user/password" } })
     return NextResponse.json(
       { error: "Failed to change password" },
       { status: 500 }

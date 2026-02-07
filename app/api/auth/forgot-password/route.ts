@@ -5,6 +5,7 @@ import { sendPasswordResetEmail } from "@/lib/email/send"
 import { TokenType } from "@prisma/client"
 import { z } from "zod"
 import { verifyRecaptcha } from "@/lib/recaptcha"
+import * as Sentry from "@sentry/nextjs"
 
 const forgotPasswordSchema = z.object({
   email: z.string().email(),
@@ -14,7 +15,9 @@ const forgotPasswordSchema = z.object({
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { email, recaptchaToken } = forgotPasswordSchema.parse(body)
+    const parsed = forgotPasswordSchema.parse(body)
+    const email = parsed.email.toLowerCase().trim()
+    const recaptchaToken = parsed.recaptchaToken
 
     // Verify reCAPTCHA
     const recaptcha = await verifyRecaptcha(recaptchaToken, "FORGOT_PASSWORD")
@@ -60,6 +63,7 @@ export async function POST(request: NextRequest) {
     }
 
     console.error("Forgot password error:", error)
+    Sentry.captureException(error, { tags: { route: "auth/forgot-password" } })
     return NextResponse.json(
       { error: "Failed to send reset code" },
       { status: 500 }

@@ -11,6 +11,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/db/prisma"
 import { handleWhopWebhook } from "@/lib/whop/webhook-handler"
+import { handlePayPalWebhook } from "@/lib/paypal/webhook-handler"
 import * as Sentry from "@sentry/nextjs"
 
 const RETRY_WINDOW_MS = 24 * 60 * 60 * 1000 // only retry within 24 hours
@@ -43,7 +44,13 @@ export async function GET(req: NextRequest) {
     for (const log of failedLogs) {
       retried++
       try {
-        await handleWhopWebhook(log.payload as Record<string, unknown>)
+        const payload = log.payload as Record<string, unknown>
+        const isPayPal = log.event.startsWith("PAYMENT.")
+        if (isPayPal) {
+          await handlePayPalWebhook(payload)
+        } else {
+          await handleWhopWebhook(payload)
+        }
 
         // Mark as successful
         await prisma.webhookLog.update({

@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
 import { Resend } from "resend"
 import { verifyRecaptcha } from "@/lib/recaptcha"
+import { contactRateLimit, checkRedisRateLimit } from "@/lib/rate-limit"
+import * as Sentry from "@sentry/nextjs"
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
@@ -10,26 +12,6 @@ const newsletterSchema = z.object({
   email: z.string().email("Invalid email address"),
   recaptchaToken: z.string(),
 })
-
-// Simple in-memory rate limiting (replace with Redis in production)
-const rateLimitMap = new Map<string, { count: number; resetAt: number }>()
-
-function checkRateLimit(identifier: string, maxRequests: number = 5, windowMs: number = 24 * 60 * 60 * 1000): boolean {
-  const now = Date.now()
-  const record = rateLimitMap.get(identifier)
-
-  if (!record || now > record.resetAt) {
-    rateLimitMap.set(identifier, { count: 1, resetAt: now + windowMs })
-    return true
-  }
-
-  if (record.count >= maxRequests) {
-    return false
-  }
-
-  record.count++
-  return true
-}
 
 export async function POST(request: NextRequest) {
   try {
@@ -60,8 +42,9 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Rate limiting - 5 requests per day per email
-    if (!checkRateLimit(email, 5, 24 * 60 * 60 * 1000)) {
+    // Rate limiting (Upstash Redis)
+    const rateLimit = await checkRedisRateLimit(contactRateLimit, email)
+    if (!rateLimit.allowed) {
       return NextResponse.json(
         {
           success: false,
@@ -171,6 +154,7 @@ export async function POST(request: NextRequest) {
     )
   } catch (error) {
     console.error("Newsletter subscription error:", error)
+    Sentry.captureException(error, { tags: { route: "newsletter" } })
     return NextResponse.json(
       {
         success: false,

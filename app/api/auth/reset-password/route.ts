@@ -4,6 +4,8 @@ import { verifyOTPToken } from "@/lib/auth/utils"
 import { hashPassword, validatePasswordStrength } from "@/lib/auth/utils"
 import { TokenType } from "@prisma/client"
 import { z } from "zod"
+import { authRateLimit, checkRedisRateLimit } from "@/lib/rate-limit"
+import * as Sentry from "@sentry/nextjs"
 
 const resetPasswordSchema = z.object({
   email: z.string().email(),
@@ -13,6 +15,13 @@ const resetPasswordSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limiting (OTP brute-force protection)
+    const ip = request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip") || "unknown"
+    const rateLimit = await checkRedisRateLimit(authRateLimit, ip)
+    if (!rateLimit.allowed) {
+      return NextResponse.json({ error: "Too many attempts. Please try again later." }, { status: 429 })
+    }
+
     const body = await request.json()
     const { email, otp, password } = resetPasswordSchema.parse(body)
 
@@ -69,6 +78,7 @@ export async function POST(request: NextRequest) {
     }
 
     console.error("Reset password error:", error)
+    Sentry.captureException(error, { tags: { route: "auth/reset-password" } })
     return NextResponse.json(
       { error: "Failed to reset password" },
       { status: 500 }

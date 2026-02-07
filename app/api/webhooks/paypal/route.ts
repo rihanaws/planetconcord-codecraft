@@ -7,14 +7,14 @@ import { NextRequest, NextResponse } from "next/server"
 import { verifyPayPalSignature } from "@/lib/paypal/verify-signature"
 import { handlePayPalWebhook } from "@/lib/paypal/webhook-handler"
 import { prisma } from "@/lib/db/prisma"
-import { checkRateLimit } from "@/lib/whop/rate-limit"
+import { webhookRateLimit, checkRedisRateLimit } from "@/lib/rate-limit"
 import * as Sentry from "@sentry/nextjs"
 
 export async function POST(req: NextRequest) {
   try {
-    // Rate limiting
+    // Rate limiting (Upstash Redis)
     const ip = req.headers.get("x-forwarded-for") || req.headers.get("x-real-ip") || "unknown"
-    const rateLimit = checkRateLimit(ip)
+    const rateLimit = await checkRedisRateLimit(webhookRateLimit, ip)
 
     if (!rateLimit.allowed) {
       return NextResponse.json(

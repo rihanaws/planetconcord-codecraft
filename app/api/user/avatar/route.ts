@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/lib/auth/config"
 import { prisma } from "@/lib/db/prisma"
 import { put } from "@vercel/blob"
+import * as Sentry from "@sentry/nextjs"
 
 export async function POST(req: NextRequest) {
   try {
@@ -57,6 +58,7 @@ export async function POST(req: NextRequest) {
     })
   } catch (error) {
     console.error("Avatar upload error:", error)
+    Sentry.captureException(error, { tags: { route: "user/avatar" } })
     return NextResponse.json(
       { error: "Failed to upload avatar" },
       { status: 500 }

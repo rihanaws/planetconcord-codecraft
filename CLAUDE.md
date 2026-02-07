@@ -1,11 +1,11 @@
 # CLAUDE.md
 
-## Status (Updated 2026-02-06)
-All 10 phases complete + PayPal + Cron + Neon PostgreSQL + ISR optimization.
+## Status (Updated 2026-02-07)
+All 10 phases + Phase 11 (hardening) complete + PayPal + Cron + Neon PostgreSQL + ISR optimization.
 **Live:** https://codecraft.techsci.xyz | **Products:** 10
 
 ## Stack
-Next.js 16.1.6 (App Router), React 19, TypeScript, Bun, Tailwind v4, Prisma 7 + Neon adapter, PostgreSQL (Neon), NextAuth v5, Zod v4, Sentry v10, Resend, Vercel Analytics, reCAPTCHA Enterprise, OpenAI, PayPal SDK
+Next.js 16.1.6 (App Router), React 19, TypeScript, Bun, Tailwind v4, Prisma 7 + Neon adapter, PostgreSQL (Neon), NextAuth v5, Zod v4, Sentry v10, Resend, Vercel Analytics, reCAPTCHA Enterprise, OpenAI, PayPal SDK, Upstash Redis (rate limiting)
 
 ## Commands
 ```bash
@@ -25,7 +25,7 @@ bunx prisma db push | bunx prisma studio | bun lib/db/seed.ts
 
 **Zod v4:** `.email()` works; use `error.issues` not `error.errors`
 
-**Sentry v10:** `tracesSampleRate: 1.0`; no `replays`/`ConsoleIntegration`
+**Sentry v10:** `tracesSampleRate: 1.0`; no `replays`/`ConsoleIntegration`; all 19+ API routes instrumented with `captureException` + route tags
 
 **Client Components:** Never import Prisma; use enums not strings
 
@@ -55,12 +55,22 @@ bunx prisma db push | bunx prisma studio | bun lib/db/seed.ts
 9. Paid Ads Master Class - $449
 10. E-Commerce Conversion Kit - $349
 
+## Rate Limiting (Upstash Redis)
+
+Shared module: `lib/rate-limit.ts` — falls back to allow-all when `UPSTASH_REDIS_*` env vars missing (local dev).
+
+| Limiter | Window | Max | Prefix | Used by |
+|---------|--------|-----|--------|---------|
+| `webhookRateLimit` | 60s sliding | 100 | `rl:webhook` | Whop + PayPal webhook routes |
+| `authRateLimit` | 60s sliding | 10 | `rl:auth` | verify-email, verify-email/confirm, reset-password |
+| `contactRateLimit` | 3600s sliding | 5 | `rl:contact` | contact form, newsletter |
+
 ## Webhooks
 
 **Whop:** `https://codecraft.techsci.xyz/api/webhooks/whop`
 - Events: payment.succeeded, membership.went_valid, membership.went_invalid, payment.refunded
 - Verification: HMAC-SHA256 (constant-time compare)
-- Rate limit: 100 req/min per IP
+- Rate limit: 100 req/min per IP (Upstash Redis)
 
 **PayPal:** `https://codecraft.techsci.xyz/api/webhooks/paypal`
 - Webhook ID: `8ED47441RE716080D`
@@ -79,7 +89,8 @@ Auth: `Authorization: Bearer $CRON_SECRET` (auto-injected)
    - Fails PENDING VideoAnalysis older than 5 min
 
 3. **retry-webhooks** (`*/15 * * * *`) - `/api/cron/retry-webhooks`
-   - Retries failed WebhookLog (24h window, max 10/run), handles Whop + PayPal
+   - Retries failed WebhookLog (24h window, max 10/run)
+   - Routes by event type: `PAYMENT.*` → PayPal handler, others → Whop handler
 
 ## Env Vars (All 3 Vercel Envs)
 
@@ -148,6 +159,18 @@ Admin: admin@techsci.xyz | Customer: customer@example.com (passwords via SEED_*_
 - Next.js 15+: no `dynamic()` with `ssr: false` in server components
 - Neon: use pooled connection string (`-pooler`) for all environments; regenerate Prisma Client after schema provider change
 - Radix UI Accordion: hydration mismatches are expected (useId() generates different IDs on SSR vs client); use `suppressHydrationWarning` on Trigger/Content components
+- Upstash rate limiting: `lib/rate-limit.ts` returns `allowed: true` when `UPSTASH_REDIS_*` env vars missing (graceful dev fallback); old `lib/whop/rate-limit.ts` is dead code
+
+## Phase 11: Production Hardening (2026-02-07)
+
+1. **Sentry on all API routes** — 19 routes now have `captureException` with route/method tags
+2. **Upstash Redis rate limiting** — replaced in-memory `Map` rate limiters; shared `lib/rate-limit.ts`
+3. **OTP brute-force protection** — `verify-email`, `verify-email/confirm`, `reset-password` rate-limited at 10 req/60s per IP
+4. **PayPal webhook retry fix** — cron now dispatches by event type (`PAYMENT.*` → PayPal, else → Whop)
+5. **File extension validation** — content upload route validates against allowlist of 30+ extensions
+6. **Email normalization** — `.toLowerCase().trim()` on register, forgot-password, profile update
+7. **Backward-compatible pagination** — admin users API supports `?page=1&limit=50`
+8. **Old in-memory rate limiter** (`lib/whop/rate-limit.ts`) no longer imported by any route
 
 ## Recent Migrations (2026-02-06)
 
