@@ -1,6 +1,5 @@
 import {
   Body,
-  Button,
   Container,
   Head,
   Heading,
@@ -11,75 +10,80 @@ import {
   Text,
 } from "@react-email/components"
 
-interface SubscriptionExpiringEmailProps {
+interface RefundProcessedEmailProps {
   name: string
   productName: string
-  expiryDate: string
-  renewUrl: string
-  amount?: string
+  amount: string
+  orderId?: string
 }
 
-export const SubscriptionExpiringEmailTemplate = ({
+export const RefundProcessedEmailTemplate = ({
   name,
   productName,
-  expiryDate,
-  renewUrl,
   amount,
-}: SubscriptionExpiringEmailProps) => {
+  orderId,
+}: RefundProcessedEmailProps) => {
   return (
     <Html>
       <Head />
-      <Preview>Your subscription to {productName} is expiring soon</Preview>
+      <Preview>
+        Refund Processed - ${amount} | TechSci CodeCraft
+      </Preview>
       <Body style={main}>
         <Container style={container}>
-          <Heading style={h1}>Subscription Expiring Soon</Heading>
+          <Heading style={h1}>Refund Processed</Heading>
           <Text style={text}>Hi {name},</Text>
-          <Text style={text}>
-            This is a friendly reminder that your subscription to{" "}
-            <strong>{productName}</strong> will expire on{" "}
-            <strong>{expiryDate}</strong>.
-          </Text>
+          <Text style={text}>Your refund has been processed.</Text>
 
           <Section style={detailBox}>
-            <Text style={detailTitle}>Subscription Details</Text>
+            <Text style={detailTitle}>Refund Details</Text>
             <Text style={detailItem}>
-              <strong>Product:</strong> {productName}
+              <strong>Original Purchase:</strong> {productName}
             </Text>
             <Text style={detailItem}>
-              <strong>Expiry Date:</strong> {expiryDate}
+              <strong>Refund Amount:</strong> ${amount}
             </Text>
-            {amount && (
+            {orderId && (
               <Text style={detailItem}>
-                <strong>Renewal Amount:</strong> ${amount}
+                <strong>Order ID:</strong> {orderId}
               </Text>
             )}
             <Text style={detailItem}>
-              <strong>Statement Descriptor:</strong> Charges appear as
-              &quot;TECHSCI&quot; or &quot;CodeCraft Agency&quot;
+              <strong>Refund Date:</strong>{" "}
+              {new Date().toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
             </Text>
           </Section>
 
           <Text style={text}>
-            To continue enjoying uninterrupted access to all the features and
-            content, please renew your subscription before it expires.
+            Your refund will appear on your credit card statement within 5-10
+            business days as a credit from &quot;TECHSCI&quot; or
+            &quot;CodeCraft Agency&quot;.
           </Text>
-          <Section style={buttonContainer}>
-            <Button style={button} href={renewUrl}>
-              Renew Subscription
-            </Button>
-          </Section>
 
           <Hr style={hr} />
 
           <Text style={text}>
-            If you have any questions about your subscription or need
-            assistance, contact us at <strong>support@techsci.xyz</strong> — we
-            typically respond within 4 hours on business days.
+            Your access to <strong>{productName}</strong> has been revoked.
+          </Text>
+          <Text style={text}>
+            If you have any questions about this refund or would like to discuss
+            alternatives, please reply to this email or contact{" "}
+            <strong>support@techsci.xyz</strong>.
+          </Text>
+          <Text style={text}>
+            We&apos;re sorry to see you go. If there&apos;s anything we could
+            have done better, we&apos;d love to hear your feedback.
           </Text>
           <Text style={footer}>
             Best regards,
             <br />
             TechSci CodeCraft Agency
+            <br />
+            support@techsci.xyz
           </Text>
         </Container>
       </Body>
@@ -117,11 +121,11 @@ const text = {
 }
 
 const detailBox = {
-  backgroundColor: "#fff8e1",
+  backgroundColor: "#f8f9fa",
   borderRadius: "8px",
   margin: "24px 40px",
   padding: "20px",
-  border: "1px solid #ffe082",
+  border: "1px solid #e9ecef",
 }
 
 const detailTitle = {
@@ -136,22 +140,6 @@ const detailItem = {
   fontSize: "14px",
   lineHeight: "22px",
   margin: "4px 0",
-}
-
-const buttonContainer = {
-  margin: "32px 40px",
-}
-
-const button = {
-  backgroundColor: "#000",
-  borderRadius: "6px",
-  color: "#fff",
-  fontSize: "16px",
-  fontWeight: "bold",
-  textDecoration: "none",
-  textAlign: "center" as const,
-  display: "block",
-  padding: "12px 20px",
 }
 
 const hr = {

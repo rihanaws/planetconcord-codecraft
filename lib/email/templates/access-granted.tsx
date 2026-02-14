@@ -4,6 +4,7 @@ import {
   Container,
   Head,
   Heading,
+  Hr,
   Html,
   Preview,
   Section,
@@ -14,12 +15,14 @@ interface AccessGrantedEmailProps {
   name: string
   productName: string
   accessUrl: string
+  accessType?: string
 }
 
 export const AccessGrantedEmailTemplate = ({
   name,
   productName,
   accessUrl,
+  accessType,
 }: AccessGrantedEmailProps) => {
   return (
     <Html>
@@ -33,23 +36,57 @@ export const AccessGrantedEmailTemplate = ({
             Great news! Your access to <strong>{productName}</strong> has been
             successfully granted.
           </Text>
+
+          <Section style={detailBox}>
+            <Text style={detailTitle}>Access Details</Text>
+            <Text style={detailItem}>
+              <strong>Product:</strong> {productName}
+            </Text>
+            <Text style={detailItem}>
+              <strong>Access Type:</strong>{" "}
+              {accessType === "SUBSCRIPTION" ? "Subscription" : "Lifetime"}
+            </Text>
+            <Text style={detailItem}>
+              <strong>Statement Descriptor:</strong> Charges appear as
+              &quot;TECHSCI&quot; or &quot;CodeCraft Agency&quot;
+            </Text>
+          </Section>
+
           <Text style={text}>
             You can now access all the content, resources, and materials included
             with this product.
           </Text>
+
           <Section style={buttonContainer}>
             <Button style={button} href={accessUrl}>
               Access Your Product
             </Button>
           </Section>
+
+          <Section style={stepsBox}>
+            <Text style={stepsTitle}>Next Steps</Text>
+            <Text style={stepsItem}>
+              1. Log in to your dashboard at codecraft.techsci.xyz/dashboard
+            </Text>
+            <Text style={stepsItem}>
+              2. Navigate to &quot;My Products&quot; to see {productName}
+            </Text>
+            <Text style={stepsItem}>
+              3. Download your files, access your tools, and get started!
+            </Text>
+          </Section>
+
+          <Hr style={hr} />
+
           <Text style={text}>
-            If you have any questions or need help getting started, please don&apos;t
-            hesitate to reach out to our support team.
+            Need help getting started? Reply to this email or contact us at{" "}
+            <strong>support@techsci.xyz</strong> — we typically respond within 4
+            hours on business days.
           </Text>
           <Text style={footer}>
             Best regards,
             <br />
-            The TechSci CodeCraft Team
+            TechSci CodeCraft Agency
           </Text>
         </Container>
       </Body>
@@ -86,6 +123,50 @@ const text = {
   margin: "16px 40px",
 }
 
+const detailBox = {
+  backgroundColor: "#f0f7ff",
+  borderRadius: "8px",
+  margin: "24px 40px",
+  padding: "20px",
+  border: "1px solid #d0e3f7",
+}
+
+const detailTitle = {
+  color: "#333",
+  fontSize: "16px",
+  fontWeight: "bold",
+  margin: "0 0 12px 0",
+}
+
+const detailItem = {
+  color: "#555",
+  fontSize: "14px",
+  lineHeight: "22px",
+  margin: "4px 0",
+}
+
+const stepsBox = {
+  backgroundColor: "#f8f9fa",
+  borderRadius: "8px",
+  margin: "24px 40px",
+  padding: "20px",
+  border: "1px solid #e9ecef",
+}
+
+const stepsTitle = {
+  color: "#333",
+  fontSize: "16px",
+  fontWeight: "bold",
+  margin: "0 0 12px 0",
+}
+
+const stepsItem = {
+  color: "#555",
+  fontSize: "14px",
+  lineHeight: "24px",
+  margin: "4px 0",
+}
+
 const buttonContainer = {
   margin: "32px 40px",
 }
@@ -100,6 +181,11 @@ const button = {
   textAlign: "center" as const,
   display: "block",
   padding: "12px 20px",
+}
+
+const hr = {
+  borderColor: "#e6ebf1",
+  margin: "32px 40px",
 }
 
 const footer = {

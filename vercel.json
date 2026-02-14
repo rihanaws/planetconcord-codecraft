@@ -11,6 +11,10 @@
     {
       "path": "/api/cron/retry-webhooks",
       "schedule": "*/15 * * * *"
+    },
+    {
+      "path": "/api/cron/post-purchase-checkin",
+      "schedule": "0 10 * * *"
     }
   ]
 }

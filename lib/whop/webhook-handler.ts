@@ -10,6 +10,7 @@ import {
   sendPurchaseConfirmationEmail,
   sendAccessGrantedEmail,
   sendSubscriptionExpiringEmail,
+  sendRefundProcessedEmail,
 } from "@/lib/email/send";
 import { hashPassword } from "@/lib/auth/utils";
 import { UserRole, AccessStatus, PurchaseStatus, AccessType } from "@prisma/client";
@@ -169,15 +170,19 @@ export async function handlePaymentSucceeded(
         user.name || "Valued Customer",
         product.name,
         dashboardUrl,
-        product.discordInviteUrl || undefined
+        product.discordInviteUrl || undefined,
+        String(amount),
+        id
       );
 
       // Access granted
+      const accessTypeLabel = product.pricingType === "SUBSCRIPTION" ? "SUBSCRIPTION" : "LIFETIME";
       await sendAccessGrantedEmail(
         user.email,
         user.name || "Valued Customer",
         product.name,
-        dashboardUrl
+        dashboardUrl,
+        accessTypeLabel
       );
     } catch (emailError) {
       console.error("Failed to send emails:", emailError);
@@ -285,9 +290,10 @@ export async function handlePaymentRefunded(
 ): Promise<void> {
   const { original_payment_id } = event.data;
 
-  await prisma.$transaction(async (tx: any) => {
+  const refundInfo = await prisma.$transaction(async (tx: any) => {
     const purchase = await tx.purchase.findUnique({
       where: { whopPaymentId: original_payment_id },
+      include: { user: true, product: true },
     });
 
     if (!purchase) {
@@ -316,7 +322,28 @@ export async function handlePaymentRefunded(
       },
     });
 
+    return {
+      email: purchase.user.email,
+      name: purchase.user.name || "Valued Customer",
+      productName: purchase.product.name,
+      amount: String(purchase.amount),
+      orderId: purchase.whopPaymentId || undefined,
+    };
   });
+
+  // Send refund confirmation email
+  try {
+    await sendRefundProcessedEmail(
+      refundInfo.email,
+      refundInfo.name,
+      refundInfo.productName,
+      refundInfo.amount,
+      refundInfo.orderId
+    );
+  } catch (emailError) {
+    console.error("Failed to send refund email:", emailError);
+    Sentry.captureException(emailError);
+  }
 }
 
 /**

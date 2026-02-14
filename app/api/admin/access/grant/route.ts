@@ -4,6 +4,7 @@ import { prisma } from "@/lib/db/prisma"
 import { UserRole, AccessType, AccessStatus } from "@prisma/client"
 import { z } from "zod"
 import * as Sentry from "@sentry/nextjs"
+import { sendAccessGrantedEmail } from "@/lib/email/send"
 
 const grantAccessSchema = z.object({
   userId: z.string().min(1, "User ID is required"),
@@ -72,9 +73,25 @@ export async function POST(request: Request) {
         },
         include: {
           user: { select: { name: true, email: true } },
-          product: { select: { name: true } },
+          product: { select: { name: true, slug: true } },
         },
       })
+
+      // Send access granted email
+      try {
+        const accessUrl = `${process.env.NEXTAUTH_URL}/dashboard/products/${updated.product.slug}`
+        await sendAccessGrantedEmail(
+          updated.user.email,
+          updated.user.name || "Valued Customer",
+          updated.product.name,
+          accessUrl,
+          data.accessType
+        )
+      } catch (emailError) {
+        console.error("Failed to send access granted email:", emailError)
+        Sentry.captureException(emailError)
+      }
+
       return NextResponse.json(updated, { status: 200 })
     }
 
@@ -89,9 +106,24 @@ export async function POST(request: Request) {
       },
       include: {
         user: { select: { name: true, email: true } },
-        product: { select: { name: true } },
+        product: { select: { name: true, slug: true } },
       },
     })
+
+    // Send access granted email
+    try {
+      const accessUrl = `${process.env.NEXTAUTH_URL}/dashboard/products/${access.product.slug}`
+      await sendAccessGrantedEmail(
+        access.user.email,
+        access.user.name || "Valued Customer",
+        access.product.name,
+        accessUrl,
+        data.accessType
+      )
+    } catch (emailError) {
+      console.error("Failed to send access granted email:", emailError)
+      Sentry.captureException(emailError)
+    }
 
     return NextResponse.json(access, { status: 201 })
   } catch (error) {

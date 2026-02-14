@@ -8,6 +8,7 @@ import { prisma } from "@/lib/db/prisma"
 import {
   sendPurchaseConfirmationEmail,
   sendAccessGrantedEmail,
+  sendRefundProcessedEmail,
 } from "@/lib/email/send"
 import { hashPassword } from "@/lib/auth/utils"
 import { UserRole, AccessStatus, PurchaseStatus, AccessType } from "@prisma/client"
@@ -172,15 +173,19 @@ export async function handlePaymentSaleCompleted(
           user.name || "Valued Customer",
           product.name,
           dashboardUrl,
-          product.discordInviteUrl || undefined
+          product.discordInviteUrl || undefined,
+          amount.total,
+          id
         )
 
         // Access granted
+        const accessTypeLabel = product.pricingType === "SUBSCRIPTION" ? "SUBSCRIPTION" : "LIFETIME"
         await sendAccessGrantedEmail(
           user.email,
           user.name || "Valued Customer",
           product.name,
-          dashboardUrl
+          dashboardUrl,
+          accessTypeLabel
         )
       } catch (emailError) {
         console.error("Failed to send emails:", emailError)
@@ -205,9 +210,10 @@ export async function handlePaymentSaleRefunded(
 ): Promise<void> {
   const { sale_id } = event.resource
 
-  await prisma.$transaction(async (tx: TransactionClient) => {
+  const refundInfo = await prisma.$transaction(async (tx: TransactionClient) => {
     const purchase = await tx.purchase.findFirst({
       where: { paypalPaymentId: sale_id },
+      include: { user: true, product: true },
     })
 
     if (!purchase) {
@@ -235,7 +241,29 @@ export async function handlePaymentSaleRefunded(
         revokedReason: "Payment refunded",
       },
     })
+
+    return {
+      email: purchase.user.email,
+      name: purchase.user.name || "Valued Customer",
+      productName: purchase.product.name,
+      amount: String(purchase.amount),
+      orderId: purchase.paypalPaymentId || undefined,
+    }
   })
+
+  // Send refund confirmation email
+  try {
+    await sendRefundProcessedEmail(
+      refundInfo.email,
+      refundInfo.name,
+      refundInfo.productName,
+      refundInfo.amount,
+      refundInfo.orderId
+    )
+  } catch (emailError) {
+    console.error("Failed to send refund email:", emailError)
+    Sentry.captureException(emailError)
+  }
 }
 
 /**
