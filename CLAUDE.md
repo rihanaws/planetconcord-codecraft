@@ -1,7 +1,7 @@
 # CLAUDE.md
 
-## Status (Updated 2026-02-07)
-All 10 phases + Phase 11 (hardening) complete + PayPal + Cron + Neon PostgreSQL + ISR optimization.
+## Status (Updated 2026-02-15)
+All 10 phases + Phase 11 (hardening) + Whop customer sync + dispute prevention emails.
 **Live:** https://codecraft.techsci.xyz | **Products:** 10
 
 ## Stack
@@ -41,7 +41,7 @@ bunx prisma db push | bunx prisma studio | bun lib/db/seed.ts
 
 **Auth:** Google OAuth + Email/Password (6-digit OTP, 10-min expiry), bcryptjs (10 rounds), role-based (CUSTOMER/ADMIN)
 
-**Emails (6):** verification-otp, welcome, purchase-confirmation, access-granted, password-reset, subscription-expiring
+**Emails (8):** verification-otp, welcome, purchase-confirmation (w/ order details + billing descriptor), access-granted (w/ access type + next steps), password-reset, subscription-expiring (w/ renewal amount), post-purchase-checkin (2-day follow-up), refund-processed
 
 ## Products (10)
 1. Email Newsletter Starter Pack - $149
@@ -83,7 +83,8 @@ Shared module: `lib/rate-limit.ts` — falls back to allow-all when `UPSTASH_RED
 Auth: `Authorization: Bearer $CRON_SECRET` (auto-injected)
 
 1. **cleanup-subscriptions** (`0 */6 * * *`) - `/api/cron/cleanup-subscriptions`
-   - Expires ACTIVE ProductAccess past expiresAt, sends email
+   - Expires ACTIVE ProductAccess past expiresAt, sends expiry email
+   - Sends 3-day-before renewal reminders (2.5–3.5 day window)
 
 2. **cleanup-video-analyses** (`*/5 * * * *`) - `/api/cron/cleanup-video-analyses`
    - Fails PENDING VideoAnalysis older than 5 min
@@ -91,6 +92,11 @@ Auth: `Authorization: Bearer $CRON_SECRET` (auto-injected)
 3. **retry-webhooks** (`*/15 * * * *`) - `/api/cron/retry-webhooks`
    - Retries failed WebhookLog (24h window, max 10/run)
    - Routes by event type: `PAYMENT.*` → PayPal handler, others → Whop handler
+
+4. **post-purchase-checkin** (`0 10 * * *`) - `/api/cron/post-purchase-checkin`
+   - Sends check-in email ~48h after purchase (47–49h window)
+   - Tracks via `Purchase.checkinSentAt` to avoid double-sends
+   - Includes billing descriptor reminder for dispute prevention
 
 ## Env Vars (All 3 Vercel Envs)
 
@@ -160,6 +166,23 @@ Admin: admin@techsci.xyz | Customer: customer@example.com (passwords via SEED_*_
 - Neon: use pooled connection string (`-pooler`) for all environments; regenerate Prisma Client after schema provider change
 - Radix UI Accordion: hydration mismatches are expected (useId() generates different IDs on SSR vs client); use `suppressHydrationWarning` on Trigger/Content components
 - Upstash rate limiting: `lib/rate-limit.ts` returns `allowed: true` when `UPSTASH_REDIS_*` env vars missing (graceful dev fallback); old `lib/whop/rate-limit.ts` is dead code
+- Scripts in `scripts/`: run with `set -a && source .env.local && set +a && npx tsx scripts/<name>.ts` (needs DATABASE_URL)
+- After adding fields to Prisma schema: run `bunx prisma generate` before `bun run build` (client must be regenerated)
+
+## Whop Customer Sync & Dispute Prevention (2026-02-15)
+
+1. **Customer sync** — 2 Whop customers granted LIFETIME access via `scripts/bulk-grant-access.ts`
+   - George (ar3636998@yahoo.com) → Landing Page CRO Boost
+   - George Peppas (georgepeppas172@gmail.com) → Shopify Speed Surge
+   - Azaan Ali (axaanali6@gmail.com) — refunded, NO access (correct)
+2. **Dispute prevention emails** — All purchase/access emails now include billing descriptor ("TECHSCI" / "CodeCraft Agency"), support contact (support@techsci.xyz, <4h response), and "contact us BEFORE your bank" warning
+3. **Refund email** — `sendRefundProcessedEmail()` wired into both Whop + PayPal refund handlers
+4. **Admin grant email** — `POST /api/admin/access/grant` now sends `sendAccessGrantedEmail()` on grant/reactivation
+5. **Post-purchase check-in cron** — Daily 10 AM UTC, emails customers ~48h after purchase
+6. **3-day renewal reminders** — `cleanup-subscriptions` cron extended to send reminders before expiry
+7. **Schema** — `Purchase.checkinSentAt DateTime?` added
+8. **Scripts** — `scripts/audit-users-and-access.ts`, `scripts/bulk-grant-access.ts`, `scripts/verify-access.ts` (run with `npx tsx scripts/<name>.ts`, requires `.env.local` sourced)
+9. **Build config** — `whoplan/` and `scripts/` excluded from ESLint + TypeScript (tsconfig.json, eslint.config.mjs)
 
 ## Phase 11: Production Hardening (2026-02-07)
 
