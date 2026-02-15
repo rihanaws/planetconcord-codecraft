@@ -1,7 +1,7 @@
 # CLAUDE.md
 
 ## Status (Updated 2026-02-15)
-All 10 phases + Phase 11 (hardening) + Whop customer sync + dispute prevention emails.
+All 10 phases + Phase 11 (hardening) + Whop customer sync + dispute prevention emails + delivery tracking + admin settings.
 **Live:** https://codecraft.techsci.xyz | **Products:** 10
 
 ## Stack
@@ -31,13 +31,13 @@ bunx prisma db push | bunx prisma studio | bun lib/db/seed.ts
 
 ## Architecture
 
-**Models (12):** User, Account, Session, VerificationToken, Product, ProductAccess, Purchase, ContentItem, WebhookLog, NewsItem, VideoAnalysis, ServiceRequest
+**Models (13):** User, Account, Session, VerificationToken, Product, ProductAccess, Purchase, ContentItem, WebhookLog, NewsItem, VideoAnalysis, ServiceRequest, AppSetting
 
 **Routes:**
 - Public: `/`, `/products/*`, `/about`, `/contact`, legal pages
 - Auth: `/login`, `/signup`, `/verify-email`, `/forgot-password`, `/reset-password`
 - Dashboard: `/dashboard`, `/dashboard/products`, `/dashboard/products/[slug]`, `/dashboard/purchases`, `/dashboard/profile`
-- Admin: `/admin`, `/admin/products/*`, `/admin/users`, `/admin/purchases`, `/admin/access`, `/admin/webhooks`, `/admin/news`, `/admin/service-requests`
+- Admin: `/admin`, `/admin/products/*`, `/admin/users`, `/admin/purchases`, `/admin/access`, `/admin/webhooks`, `/admin/news`, `/admin/service-requests`, `/admin/settings`
 
 **Auth:** Google OAuth + Email/Password (6-digit OTP, 10-min expiry), bcryptjs (10 rounds), role-based (CUSTOMER/ADMIN)
 
@@ -108,7 +108,7 @@ Auth: `Authorization: Bearer $CRON_SECRET` (auto-injected)
 
 **Email:** RESEND_API_KEY, RESEND_FROM_EMAIL
 
-**Whop:** WHOP_WEBHOOK_SECRET, WHOP_API_KEY, WHOP_COMPANY_ID
+**Whop:** WHOP_WEBHOOK_SECRET, WHOP_API_KEY, WHOP_COMPANY_ID (also configurable via `/admin/settings` → AppSetting table, DB overrides env)
 
 **Services:** BLOB_READ_WRITE_TOKEN (auto), SENTRY_DSN, UPSTASH_REDIS_REST_URL, UPSTASH_REDIS_REST_TOKEN, OPENAI_API_KEY, CRON_SECRET
 
@@ -168,6 +168,22 @@ Admin: admin@techsci.xyz | Customer: customer@example.com (passwords via SEED_*_
 - Upstash rate limiting: `lib/rate-limit.ts` returns `allowed: true` when `UPSTASH_REDIS_*` env vars missing (graceful dev fallback); old `lib/whop/rate-limit.ts` is dead code
 - Scripts in `scripts/`: run with `set -a && source .env.local && set +a && npx tsx scripts/<name>.ts` (needs DATABASE_URL)
 - After adding fields to Prisma schema: run `bunx prisma generate` before `bun run build` (client must be regenerated)
+- AppSetting cache (`lib/settings.ts`): 60s TTL in-memory cache; changes via `/admin/settings` take up to 60s to apply to webhook verification
+
+## Purchase Delivery Tracking & Admin Settings (2026-02-15)
+
+1. **Delivery tracking on Purchase** — `deliveredAt DateTime?`, `deliveryConfirmed Boolean`, `deliveryNotes String?`
+2. **Delivery tracking on ProductAccess** — `deliveryStatus String? @default("PENDING")` (PENDING/DELIVERED/BACKLOGGED), `deliveredAt DateTime?`, `backlogNotes String?`
+3. **AppSetting model** — key-value store for admin-configurable settings (key unique, value Text)
+4. **Purchase table** — "Delivery" column with Pending/Delivered badges, "Mark Delivered" button on completed purchases
+5. **Access table** — "Delivery" column with Pending/Delivered/Backlogged badges, "Deliver" and "Backlog" action buttons
+6. **Admin Settings page** (`/admin/settings`) — 3 sections:
+   - Whop Global Credentials: API Key, Webhook Secret, Company ID (masked inputs, save/copy per field, stored in AppSetting)
+   - Webhook Endpoints: read-only Whop + PayPal URLs with copy buttons, PayPal Webhook ID
+   - Per-Product Whop Mapping: editable table of all products with Whop Product ID + Checkout URL, Linked/Unlinked badges
+7. **Settings helper** (`lib/settings.ts`) — in-memory 60s TTL cache for AppSetting values, env var fallback
+8. **Whop webhook** — secret now read from DB via `getWhopWebhookSecret()`, falls back to `WHOP_WEBHOOK_SECRET` env var
+9. **APIs**: `PATCH /api/admin/purchases/[id]/delivery`, `PATCH /api/admin/access/delivery`, `GET/PUT /api/admin/settings`, `PATCH /api/admin/products/[id]/whop`
 
 ## Whop Customer Sync & Dispute Prevention (2026-02-15)
 
