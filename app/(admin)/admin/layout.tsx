@@ -16,6 +16,7 @@ import {
   Webhook,
   Megaphone,
   ClipboardList,
+  Settings,
   Menu,
   X,
   LogOut,
@@ -75,6 +76,11 @@ const ADMIN_NAV = [
     label: "Service Requests",
     href: "/admin/service-requests",
     icon: ClipboardList,
+  },
+  {
+    label: "Settings",
+    href: "/admin/settings",
+    icon: Settings,
   },
 ]
 

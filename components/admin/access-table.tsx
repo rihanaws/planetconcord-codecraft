@@ -19,7 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { Search, Slash } from "lucide-react"
+import { Search, Slash, CheckCircle2, Clock, AlertTriangle } from "lucide-react"
 import { format } from "date-fns"
 import { RevokeAccessDialog } from "@/components/admin/revoke-access-dialog"
 
@@ -27,6 +27,9 @@ interface AccessRow {
   id: string
   status: string
   accessType: string
+  deliveryStatus: string | null
+  deliveredAt: Date | null
+  backlogNotes: string | null
   expiresAt: Date | null
   revokedAt: Date | null
   revokedReason: string | null
@@ -44,6 +47,7 @@ export function AccessTable({ accessRecords: initialRecords }: AccessTableProps)
   const [searchQuery, setSearchQuery] = useState("")
   const [statusFilter, setStatusFilter] = useState<string>("ALL")
   const [revokeTarget, setRevokeTarget] = useState<AccessRow | null>(null)
+  const [loadingDelivery, setLoadingDelivery] = useState<string | null>(null)
 
   const filtered = useMemo(() => {
     return records.filter((record) => {
@@ -83,6 +87,57 @@ export function AccessTable({ accessRecords: initialRecords }: AccessTableProps)
       )
     )
     setRevokeTarget(null)
+  }
+
+  const handleDeliveryUpdate = async (accessId: string, deliveryStatus: "DELIVERED" | "BACKLOGGED") => {
+    setLoadingDelivery(accessId)
+    try {
+      const res = await fetch("/api/admin/access/delivery", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ accessId, deliveryStatus }),
+      })
+      if (!res.ok) throw new Error("Failed to update")
+      setRecords((prev) =>
+        prev.map((r) =>
+          r.id === accessId
+            ? { ...r, deliveryStatus, deliveredAt: deliveryStatus === "DELIVERED" ? new Date() : r.deliveredAt }
+            : r
+        )
+      )
+    } catch {
+      // silent fail — user will see no change
+    } finally {
+      setLoadingDelivery(null)
+    }
+  }
+
+  const getDeliveryBadge = (record: AccessRow) => {
+    if (record.status === "REVOKED" || record.status === "EXPIRED") return null
+    const status = record.deliveryStatus || "PENDING"
+    switch (status) {
+      case "DELIVERED":
+        return (
+          <Badge variant="default" className="gap-1">
+            <CheckCircle2 className="h-3 w-3" />
+            Delivered
+          </Badge>
+        )
+      case "BACKLOGGED":
+        return (
+          <Badge variant="destructive" className="gap-1">
+            <AlertTriangle className="h-3 w-3" />
+            Backlogged
+          </Badge>
+        )
+      default:
+        return (
+          <Badge variant="secondary" className="gap-1">
+            <Clock className="h-3 w-3" />
+            Pending
+          </Badge>
+        )
+    }
   }
 
   return (
@@ -141,6 +196,7 @@ export function AccessTable({ accessRecords: initialRecords }: AccessTableProps)
                   <TableHead className="font-semibold">Product</TableHead>
                   <TableHead className="font-semibold">Status</TableHead>
                   <TableHead className="font-semibold">Type</TableHead>
+                  <TableHead className="font-semibold">Delivery</TableHead>
                   <TableHead className="font-semibold">Granted</TableHead>
                   <TableHead className="font-semibold">Expires</TableHead>
                   <TableHead className="font-semibold text-right">Actions</TableHead>
@@ -170,13 +226,40 @@ export function AccessTable({ accessRecords: initialRecords }: AccessTableProps)
                       </Badge>
                     </TableCell>
                     <TableCell className="text-sm capitalize">{record.accessType.toLowerCase()}</TableCell>
+                    <TableCell>
+                      {getDeliveryBadge(record)}
+                    </TableCell>
                     <TableCell className="text-sm text-muted-foreground">
                       {format(new Date(record.grantedAt), "MMM d, yyyy")}
                     </TableCell>
                     <TableCell className="text-sm text-muted-foreground">
                       {record.expiresAt ? format(new Date(record.expiresAt), "MMM d, yyyy") : "—"}
                     </TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="text-right space-x-1">
+                      {record.status === "ACTIVE" && record.deliveryStatus !== "DELIVERED" && (
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="h-8 text-xs"
+                          disabled={loadingDelivery === record.id}
+                          onClick={() => handleDeliveryUpdate(record.id, "DELIVERED")}
+                        >
+                          <CheckCircle2 className="h-3.5 w-3.5 mr-1" />
+                          Deliver
+                        </Button>
+                      )}
+                      {record.status === "ACTIVE" && record.deliveryStatus !== "BACKLOGGED" && record.deliveryStatus !== "DELIVERED" && (
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="h-8 text-xs text-amber-600 hover:text-amber-600 hover:bg-amber-600/10"
+                          disabled={loadingDelivery === record.id}
+                          onClick={() => handleDeliveryUpdate(record.id, "BACKLOGGED")}
+                        >
+                          <AlertTriangle className="h-3.5 w-3.5 mr-1" />
+                          Backlog
+                        </Button>
+                      )}
                       {record.status === "ACTIVE" && (
                         <Button
                           size="sm"
@@ -184,7 +267,7 @@ export function AccessTable({ accessRecords: initialRecords }: AccessTableProps)
                           className="h-8 text-xs text-destructive hover:text-destructive hover:bg-destructive/10"
                           onClick={() => setRevokeTarget(record)}
                         >
-                          <Slash className="h-3.5 w-3.5 mr-1.5" />
+                          <Slash className="h-3.5 w-3.5 mr-1" />
                           Revoke
                         </Button>
                       )}

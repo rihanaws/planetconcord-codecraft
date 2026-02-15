@@ -10,7 +10,17 @@ async function getPurchaseData() {
   const [purchases, products] = await Promise.all([
     prisma.purchase.findMany({
       orderBy: { createdAt: "desc" },
-      include: {
+      select: {
+        id: true,
+        amount: true,
+        status: true,
+        whopPaymentId: true,
+        deliveredAt: true,
+        deliveryConfirmed: true,
+        deliveryNotes: true,
+        createdAt: true,
+        completedAt: true,
+        refundedAt: true,
         user: { select: { id: true, name: true, email: true } },
         product: { select: { id: true, name: true, slug: true } },
       },

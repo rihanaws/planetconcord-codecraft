@@ -195,6 +195,11 @@ model ProductAccess {
   revokedAt        DateTime?
   revokedReason    String?
 
+  // Delivery tracking
+  deliveryStatus String?   @default("PENDING")
+  deliveredAt    DateTime?
+  backlogNotes   String?   @db.Text
+
   grantedAt DateTime @default(now())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -220,6 +225,11 @@ model Purchase {
   whopPaymentId   String? @unique
   whopData        Json?   // Store full webhook payload
   paypalPaymentId String? @unique
+
+  // Delivery tracking
+  deliveredAt       DateTime?
+  deliveryConfirmed Boolean   @default(false)
+  deliveryNotes     String?   @db.Text
 
   completedAt   DateTime?
   refundedAt    DateTime?
@@ -335,4 +345,15 @@ model ServiceRequest {
 
   @@index([userId])
   @@index([productId, status])
+}
+
+model AppSetting {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([key])
 }

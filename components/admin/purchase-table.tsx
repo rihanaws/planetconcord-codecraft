@@ -14,13 +14,16 @@ import {
 import { format } from "date-fns"
 import { useToast } from "@/hooks/use-toast"
 import { PurchaseFilters } from "@/components/admin/purchase-filters"
-import { Receipt } from "lucide-react"
+import { Receipt, CheckCircle2, Clock } from "lucide-react"
 
 interface PurchaseRow {
   id: string
   amount: number
   status: string
   whopPaymentId: string | null
+  deliveredAt: Date | null
+  deliveryConfirmed: boolean
+  deliveryNotes: string | null
   createdAt: Date
   completedAt: Date | null
   refundedAt: Date | null
@@ -39,10 +42,11 @@ interface PurchaseTableProps {
 }
 
 export function PurchaseTable({ purchases: initialPurchases, products }: PurchaseTableProps) {
-  const [purchases] = useState<PurchaseRow[]>(initialPurchases)
+  const [purchases, setPurchases] = useState<PurchaseRow[]>(initialPurchases)
   const [searchQuery, setSearchQuery] = useState("")
   const [statusFilter, setStatusFilter] = useState<string>("ALL")
   const [productFilter, setProductFilter] = useState<string>("ALL")
+  const [loadingDelivery, setLoadingDelivery] = useState<string | null>(null)
   const { toast } = useToast()
 
   const filtered = useMemo(() => {
@@ -78,9 +82,44 @@ export function PurchaseTable({ purchases: initialPurchases, products }: Purchas
     }
   }
 
-  const handleStatusUpdate = async (id: string, newStatus: string) => {
-    // For now, just show a toast — manual DB status change would need a dedicated API
-    toast({ title: "Status update", description: `Would update purchase ${id} to ${newStatus}. (Manual update via Whop dashboard recommended.)` })
+  const handleMarkDelivered = async (id: string) => {
+    setLoadingDelivery(id)
+    try {
+      const res = await fetch(`/api/admin/purchases/${id}/delivery`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ deliveryConfirmed: true }),
+      })
+      if (!res.ok) throw new Error("Failed to update delivery status")
+      setPurchases((prev) =>
+        prev.map((p) =>
+          p.id === id ? { ...p, deliveryConfirmed: true, deliveredAt: new Date() } : p
+        )
+      )
+      toast({ title: "Delivery confirmed", description: "Purchase marked as delivered." })
+    } catch {
+      toast({ title: "Error", description: "Failed to update delivery status.", variant: "destructive" })
+    } finally {
+      setLoadingDelivery(null)
+    }
+  }
+
+  const getDeliveryBadge = (purchase: PurchaseRow) => {
+    if (purchase.status === "REFUNDED") return null
+    if (purchase.deliveryConfirmed) {
+      return (
+        <Badge variant="default" className="gap-1">
+          <CheckCircle2 className="h-3 w-3" />
+          Delivered
+        </Badge>
+      )
+    }
+    return (
+      <Badge variant="secondary" className="gap-1">
+        <Clock className="h-3 w-3" />
+        Pending
+      </Badge>
+    )
   }
 
   const exportToCSV = () => {
@@ -161,6 +200,7 @@ export function PurchaseTable({ purchases: initialPurchases, products }: Purchas
                   <TableHead className="font-semibold">Product</TableHead>
                   <TableHead className="font-semibold">Amount</TableHead>
                   <TableHead className="font-semibold">Status</TableHead>
+                  <TableHead className="font-semibold">Delivery</TableHead>
                   <TableHead className="font-semibold">Whop ID</TableHead>
                   <TableHead className="font-semibold text-right">Actions</TableHead>
                 </TableRow>
@@ -193,18 +233,25 @@ export function PurchaseTable({ purchases: initialPurchases, products }: Purchas
                         {purchase.status}
                       </Badge>
                     </TableCell>
+                    <TableCell>
+                      {getDeliveryBadge(purchase)}
+                    </TableCell>
                     <TableCell className="font-mono text-xs text-muted-foreground">
                       {purchase.whopPaymentId || "N/A"}
                     </TableCell>
                     <TableCell className="text-right">
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        className="h-8 text-xs"
-                        onClick={() => handleStatusUpdate(purchase.id, purchase.status === "PENDING" ? "COMPLETED" : "PENDING")}
-                      >
-                        Update
-                      </Button>
+                      {purchase.status === "COMPLETED" && !purchase.deliveryConfirmed && (
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="h-8 text-xs"
+                          disabled={loadingDelivery === purchase.id}
+                          onClick={() => handleMarkDelivered(purchase.id)}
+                        >
+                          <CheckCircle2 className="h-3.5 w-3.5 mr-1.5" />
+                          {loadingDelivery === purchase.id ? "Saving..." : "Mark Delivered"}
+                        </Button>
+                      )}
                     </TableCell>
                   </TableRow>
                 ))}

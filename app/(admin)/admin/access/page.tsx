@@ -19,7 +19,19 @@ async function getAccessData() {
     }),
     prisma.productAccess.findMany({
       orderBy: { createdAt: "desc" },
-      include: {
+      select: {
+        id: true,
+        status: true,
+        accessType: true,
+        deliveryStatus: true,
+        deliveredAt: true,
+        backlogNotes: true,
+        expiresAt: true,
+        revokedAt: true,
+        revokedReason: true,
+        grantedAt: true,
+        userId: true,
+        productId: true,
         user: { select: { id: true, name: true, email: true } },
         product: { select: { id: true, name: true, slug: true } },
       },

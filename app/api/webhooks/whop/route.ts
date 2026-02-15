@@ -9,6 +9,7 @@ import { handleWhopWebhook } from "@/lib/whop/webhook-handler";
 import { prisma } from "@/lib/db/prisma";
 import { WhopWebhookSchema } from "@/lib/validations";
 import { webhookRateLimit, checkRedisRateLimit } from "@/lib/rate-limit";
+import { getWhopWebhookSecret } from "@/lib/settings";
 import * as Sentry from "@sentry/nextjs";
 
 export async function POST(req: NextRequest) {
@@ -48,9 +49,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const secret = process.env.WHOP_WEBHOOK_SECRET;
+    const secret = await getWhopWebhookSecret();
     if (!secret) {
-      console.error("WHOP_WEBHOOK_SECRET not configured");
+      console.error("WHOP_WEBHOOK_SECRET not configured (DB or env)");
       return NextResponse.json(
         { error: "Webhook secret not configured" },
         { status: 500 }
