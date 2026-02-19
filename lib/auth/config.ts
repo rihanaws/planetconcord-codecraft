@@ -5,6 +5,7 @@ import Credentials from "next-auth/providers/credentials"
 import { prisma, prismaForAuth } from "@/lib/db/prisma"
 import { comparePasswords } from "./utils"
 import { UserRole } from "@prisma/client"
+import { logActivity } from "@/lib/activity-logger"
 
 declare module "next-auth" {
   interface Session {
@@ -113,6 +114,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           where: { email: user.email },
           data: { emailVerified: new Date() },
         })
+      }
+
+      // Log login activity (fire-and-forget)
+      if (user.id) {
+        logActivity(user.id, "LOGIN", { provider: account?.provider ?? "credentials" })
       }
 
       return true

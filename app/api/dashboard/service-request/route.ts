@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { auth } from "@/lib/auth/config"
 import { prisma } from "@/lib/db/prisma"
 import { z } from "zod"
+import { logActivity } from "@/lib/activity-logger"
 
 const createServiceRequestSchema = z.object({
   shopifyUrl: z.string().url("Must be a valid URL"),
@@ -35,6 +36,8 @@ export async function POST(request: Request) {
   if (!parsed.success) {
     return NextResponse.json({ error: "Validation failed", issues: parsed.error.issues }, { status: 400 })
   }
+
+  logActivity(session.user.id, "SERVICE_REQUEST", { productId: product.id })
 
   const serviceRequest = await prisma.serviceRequest.create({
     data: {

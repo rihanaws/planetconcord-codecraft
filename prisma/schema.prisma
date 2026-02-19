@@ -83,6 +83,7 @@ model User {
   purchases       Purchase[]
   videoAnalyses   VideoAnalysis[]
   serviceRequests ServiceRequest[]
+  userActivities  UserActivity[]
 
   @@index([email])
   @@index([role])
@@ -345,6 +346,19 @@ model ServiceRequest {
 
   @@index([userId])
   @@index([productId, status])
+}
+
+model UserActivity {
+  id        String   @id @default(cuid())
+  userId    String
+  action    String   // LOGIN, PAGE_VIEW, CONTENT_VIEW, CONTENT_DOWNLOAD, VIDEO_ANALYZE, SERVICE_REQUEST
+  metadata  Json?    // { ip, userAgent, slug, contentItemId, productId, path, etc. }
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([action, createdAt])
 }
 
 model AppSetting {

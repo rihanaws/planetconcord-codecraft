@@ -14,7 +14,7 @@ import {
 import { format } from "date-fns"
 import { useToast } from "@/hooks/use-toast"
 import { PurchaseFilters } from "@/components/admin/purchase-filters"
-import { Receipt, CheckCircle2, Clock } from "lucide-react"
+import { Receipt, CheckCircle2, Clock, FileText } from "lucide-react"
 
 interface PurchaseRow {
   id: string
@@ -239,7 +239,7 @@ export function PurchaseTable({ purchases: initialPurchases, products }: Purchas
                     <TableCell className="font-mono text-xs text-muted-foreground">
                       {purchase.whopPaymentId || "N/A"}
                     </TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="text-right space-x-1">
                       {purchase.status === "COMPLETED" && !purchase.deliveryConfirmed && (
                         <Button
                           size="sm"
@@ -252,6 +252,15 @@ export function PurchaseTable({ purchases: initialPurchases, products }: Purchas
                           {loadingDelivery === purchase.id ? "Saving..." : "Mark Delivered"}
                         </Button>
                       )}
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="h-8 text-xs"
+                        onClick={() => window.open(`/api/admin/disputes/${purchase.id}/evidence`, "_blank")}
+                      >
+                        <FileText className="h-3.5 w-3.5 mr-1.5" />
+                        Evidence
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}

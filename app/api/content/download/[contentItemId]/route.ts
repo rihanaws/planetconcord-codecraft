@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { auth } from "@/lib/auth/config"
 import { prisma } from "@/lib/db/prisma"
+import { logActivity } from "@/lib/activity-logger"
 
 export async function GET(
   _request: Request,
@@ -41,6 +42,11 @@ export async function GET(
   if (!access) {
     return NextResponse.json({ error: "Access denied" }, { status: 403 })
   }
+
+  logActivity(session.user.id, "CONTENT_DOWNLOAD", {
+    contentItemId,
+    productId: contentItem.productId,
+  })
 
   // Fetch the file from Vercel Blob and stream it back
   const blobResponse = await fetch(contentItem.fileUrl)

@@ -7,6 +7,7 @@ import { ProductAccessGrid } from "@/components/dashboard/product-access-grid"
 import { RecentPurchases } from "@/components/dashboard/recent-purchases"
 import { NewsFeed } from "@/components/dashboard/news-feed"
 import { Skeleton } from "@/components/ui/skeleton"
+import { logActivity } from "@/lib/activity-logger"
 
 async function getDashboardData(userId: string) {
   const [productAccesses, purchases, stats] = await Promise.all([
@@ -103,6 +104,8 @@ async function DashboardContent() {
   }
 
   const data = await getDashboardData(session.user.id)
+
+  logActivity(session.user.id, "PAGE_VIEW", { path: "/dashboard" })
 
   return (
     <div className="space-y-8">

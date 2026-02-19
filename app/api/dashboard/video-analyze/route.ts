@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth/config"
 import { prisma } from "@/lib/db/prisma"
 import { z } from "zod"
 import OpenAI from "openai"
+import { logActivity } from "@/lib/activity-logger"
 
 const createAnalysisSchema = z.object({
   videoUrl: z
@@ -58,6 +59,11 @@ export async function POST(request: Request) {
   }
 
   const { videoUrl, notes } = parsed.data
+
+  logActivity(session.user.id, "VIDEO_ANALYZE", {
+    productId: product.id,
+    videoUrl,
+  })
 
   // Create row as PENDING
   const analysis = await prisma.videoAnalysis.create({

@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { AlertCircle, ArrowLeft, Calendar, Shield, ExternalLink } from "lucide-react"
 import { formatDistanceToNow } from "date-fns"
+import { logActivity } from "@/lib/activity-logger"
 
 async function getProductAccess(slug: string, userId: string) {
   const product = await prisma.product.findUnique({
@@ -54,6 +55,12 @@ async function ProductAccessContent({ slug }: { slug: string }) {
   }
 
   const { product, productAccess } = data
+
+  logActivity(session.user.id, "PAGE_VIEW", {
+    path: `/dashboard/products/${slug}`,
+    slug,
+    productId: product.id,
+  })
 
   // Check if user has access
   if (!productAccess) {
