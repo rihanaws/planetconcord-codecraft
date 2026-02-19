@@ -1,7 +1,7 @@
 # CLAUDE.md
 
-## Status (Updated 2026-02-15)
-All 10 phases + Phase 11 (hardening) + Whop customer sync + dispute prevention emails + delivery tracking + admin settings.
+## Status (Updated 2026-02-19)
+All 10 phases + Phase 11 (hardening) + Whop customer sync + dispute prevention emails + delivery tracking + admin settings + UserActivity logging + dispute evidence.
 **Live:** https://codecraft.techsci.xyz | **Products:** 10
 
 ## Stack
@@ -25,13 +25,13 @@ bunx prisma db push | bunx prisma studio | bun lib/db/seed.ts
 
 **Zod v4:** `.email()` works; use `error.issues` not `error.errors`
 
-**Sentry v10:** `tracesSampleRate: 1.0`; no `replays`/`ConsoleIntegration`; all 19+ API routes instrumented with `captureException` + route tags
+**Sentry v10:** `tracesSampleRate: 1.0`; no `replays`/`ConsoleIntegration`; all 20+ API routes instrumented with `captureException` + route tags
 
 **Client Components:** Never import Prisma; use enums not strings
 
 ## Architecture
 
-**Models (13):** User, Account, Session, VerificationToken, Product, ProductAccess, Purchase, ContentItem, WebhookLog, NewsItem, VideoAnalysis, ServiceRequest, AppSetting
+**Models (14):** User, Account, Session, VerificationToken, Product, ProductAccess, Purchase, ContentItem, WebhookLog, NewsItem, VideoAnalysis, ServiceRequest, AppSetting, UserActivity
 
 **Routes:**
 - Public: `/`, `/products/*`, `/about`, `/contact`, legal pages
@@ -210,6 +210,15 @@ Admin: admin@techsci.xyz | Customer: customer@example.com (passwords via SEED_*_
 6. **Email normalization** — `.toLowerCase().trim()` on register, forgot-password, profile update
 7. **Backward-compatible pagination** — admin users API supports `?page=1&limit=50`
 8. **Old in-memory rate limiter** (`lib/whop/rate-limit.ts`) no longer imported by any route
+
+## UserActivity Logging & Dispute Evidence (2026-02-19)
+
+1. **UserActivity model** — `id`, `userId`, `action` (String), `metadata` (Json?), `createdAt`; indexes on `[userId, createdAt]` and `[action, createdAt]`
+2. **Activity logger** (`lib/activity-logger.ts`) — fire-and-forget `logActivity(userId, action, metadata?)`, never throws
+3. **Instrumented touchpoints** — LOGIN (signIn callback), PAGE_VIEW (dashboard + product detail), CONTENT_DOWNLOAD, VIDEO_ANALYZE, SERVICE_REQUEST
+4. **Dispute evidence endpoint** — `GET /api/admin/disputes/[purchaseId]/evidence` — admin-only, returns JSON bundle: customer, purchase, product, access, activitySummary (totals + days active), full timeline, auto-generated disputeStatement
+5. **Admin UI** — "Evidence" button on purchase table opens evidence JSON in new tab
+6. **Prisma JSON typing** — use `Prisma.InputJsonValue` cast for `Record<string, unknown>` metadata
 
 ## Recent Migrations (2026-02-06)
 
