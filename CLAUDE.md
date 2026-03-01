@@ -1,8 +1,8 @@
 # CLAUDE.md
 
-## Status (Updated 2026-02-19)
-All 10 phases + Phase 11 (hardening) + Whop customer sync + dispute prevention emails + delivery tracking + admin settings + UserActivity logging + dispute evidence.
-**Live:** https://codecraft.techsci.xyz | **Products:** 10
+## Status (Updated 2026-03-02)
+All 10 phases + Phase 11 (hardening) + Whop customer sync + dispute prevention + delivery tracking + admin settings + UserActivity logging + dispute evidence + admin dispute page + aligned legal pages.
+**Live:** https://codecraft.techsci.xyz | **Products:** 10 | **Last commit:** f8930e2
 
 ## Stack
 Next.js 16.1.6 (App Router), React 19, TypeScript, Bun, Tailwind v4, Prisma 7 + Neon adapter, PostgreSQL (Neon), NextAuth v5, Zod v4, Sentry v10, Resend, Vercel Analytics, reCAPTCHA Enterprise, OpenAI, PayPal SDK, Upstash Redis (rate limiting)
@@ -217,8 +217,28 @@ Admin: admin@techsci.xyz | Customer: customer@example.com (passwords via SEED_*_
 2. **Activity logger** (`lib/activity-logger.ts`) — fire-and-forget `logActivity(userId, action, metadata?)`, never throws
 3. **Instrumented touchpoints** — LOGIN (signIn callback), PAGE_VIEW (dashboard + product detail), CONTENT_DOWNLOAD, VIDEO_ANALYZE, SERVICE_REQUEST
 4. **Dispute evidence endpoint** — `GET /api/admin/disputes/[purchaseId]/evidence` — admin-only, returns JSON bundle: customer, purchase, product, access, activitySummary (totals + days active), full timeline, auto-generated disputeStatement
-5. **Admin UI** — "Evidence" button on purchase table opens evidence JSON in new tab
+5. **Admin UI** — "Evidence" button on purchase table opens `/admin/disputes/[purchaseId]` page
 6. **Prisma JSON typing** — use `Prisma.InputJsonValue` cast for `Record<string, unknown>` metadata
+
+## Admin Dispute Evidence Page & Legal Alignment (2026-03-02)
+
+1. **Admin dispute page** — `/admin/disputes/[purchaseId]` — full printable evidence page with:
+   - Customer, transaction, product access, deliverables sections
+   - Whop platform access log (hardcoded from Whop dispute evidence page)
+   - Platform event timeline from DB
+   - Auto-generated rebuttal statement with dates
+   - Phase-by-phase refund analysis table (why $0 is owed)
+   - `DisputePrintButton` client component → `window.print()` → Save as PDF
+2. **Purchase table** — "Evidence" button now links to `/admin/disputes/[id]` (was raw JSON)
+3. **`/terms` page** — full rewrite matching `whop-terms.md`: 16 sections, chargebacks §7, user responsibilities §4, IP ownership split, `legal@techsci.io` contact, EIN
+4. **`/refund` page** — full rewrite matching `whop-refund.md`: milestone-based (not "30-day guarantee"), phase table ($250/$450/$1,080/$269), chargeback warning, non-refundable situations, `billing@techsci.io`
+5. **Print CSS** — `globals.css` `@media print` hides nav/sidebar for clean PDF output
+6. **Key dispute facts** (George / ar3636998@yahoo.com):
+   - Purchase: Feb 2, 2026 · Whop payment: pay_4XEFaQjGrdrwqH · $507.27
+   - Access granted: Feb 2 (LIFETIME) · Email verified: Feb 14 · Delivered: Feb 15
+   - Dispute filed: Feb 26 (24 days after purchase, 11 days after delivery)
+   - Reason claimed: "No cardholder authorisation" — contradicted by Whop log
+   - Evidence deadline: April 6, 2026
 
 ## Recent Migrations (2026-02-06)
 
