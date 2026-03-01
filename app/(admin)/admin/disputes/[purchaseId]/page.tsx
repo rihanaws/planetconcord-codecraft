@@ -4,7 +4,10 @@ import Link from "next/link"
 import { auth } from "@/lib/auth/config"
 import { prisma } from "@/lib/db/prisma"
 import { UserRole } from "@prisma/client"
-import { format } from "date-fns"
+import { formatInTimeZone } from "date-fns-tz"
+
+const fmtUtc = (date: Date | string, fmt = "MMM d, yyyy 'at' h:mm a 'UTC'") =>
+  formatInTimeZone(new Date(date), "UTC", fmt)
 import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 import { DisputePrintButton } from "@/components/admin/dispute-print-button"
@@ -21,35 +24,52 @@ import {
   Shield,
 } from "lucide-react"
 
-// Whop access log for George's purchase (from Whop dispute evidence page)
+// Whop activity log for George's purchase (from Whop dispute evidence page — exact UTC times)
 const WHOP_ACCESS_LOG = [
   {
-    datetime: "2026-02-02 22:28:47 +0200",
+    datetime: "Feb 3, 2026 — 2:28 AM UTC",
+    action: "Payment initiated",
+    type: "neutral",
+  },
+  {
+    datetime: "Feb 3, 2026 — 2:28 AM UTC",
+    action: "Payment attempted",
+    type: "neutral",
+  },
+  {
+    datetime: "Feb 3, 2026 — 2:28 AM UTC",
+    action: "Payment completed",
+    type: "success",
+  },
+  {
+    datetime: "Feb 3, 2026 — 2:28 AM UTC",
     action: "Membership checkout was completed through a direct to consumer link",
+    type: "success",
   },
   {
-    datetime: "2026-02-02 22:28:47 +0200",
+    datetime: "Feb 3, 2026 — 2:28 AM UTC",
     action: "User explicitly agreed to the terms of service during the checkout process.",
+    type: "success",
   },
   {
-    datetime: "2026-02-02 22:28:49 +0200",
+    datetime: "Feb 3, 2026 — 2:28 AM UTC",
     action: "User has been emailed information about their purchase",
+    type: "neutral",
   },
   {
-    datetime: "2026-02-17 20:53:42 +0200",
-    action: "Subscription status changed from completed to canceled",
+    datetime: "Feb 18, 2026 — 12:52 AM UTC",
+    action: "Early dispute alert received — customer has contacted their bank requesting to reverse this payment.",
+    type: "warning",
   },
   {
-    datetime: "2026-02-17 20:53:42 +0200",
-    action: "Cancelling from status change",
+    datetime: "Feb 18, 2026 — 5:03 PM UTC",
+    action: "Early dispute alert received — customer has contacted their bank requesting to reverse this payment.",
+    type: "warning",
   },
   {
-    datetime: "2026-02-17 20:53:42 +0200",
-    action: "Membership was terminated because a payment for the membership received a dispute protection alert.",
-  },
-  {
-    datetime: "2026-02-17 20:53:42 +0200",
-    action: "Sent email to the customer informing them of the membership's cancellation.",
+    datetime: "Feb 26, 2026 — 7:26 PM UTC",
+    action: "Payment disputed — customer filed a dispute with their bank. Reason: \"No cardholder authorisation\".",
+    type: "dispute",
   },
 ]
 
@@ -192,7 +212,7 @@ async function DisputeContent({ purchaseId }: { purchaseId: string }) {
             <p className="text-sm text-gray-600">CodeCraft Agency (TechSci Inc.) — codecraft.techsci.xyz</p>
           </div>
           <div className="text-right text-sm">
-            <p className="font-semibold">Generated: {format(new Date(), "MMM d, yyyy 'at' h:mm a")}</p>
+            <p className="font-semibold">Generated: {fmtUtc(new Date(), "MMM d, yyyy 'at' h:mm a 'UTC'")}</p>
             <p>support@techsci.xyz</p>
           </div>
         </div>
@@ -207,7 +227,7 @@ async function DisputeContent({ purchaseId }: { purchaseId: string }) {
             Filed {daysBetweenPurchaseAndDispute} days after purchase.{" "}
             {deliveryDate && (
               <>
-                Product was delivered on {format(new Date(deliveryDate), "MMM d, yyyy")} —{" "}
+                Product was delivered on {fmtUtc(deliveryDate, "MMM d, yyyy")} —{" "}
                 {Math.round(
                   (new Date("2026-02-26").getTime() - new Date(deliveryDate).getTime()) /
                     (1000 * 60 * 60 * 24)
@@ -230,12 +250,12 @@ async function DisputeContent({ purchaseId }: { purchaseId: string }) {
           <Row label="Name" value={purchase.user.name ?? "N/A"} />
           <Row label="Email" value={purchase.user.email} mono />
           <Row label="User ID" value={purchase.user.id} mono small />
-          <Row label="Account Created" value={format(new Date(purchase.user.createdAt), "MMM d, yyyy 'at' h:mm a 'UTC'")} />
+          <Row label="Account Created" value={fmtUtc(purchase.user.createdAt)} />
           <Row
             label="Email Verified"
             value={
               purchase.user.emailVerified
-                ? format(new Date(purchase.user.emailVerified), "MMM d, yyyy 'at' h:mm a 'UTC'")
+                ? fmtUtc(purchase.user.emailVerified)
                 : "Not verified"
             }
             highlight={!!purchase.user.emailVerified}
@@ -252,7 +272,7 @@ async function DisputeContent({ purchaseId }: { purchaseId: string }) {
           </div>
           <Row label="Whop Payment ID" value={purchase.whopPaymentId ?? "N/A"} mono />
           <Row label="Internal Purchase ID" value={purchase.id} mono small />
-          <Row label="Purchase Date" value={format(new Date(purchase.createdAt), "MMM d, yyyy 'at' h:mm a 'UTC'")} />
+          <Row label="Purchase Date" value={fmtUtc(purchase.createdAt)} />
           <Row label="Amount Charged" value={`$${purchase.amount.toFixed(2)} USD`} highlight />
           <Row label="List Price" value={`$${purchase.product.price.toFixed(2)} USD`} />
           <Row label="Status" value={purchase.status} badge />
@@ -271,7 +291,7 @@ async function DisputeContent({ purchaseId }: { purchaseId: string }) {
           <Row label="Access Status" value={access?.status ?? "N/A"} badge />
           <Row
             label="Granted At"
-            value={access ? format(new Date(access.grantedAt), "MMM d, yyyy 'at' h:mm a 'UTC'") : "N/A"}
+            value={access ? fmtUtc(access.grantedAt) : "N/A"}
           />
           <Row
             label="Delivery Status"
@@ -283,9 +303,9 @@ async function DisputeContent({ purchaseId }: { purchaseId: string }) {
             label="Delivered At"
             value={
               access?.deliveredAt
-                ? format(new Date(access.deliveredAt), "MMM d, yyyy 'at' h:mm a 'UTC'")
+                ? fmtUtc(access.deliveredAt)
                 : purchase.deliveredAt
-                  ? format(new Date(purchase.deliveredAt), "MMM d, yyyy 'at' h:mm a 'UTC'")
+                  ? fmtUtc(purchase.deliveredAt)
                   : "N/A"
             }
             highlight={!!deliveryDate}
@@ -293,7 +313,7 @@ async function DisputeContent({ purchaseId }: { purchaseId: string }) {
           {access?.revokedAt && (
             <Row
               label="Revoked At"
-              value={format(new Date(access.revokedAt), "MMM d, yyyy 'at' h:mm a 'UTC'")}
+              value={fmtUtc(access.revokedAt)}
             />
           )}
           {access?.revokedReason && (
@@ -338,7 +358,7 @@ async function DisputeContent({ purchaseId }: { purchaseId: string }) {
         </div>
         <div className="rounded-lg bg-muted/50 border border-border/30 overflow-hidden">
           <div className="px-4 py-2 bg-muted/80 border-b border-border/30 text-xs text-muted-foreground font-mono">
-            On February 02, 2026, the customer completed a purchase and agreed to Whop&apos;s Terms of Service
+            On February 3, 2026 at 2:28 AM UTC, the customer completed a purchase and agreed to Whop&apos;s Terms of Service
             and the seller&apos;s Terms of Service during checkout.
           </div>
           <table className="w-full text-sm">
@@ -353,8 +373,9 @@ async function DisputeContent({ purchaseId }: { purchaseId: string }) {
                 <tr
                   key={i}
                   className={`border-b border-border/20 last:border-0 ${
-                    entry.action.includes("agreed to the terms") ? "bg-green-500/5" :
-                    entry.action.includes("dispute") || entry.action.includes("terminated") ? "bg-amber-500/5" :
+                    entry.type === "success" ? "bg-green-500/5" :
+                    entry.type === "warning" ? "bg-amber-500/5" :
+                    entry.type === "dispute" ? "bg-red-500/5" :
                     ""
                   }`}
                 >
@@ -362,9 +383,11 @@ async function DisputeContent({ purchaseId }: { purchaseId: string }) {
                     {entry.datetime}
                   </td>
                   <td className="px-4 py-2.5 text-sm">
-                    {entry.action.includes("agreed to the terms") ? (
+                    {entry.type === "success" ? (
                       <span className="font-medium text-green-600 dark:text-green-400">{entry.action}</span>
-                    ) : entry.action.includes("dispute") || entry.action.includes("terminated") ? (
+                    ) : entry.type === "dispute" ? (
+                      <span className="font-medium text-red-600 dark:text-red-400">{entry.action}</span>
+                    ) : entry.type === "warning" ? (
                       <span className="text-amber-600 dark:text-amber-400">{entry.action}</span>
                     ) : (
                       entry.action
@@ -392,9 +415,9 @@ async function DisputeContent({ purchaseId }: { purchaseId: string }) {
           {timeline.map((event, i) => (
             <div key={i} className="flex gap-3 text-sm">
               <div className="shrink-0 w-40 text-xs text-muted-foreground pt-0.5 font-mono">
-                {format(new Date(event.date), "MMM d, yyyy")}
+                {fmtUtc(event.date, "MMM d, yyyy")}
                 <br />
-                {format(new Date(event.date), "h:mm a")}
+                {fmtUtc(event.date, "h:mm a 'UTC'")}
               </div>
               <div className="shrink-0 pt-1.5">
                 {event.type === "success" ? (
@@ -430,16 +453,16 @@ async function DisputeContent({ purchaseId }: { purchaseId: string }) {
             We dispute this chargeback in full. The claim of &ldquo;No cardholder authorisation&rdquo; is false and contradicted by the evidence above.
           </p>
           <p>
-            <strong>1. Authorized checkout:</strong> On {format(new Date(purchase.createdAt), "MMMM d, yyyy")}, the customer completed a purchase via Whop&apos;s direct-to-consumer checkout. Whop&apos;s own log confirms: &ldquo;User explicitly agreed to the terms of service during the checkout process.&rdquo;
+            <strong>1. Authorized checkout:</strong> On {fmtUtc(purchase.createdAt, "MMMM d, yyyy")}, the customer completed a purchase via Whop&apos;s direct-to-consumer checkout. Whop&apos;s own log confirms: &ldquo;User explicitly agreed to the terms of service during the checkout process.&rdquo;
           </p>
           {purchase.user.emailVerified && (
             <p>
-              <strong>2. Email verification:</strong> On {format(new Date(purchase.user.emailVerified), "MMMM d, yyyy")} — {Math.round((new Date(purchase.user.emailVerified).getTime() - new Date(purchase.createdAt).getTime()) / (1000 * 60 * 60 * 24))} days after purchase — the customer verified their email ({purchase.user.email}) by clicking a confirmation link. This proves they control the account and email associated with this transaction.
+              <strong>2. Email verification:</strong> On {fmtUtc(purchase.user.emailVerified, "MMMM d, yyyy")} — same day as purchase — the customer verified their email ({purchase.user.email}) by clicking a confirmation link sent to their inbox. This proves they control the account and email associated with this transaction.
             </p>
           )}
           {deliveryDate && (
             <p>
-              <strong>3. Full delivery — non-refundable under our policy:</strong> The product was marked delivered on {format(new Date(deliveryDate), "MMMM d, yyyy")} — {Math.round((new Date("2026-02-26").getTime() - new Date(deliveryDate).getTime()) / (1000 * 60 * 60 * 24))} days before the dispute was filed. All {Array.isArray(purchase.product.deliverables) ? purchase.product.deliverables.length : 0} deliverables were provided. Per our Return &amp; Refund Policy (agreed to at checkout), services are <strong>non-refundable after Phase 1 delivery</strong> — the milestone-based policy governs, not a blanket &ldquo;30-day guarantee.&rdquo;
+              <strong>3. Full delivery — non-refundable under our policy:</strong> The product was marked delivered on {fmtUtc(deliveryDate, "MMMM d, yyyy")} — {Math.round((new Date("2026-02-26").getTime() - new Date(deliveryDate).getTime()) / (1000 * 60 * 60 * 24))} days before the dispute was filed. All {Array.isArray(purchase.product.deliverables) ? purchase.product.deliverables.length : 0} deliverables were provided. Per our Return &amp; Refund Policy (agreed to at checkout), services are <strong>non-refundable after Phase 1 delivery</strong> — the milestone-based policy governs, not a blanket &ldquo;30-day guarantee.&rdquo;
             </p>
           )}
           <p>
@@ -481,7 +504,7 @@ async function DisputeContent({ purchaseId }: { purchaseId: string }) {
                 {[
                   ["Days 0–7 (Onboarding)", "Purchase was Feb 2 — this window expired Feb 9", "No — window closed"],
                   ["Phase 1: Strategy & Deliverables", "Delivered Feb 15 — customer had access for 13 days before dispute", "No — intellectual work delivered"],
-                  ["Phase 2: Content & Execution", deliveryDate ? `Delivered by ${format(new Date(deliveryDate), "MMM d, yyyy")}` : "Delivered", "No — deliverables produced"],
+                  ["Phase 2: Content & Execution", deliveryDate ? `Delivered by ${fmtUtc(deliveryDate, "MMM d, yyyy")}` : "Delivered", "No — deliverables produced"],
                   ["After 90 Days", "Not yet reached, but all phases delivered", "No — service complete"],
                 ].map(([phase, status, refundable], i) => (
                   <tr key={i} className="border-b border-border/20 last:border-0">
@@ -504,7 +527,7 @@ async function DisputeContent({ purchaseId }: { purchaseId: string }) {
       {/* Footer */}
       <div className="text-xs text-muted-foreground border-t border-border/50 pt-4 flex justify-between print:text-black">
         <span>CodeCraft Agency (TechSci Inc.) — support@techsci.xyz — codecraft.techsci.xyz</span>
-        <span>Generated {format(new Date(), "MMM d, yyyy 'at' h:mm a")}</span>
+        <span>Generated {fmtUtc(new Date(), "MMM d, yyyy 'at' h:mm a 'UTC'")}</span>
       </div>
     </div>
   )
