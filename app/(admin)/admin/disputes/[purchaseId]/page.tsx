@@ -439,17 +439,64 @@ async function DisputeContent({ purchaseId }: { purchaseId: string }) {
           )}
           {deliveryDate && (
             <p>
-              <strong>3. Full delivery:</strong> The product was marked delivered on {format(new Date(deliveryDate), "MMMM d, yyyy")} — {Math.round((new Date("2026-02-26").getTime() - new Date(deliveryDate).getTime()) / (1000 * 60 * 60 * 24))} days before the dispute was filed. All {Array.isArray(purchase.product.deliverables) ? purchase.product.deliverables.length : 0} deliverables were provided and accessible via the customer dashboard.
+              <strong>3. Full delivery — non-refundable under our policy:</strong> The product was marked delivered on {format(new Date(deliveryDate), "MMMM d, yyyy")} — {Math.round((new Date("2026-02-26").getTime() - new Date(deliveryDate).getTime()) / (1000 * 60 * 60 * 24))} days before the dispute was filed. All {Array.isArray(purchase.product.deliverables) ? purchase.product.deliverables.length : 0} deliverables were provided. Per our Return &amp; Refund Policy (agreed to at checkout), services are <strong>non-refundable after Phase 1 delivery</strong> — the milestone-based policy governs, not a blanket &ldquo;30-day guarantee.&rdquo;
             </p>
           )}
           <p>
-            <strong>4. No prior contact:</strong> The customer never contacted support@techsci.xyz before filing the chargeback. Our response time is under 4 hours. Had any issue been raised, we would have resolved it immediately.
+            <strong>4. Refund policy breach:</strong> Our Terms of Service (codecraft.techsci.xyz/terms, Section 7) and Refund Policy (codecraft.techsci.xyz/refund) explicitly state that chargebacks filed without prior contact are a breach of contract. The customer never contacted support@techsci.xyz, billing@techsci.io, or the Whop Resolution Center before filing. Our response time is under 4 hours — any legitimate issue would have been resolved immediately.
           </p>
           <p>
-            <strong>5. {daysBetweenPurchaseAndDispute}-day gap:</strong> The dispute was filed {daysBetweenPurchaseAndDispute} days after purchase, after the customer had full access to and received all product content. This is consistent with friendly fraud, not unauthorized card use.
+            <strong>5. {daysBetweenPurchaseAndDispute}-day gap — friendly fraud pattern:</strong> The dispute was filed {daysBetweenPurchaseAndDispute} days after purchase, {deliveryDate ? `${Math.round((new Date("2026-02-26").getTime() - new Date(deliveryDate).getTime()) / (1000 * 60 * 60 * 24))} days after receiving the full product` : "after receiving the full product"}. This is consistent with friendly fraud — a customer who consumed a digital product then filed a false unauthorized-use claim to obtain it for free.
           </p>
           <p className="pt-2 border-t border-border/30 text-muted-foreground">
-            We request the issuing bank uphold the original charge of ${purchase.amount.toFixed(2)} USD in favor of the merchant. The transaction was legitimate, authorized, and the product was fully delivered.
+            We request the issuing bank uphold the original charge of ${purchase.amount.toFixed(2)} USD in favor of the merchant. The transaction was legitimate, authorized, fully delivered, and non-refundable under the merchant&apos;s milestone-based policy agreed to at checkout.
+          </p>
+        </div>
+      </section>
+
+      {/* Refund Policy Argument */}
+      <section className="rounded-xl border border-border/50 bg-card/50 p-5">
+        <div className="flex items-center gap-2 mb-4">
+          <FileText className="h-4 w-4 text-muted-foreground" />
+          <h2 className="font-semibold text-sm uppercase tracking-wide text-muted-foreground">
+            Refund Policy — Why No Refund Is Owed
+          </h2>
+        </div>
+        <div className="space-y-3 text-sm">
+          <p className="text-muted-foreground">
+            Our Return &amp; Refund Policy (published at{" "}
+            <strong>codecraft.techsci.xyz/refund</strong>, last updated January 28, 2026) is
+            milestone-based. The customer agreed to this policy at checkout per Whop&apos;s own log.
+          </p>
+          <div className="rounded-lg bg-muted/50 border border-border/30 overflow-hidden">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border/30 bg-muted/30">
+                  <th className="text-left px-4 py-2 text-xs font-semibold text-muted-foreground">Phase</th>
+                  <th className="text-left px-4 py-2 text-xs font-semibold text-muted-foreground">Status in This Case</th>
+                  <th className="text-left px-4 py-2 text-xs font-semibold text-muted-foreground">Refundable?</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  ["Days 0–7 (Onboarding)", "Purchase was Feb 2 — this window expired Feb 9", "No — window closed"],
+                  ["Phase 1: Strategy & Deliverables", "Delivered Feb 15 — customer had access for 13 days before dispute", "No — intellectual work delivered"],
+                  ["Phase 2: Content & Execution", deliveryDate ? `Delivered by ${format(new Date(deliveryDate), "MMM d, yyyy")}` : "Delivered", "No — deliverables produced"],
+                  ["After 90 Days", "Not yet reached, but all phases delivered", "No — service complete"],
+                ].map(([phase, status, refundable], i) => (
+                  <tr key={i} className="border-b border-border/20 last:border-0">
+                    <td className="px-4 py-2.5 text-xs font-medium">{phase}</td>
+                    <td className="px-4 py-2.5 text-xs text-muted-foreground">{status}</td>
+                    <td className="px-4 py-2.5 text-xs font-semibold text-red-500">{refundable}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="text-xs text-muted-foreground pt-1">
+            The customer also never attempted to use the Whop Resolution Center or contact us directly —
+            a requirement explicitly stated in our Terms of Service (Section 7) before any dispute
+            mechanism is pursued. The chargeback is therefore also a breach of contract.
           </p>
         </div>
       </section>
