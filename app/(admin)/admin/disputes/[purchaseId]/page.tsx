@@ -24,38 +24,48 @@ import {
   Shield,
 } from "lucide-react"
 
-// Whop activity log for George's purchase (from Whop dispute evidence page — exact UTC times)
+// Whop access log — verbatim from Whop dispute evidence page (timestamps converted to UTC)
+// Original timezone: +0200. Purchase events: 2026-02-02 22:28:xx +0200 = Feb 2, 8:28 PM UTC
+// Termination events: 2026-02-17 20:53:42 +0200 = Feb 17, 6:53 PM UTC
 const WHOP_ACCESS_LOG = [
+  // ── Purchase & checkout (access log entries) ──
   {
-    datetime: "Feb 3, 2026 — 2:28 AM UTC",
-    action: "Payment initiated",
-    type: "neutral",
-  },
-  {
-    datetime: "Feb 3, 2026 — 2:28 AM UTC",
-    action: "Payment attempted",
-    type: "neutral",
-  },
-  {
-    datetime: "Feb 3, 2026 — 2:28 AM UTC",
-    action: "Payment completed",
-    type: "success",
-  },
-  {
-    datetime: "Feb 3, 2026 — 2:28 AM UTC",
+    datetime: "Feb 2, 2026 — 8:28 PM UTC",
     action: "Membership checkout was completed through a direct to consumer link",
     type: "success",
   },
   {
-    datetime: "Feb 3, 2026 — 2:28 AM UTC",
+    datetime: "Feb 2, 2026 — 8:28 PM UTC",
     action: "User explicitly agreed to the terms of service during the checkout process.",
     type: "success",
   },
   {
-    datetime: "Feb 3, 2026 — 2:28 AM UTC",
+    datetime: "Feb 2, 2026 — 8:28 PM UTC",
     action: "User has been emailed information about their purchase",
     type: "neutral",
   },
+  // ── Membership termination due to dispute protection alert ──
+  {
+    datetime: "Feb 17, 2026 — 6:53 PM UTC",
+    action: "Subscription status changed from completed to canceled",
+    type: "warning",
+  },
+  {
+    datetime: "Feb 17, 2026 — 6:53 PM UTC",
+    action: "Cancelling from status change",
+    type: "warning",
+  },
+  {
+    datetime: "Feb 17, 2026 — 6:53 PM UTC",
+    action: "Membership was terminated because a payment for the membership received a dispute protection alert.",
+    type: "warning",
+  },
+  {
+    datetime: "Feb 17, 2026 — 6:53 PM UTC",
+    action: "Sent email to the customer informing them of the membership's cancellation.",
+    type: "neutral",
+  },
+  // ── Payment activity (from Whop payments page) ──
   {
     datetime: "Feb 18, 2026 — 12:52 AM UTC",
     action: "Early dispute alert received — customer has contacted their bank requesting to reverse this payment.",
@@ -358,7 +368,7 @@ async function DisputeContent({ purchaseId }: { purchaseId: string }) {
         </div>
         <div className="rounded-lg bg-muted/50 border border-border/30 overflow-hidden">
           <div className="px-4 py-2 bg-muted/80 border-b border-border/30 text-xs text-muted-foreground font-mono">
-            On February 3, 2026 at 2:28 AM UTC, the customer completed a purchase and agreed to Whop&apos;s Terms of Service
+            On February 2, 2026 at 8:28 PM UTC, the customer completed a purchase and agreed to Whop&apos;s Terms of Service
             and the seller&apos;s Terms of Service during checkout.
           </div>
           <table className="w-full text-sm">
