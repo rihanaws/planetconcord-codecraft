@@ -123,3 +123,29 @@
     @apply bg-background text-foreground;
   }
 }
+
+@media print {
+  /* Hide nav, sidebar, and non-content chrome when printing dispute page */
+  nav,
+  aside,
+  header,
+  [data-sidebar],
+  .print\:hidden {
+    display: none !important;
+  }
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  .bg-card\/50,
+  .bg-muted\/50,
+  .bg-primary\/5,
+  .bg-destructive\/5 {
+    background: #f9f9f9 !important;
+    border: 1px solid #ccc !important;
+  }
+  a {
+    color: black !important;
+    text-decoration: none !important;
+  }
+}

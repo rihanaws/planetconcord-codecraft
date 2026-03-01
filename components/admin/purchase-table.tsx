@@ -256,7 +256,7 @@ export function PurchaseTable({ purchases: initialPurchases, products }: Purchas
                         size="sm"
                         variant="ghost"
                         className="h-8 text-xs"
-                        onClick={() => window.open(`/api/admin/disputes/${purchase.id}/evidence`, "_blank")}
+                        onClick={() => window.open(`/admin/disputes/${purchase.id}`, "_blank")}
                       >
                         <FileText className="h-3.5 w-3.5 mr-1.5" />
                         Evidence
