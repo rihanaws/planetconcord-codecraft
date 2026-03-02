@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { verifyWhopSignature } from "@/lib/whop/verify-signature";
 import { handleWhopWebhook } from "@/lib/whop/webhook-handler";
 import { prisma } from "@/lib/db/prisma";
-import { WhopWebhookSchema } from "@/lib/validations";
+import { WhopWebhookSchema, WhopUnknownEventSchema } from "@/lib/validations";
 import { webhookRateLimit, checkRedisRateLimit } from "@/lib/rate-limit";
 import { getWhopWebhookSecret } from "@/lib/settings";
 import * as Sentry from "@sentry/nextjs";
@@ -70,16 +70,33 @@ export async function POST(req: NextRequest) {
 
     // Parse and validate payload
     const body = JSON.parse(rawBody);
-    const validatedEvent = WhopWebhookSchema.parse(body);
+
+    // First parse loosely to get event type for logging
+    const looseParse = WhopUnknownEventSchema.parse(body);
+    const eventType = looseParse.type;
 
     // Log webhook to database
     const webhookLog = await prisma.webhookLog.create({
       data: {
-        event: validatedEvent.type,
+        event: eventType,
         payload: body,
         processed: false,
       },
     });
+
+    // Try to parse as a known handled event
+    const knownResult = WhopWebhookSchema.safeParse(body);
+    if (!knownResult.success) {
+      // Unknown/unhandled event type — log and return 200 so Whop doesn't retry
+      await prisma.webhookLog.update({
+        where: { id: webhookLog.id },
+        data: { processed: true, success: true },
+      });
+      console.log(`Unhandled Whop event type: ${eventType} — acknowledged`);
+      return NextResponse.json({ success: true, message: `Event ${eventType} acknowledged (not handled)` });
+    }
+
+    const validatedEvent = knownResult.data;
 
     // Process webhook event
     try {

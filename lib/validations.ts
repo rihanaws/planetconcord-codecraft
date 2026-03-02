@@ -6,81 +6,83 @@
 import { z } from "zod";
 
 // ===========================
-// WHOP WEBHOOK SCHEMAS
+// WHOP WEBHOOK SCHEMAS (V1 API)
+// Event names use snake_case e.g. membership_activated, invoice_paid
 // ===========================
 
 /**
- * Base webhook event schema
+ * Base webhook event schema — passthrough allows extra fields Whop may add
  */
 export const WhopWebhookBaseSchema = z.object({
   id: z.string(),
   created_at: z.string().optional(),
-});
+}).passthrough();
 
 /**
- * Payment succeeded event
+ * invoice_paid — triggers when a payment completes successfully
+ * Replaces old "payment.succeeded"
  */
-export const PaymentSucceededSchema = WhopWebhookBaseSchema.extend({
-  type: z.literal("payment.succeeded"),
+export const InvoicePaidSchema = WhopWebhookBaseSchema.extend({
+  type: z.literal("invoice_paid"),
   data: z.object({
-    id: z.string(),
-    amount: z.number(),
-    currency: z.string(),
-    customer_email: z.string().email(),
+    id: z.string(),                          // invoice id
+    amount: z.number().optional(),
+    final_amount: z.number().optional(),     // actual charged amount
+    currency: z.string().optional(),
+    membership_id: z.string().optional(),    // links to membership
+    user_id: z.string().optional(),
+    product_id: z.string().optional(),
+    // customer fields may be nested under user or top-level
+    customer_email: z.string().optional(),
     customer_name: z.string().optional(),
-    product_id: z.string(),
-    metadata: z
-      .object({
-        productSlug: z.string().optional(),
-      })
-      .optional(),
-  }),
+  }).passthrough(),
 });
 
 /**
- * Membership went valid event
+ * membership_activated — triggers when access goes valid
+ * Replaces old "membership.went_valid"
  */
-export const MembershipValidSchema = WhopWebhookBaseSchema.extend({
-  type: z.literal("membership.went_valid"),
+export const MembershipActivatedSchema = WhopWebhookBaseSchema.extend({
+  type: z.literal("membership_activated"),
   data: z.object({
-    id: z.string(),
-    user_id: z.string(),
-    product_id: z.string(),
+    id: z.string(),                          // membership id
+    user_id: z.string().optional(),
+    product_id: z.string().optional(),
     valid_until: z.string().optional(),
-  }),
+    status: z.string().optional(),
+  }).passthrough(),
 });
 
 /**
- * Membership went invalid event
+ * membership_deactivated — triggers when access goes invalid
+ * Replaces old "membership.went_invalid"
  */
-export const MembershipInvalidSchema = WhopWebhookBaseSchema.extend({
-  type: z.literal("membership.went_invalid"),
+export const MembershipDeactivatedSchema = WhopWebhookBaseSchema.extend({
+  type: z.literal("membership_deactivated"),
   data: z.object({
-    id: z.string(),
-    user_id: z.string(),
-    product_id: z.string(),
-  }),
+    id: z.string(),                          // membership id
+    user_id: z.string().optional(),
+    product_id: z.string().optional(),
+    status: z.string().optional(),
+  }).passthrough(),
 });
 
 /**
- * Payment refunded event
+ * Fallback schema — accepts any other Whop event without crashing
+ * (invoice_created, entry_created, setup_intent_succeeded, etc.)
  */
-export const PaymentRefundedSchema = WhopWebhookBaseSchema.extend({
-  type: z.literal("payment.refunded"),
-  data: z.object({
-    id: z.string(),
-    original_payment_id: z.string(),
-  }),
-});
+export const WhopUnknownEventSchema = z.object({
+  type: z.string(),
+  id: z.string().optional(),
+}).passthrough();
 
 /**
- * Union of all webhook event types
+ * Union of all handled webhook event types
  */
 export const WhopWebhookSchema = z.discriminatedUnion("type", [
-  PaymentSucceededSchema,
-  MembershipValidSchema,
-  MembershipInvalidSchema,
-  PaymentRefundedSchema,
+  InvoicePaidSchema,
+  MembershipActivatedSchema,
+  MembershipDeactivatedSchema,
 ]);
 
 export type WhopWebhookEvent = z.infer<typeof WhopWebhookSchema>;

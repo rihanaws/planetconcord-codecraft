@@ -28,21 +28,18 @@ export async function POST(req: NextRequest) {
     let payload;
 
     switch (eventType) {
-      case "payment.succeeded":
+      case "invoice_paid":
         payload = generatePaymentSucceededPayload(options);
         break;
-      case "membership.went_valid":
+      case "membership_activated":
         payload = generateMembershipValidPayload(options);
         break;
-      case "membership.went_invalid":
+      case "membership_deactivated":
         payload = generateMembershipInvalidPayload(options);
-        break;
-      case "payment.refunded":
-        payload = generatePaymentRefundedPayload(options);
         break;
       default:
         return NextResponse.json(
-          { error: "Invalid event type" },
+          { error: `Invalid event type. Use: invoice_paid, membership_activated, membership_deactivated` },
           { status: 400 }
         );
     }

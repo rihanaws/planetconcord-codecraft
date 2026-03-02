@@ -16,79 +16,81 @@ import { hashPassword } from "@/lib/auth/utils";
 import { UserRole, AccessStatus, PurchaseStatus, AccessType } from "@prisma/client";
 import * as Sentry from "@sentry/nextjs";
 
-interface PaymentSucceededEvent {
-  type: "payment.succeeded";
+// Whop V1 API event types (snake_case)
+interface InvoicePaidEvent {
+  type: "invoice_paid";
   data: {
-    id: string;
-    amount: number;
-    currency: string;
-    customer_email: string;
+    id: string;                   // invoice id
+    amount?: number;
+    final_amount?: number;        // actual charged amount
+    currency?: string;
+    membership_id?: string;
+    user_id?: string;
+    product_id?: string;
+    customer_email?: string;
     customer_name?: string;
-    product_id: string;
-    metadata?: {
-      productSlug?: string;
-    };
+    [key: string]: unknown;
   };
 }
 
-interface MembershipValidEvent {
-  type: "membership.went_valid";
+interface MembershipActivatedEvent {
+  type: "membership_activated";
   data: {
-    id: string;
-    user_id: string;
-    product_id: string;
+    id: string;                   // membership id
+    user_id?: string;
+    product_id?: string;
     valid_until?: string;
+    status?: string;
+    [key: string]: unknown;
   };
 }
 
-interface MembershipInvalidEvent {
-  type: "membership.went_invalid";
+interface MembershipDeactivatedEvent {
+  type: "membership_deactivated";
   data: {
-    id: string;
-    user_id: string;
-    product_id: string;
-  };
-}
-
-interface PaymentRefundedEvent {
-  type: "payment.refunded";
-  data: {
-    id: string;
-    original_payment_id: string;
+    id: string;                   // membership id
+    user_id?: string;
+    product_id?: string;
+    status?: string;
+    [key: string]: unknown;
   };
 }
 
 type WhopWebhookEvent =
-  | PaymentSucceededEvent
-  | MembershipValidEvent
-  | MembershipInvalidEvent
-  | PaymentRefundedEvent;
+  | InvoicePaidEvent
+  | MembershipActivatedEvent
+  | MembershipDeactivatedEvent;
 
 /**
- * Handle payment.succeeded event
+ * Handle invoice_paid event (Whop V1)
  * Creates user account, grants product access, sends emails
  */
 export async function handlePaymentSucceeded(
-  event: PaymentSucceededEvent
+  event: InvoicePaidEvent
 ): Promise<void> {
-  const { id, amount, customer_email, customer_name, product_id, metadata } =
-    event.data;
+  const { id, customer_email, customer_name, product_id, membership_id } = event.data;
+  const amount = event.data.final_amount ?? event.data.amount ?? 0;
+  const metadata = event.data.metadata as { productSlug?: string } | undefined;
 
   try {
     // Start transaction
     await prisma.$transaction(async (tx: any) => {
-    // Find product by Whop product ID or slug
+    // Find product by Whop product ID or membership_id fallback
     const product = await tx.product.findFirst({
       where: {
         OR: [
-          { whopProductId: product_id },
-          { slug: metadata?.productSlug || "" },
+          ...(product_id ? [{ whopProductId: product_id }] : []),
+          ...(metadata?.productSlug ? [{ slug: metadata.productSlug }] : []),
         ],
       },
     });
 
     if (!product) {
-      throw new Error(`Product not found for Whop ID: ${product_id}`);
+      throw new Error(`Product not found for Whop product_id: ${product_id}`);
+    }
+
+    if (!customer_email) {
+      throw new Error(`invoice_paid missing customer_email for invoice: ${id}`);
     }
 
     // Find or create user
@@ -193,18 +195,18 @@ export async function handlePaymentSucceeded(
 
   } catch (error) {
     Sentry.captureException(error, {
-      tags: { handler: "payment.succeeded", payment_id: id },
+      tags: { handler: "invoice_paid", invoice_id: id },
     });
     throw error;
   }
 }
 
 /**
- * Handle membership.went_valid event
+ * Handle membership_activated event (Whop V1)
  * Activates subscription access
  */
 export async function handleMembershipValid(
-  event: MembershipValidEvent
+  event: MembershipActivatedEvent
 ): Promise<void> {
   const { id, valid_until } = event.data;
 
@@ -230,11 +232,11 @@ export async function handleMembershipValid(
 }
 
 /**
- * Handle membership.went_invalid event
+ * Handle membership_deactivated event (Whop V1)
  * Expires subscription access
  */
 export async function handleMembershipInvalid(
-  event: MembershipInvalidEvent
+  event: MembershipDeactivatedEvent
 ): Promise<void> {
   const { id } = event.data;
 
@@ -282,11 +284,11 @@ export async function handleMembershipInvalid(
 }
 
 /**
- * Handle payment.refunded event
+ * Handle payment.refunded event (legacy — kept for retry cron compatibility)
  * Revokes product access
  */
 export async function handlePaymentRefunded(
-  event: PaymentRefundedEvent
+  event: { type: string; data: { id: string; original_payment_id: string } }
 ): Promise<void> {
   const { original_payment_id } = event.data;
 
@@ -354,17 +356,14 @@ export async function handleWhopWebhook(
 ): Promise<void> {
   const typedEvent = event as unknown as WhopWebhookEvent;
   switch (typedEvent.type) {
-    case "payment.succeeded":
-      await handlePaymentSucceeded(typedEvent as PaymentSucceededEvent);
+    case "invoice_paid":
+      await handlePaymentSucceeded(typedEvent as InvoicePaidEvent);
       break;
-    case "membership.went_valid":
-      await handleMembershipValid(typedEvent as MembershipValidEvent);
+    case "membership_activated":
+      await handleMembershipValid(typedEvent as MembershipActivatedEvent);
       break;
-    case "membership.went_invalid":
-      await handleMembershipInvalid(typedEvent as MembershipInvalidEvent);
-      break;
-    case "payment.refunded":
-      await handlePaymentRefunded(typedEvent as PaymentRefundedEvent);
+    case "membership_deactivated":
+      await handleMembershipInvalid(typedEvent as MembershipDeactivatedEvent);
       break;
     default:
       console.warn(`Unhandled webhook event type: ${(typedEvent as { type?: string }).type}`);
