@@ -1,8 +1,8 @@
 # CLAUDE.md
 
 ## Status (Updated 2026-03-02)
-All 10 phases + Phase 11 (hardening) + Whop customer sync + dispute prevention + delivery tracking + admin settings + UserActivity logging + dispute evidence + admin dispute page + aligned legal pages.
-**Live:** https://codecraft.techsci.xyz | **Products:** 10 | **Last commit:** f8930e2
+All 10 phases + Phase 11 (hardening) + Whop customer sync + dispute prevention + delivery tracking + admin settings + UserActivity logging + dispute evidence + admin dispute page + aligned legal pages + Whop V1 webhook fix + Whop balance sync.
+**Live:** https://codecraft.techsci.xyz | **Products:** 10 | **Last commit:** 2f0bdf9
 
 ## Stack
 Next.js 16.1.6 (App Router), React 19, TypeScript, Bun, Tailwind v4, Prisma 7 + Neon adapter, PostgreSQL (Neon), NextAuth v5, Zod v4, Sentry v10, Resend, Vercel Analytics, reCAPTCHA Enterprise, OpenAI, PayPal SDK, Upstash Redis (rate limiting)
@@ -37,7 +37,7 @@ bunx prisma db push | bunx prisma studio | bun lib/db/seed.ts
 - Public: `/`, `/products/*`, `/about`, `/contact`, legal pages
 - Auth: `/login`, `/signup`, `/verify-email`, `/forgot-password`, `/reset-password`
 - Dashboard: `/dashboard`, `/dashboard/products`, `/dashboard/products/[slug]`, `/dashboard/purchases`, `/dashboard/profile`
-- Admin: `/admin`, `/admin/products/*`, `/admin/users`, `/admin/purchases`, `/admin/access`, `/admin/webhooks`, `/admin/news`, `/admin/service-requests`, `/admin/settings`
+- Admin: `/admin`, `/admin/products/*`, `/admin/users`, `/admin/purchases`, `/admin/access`, `/admin/webhooks`, `/admin/news`, `/admin/service-requests`, `/admin/balance`, `/admin/settings`
 
 **Auth:** Google OAuth + Email/Password (6-digit OTP, 10-min expiry), bcryptjs (10 rounds), role-based (CUSTOMER/ADMIN)
 
@@ -68,9 +68,10 @@ Shared module: `lib/rate-limit.ts` — falls back to allow-all when `UPSTASH_RED
 ## Webhooks
 
 **Whop:** `https://codecraft.techsci.xyz/api/webhooks/whop`
-- Events: payment.succeeded, membership.went_valid, membership.went_invalid, payment.refunded
-- Verification: HMAC-SHA256 (constant-time compare)
+- Events (V1 API, snake_case): `invoice_paid`, `membership_activated`, `membership_deactivated` + unknown events acknowledged silently (200)
+- Verification: HMAC-SHA256 (constant-time compare); secret from DB (`whop_webhook_secret`) with env var fallback
 - Rate limit: 100 req/min per IP (Upstash Redis)
+- **IMPORTANT:** Whop V1 uses snake_case event names — NOT `payment.succeeded`/`membership.went_valid` (old dot-notation)
 
 **PayPal:** `https://codecraft.techsci.xyz/api/webhooks/paypal`
 - Webhook ID: `8ED47441RE716080D`
@@ -169,6 +170,9 @@ Admin: admin@techsci.xyz | Customer: customer@example.com (passwords via SEED_*_
 - Scripts in `scripts/`: run with `set -a && source .env.local && set +a && npx tsx scripts/<name>.ts` (needs DATABASE_URL)
 - After adding fields to Prisma schema: run `bunx prisma generate` before `bun run build` (client must be regenerated)
 - AppSetting cache (`lib/settings.ts`): 60s TTL in-memory cache; changes via `/admin/settings` take up to 60s to apply to webhook verification
+- Date formatting: always use `formatInTimeZone(date, "UTC", fmt)` from `date-fns-tz` — bare `format()` from `date-fns` uses server local timezone (BST/UTC+6 on this machine)
+- Whop API amounts: returned in **dollars** (not cents) — do NOT divide by 100
+- Whop webhook events: V1 API uses `snake_case` (`invoice_paid`, `membership_activated`, `membership_deactivated`) — never dot-notation
 
 ## Purchase Delivery Tracking & Admin Settings (2026-02-15)
 
@@ -220,6 +224,26 @@ Admin: admin@techsci.xyz | Customer: customer@example.com (passwords via SEED_*_
 5. **Admin UI** — "Evidence" button on purchase table opens `/admin/disputes/[purchaseId]` page
 6. **Prisma JSON typing** — use `Prisma.InputJsonValue` cast for `Record<string, unknown>` metadata
 
+## Whop Balance Sync (2026-03-02)
+
+1. **Admin Balance page** — `/admin/balance` — live Whop balance synced via API:
+   - 3 cards: Available (green), Pending (amber), Reserve (blue)
+   - Account details: company, ledger ID/type, transfer fee, payout email, KYC verification, payments approval
+   - Multi-currency balance table
+   - Withdrawal history (last 20) with status badges + UTC timestamps
+   - Refresh button + "Open in Whop" external link
+2. **API route** — `GET /api/admin/whop-balance` — admin-only, calls Whop `GET /api/v1/ledger_accounts/{company_id}` + withdrawals list; Sentry instrumented
+3. **Whop amounts are in dollars** (not cents) — do NOT divide by 100
+4. **Balance nav item** added to admin sidebar (before Settings)
+
+## Whop V1 Webhook Fix (2026-03-02)
+
+1. **Event name mismatch fixed** — Whop V1 API sends `snake_case`, old code expected `dot.notation` → every webhook was failing Zod with 400
+2. **Schema updated** (`lib/validations.ts`) — `InvoicePaidSchema`, `MembershipActivatedSchema`, `MembershipDeactivatedSchema` + `WhopUnknownEventSchema` with `.passthrough()`
+3. **Handler updated** (`lib/whop/webhook-handler.ts`) — switch cases now use V1 names
+4. **Unknown events** return 200 (acknowledged) instead of 400 crash — prevents Whop retry storms
+5. **Test payloads + test route** updated to V1 names
+
 ## Admin Dispute Evidence Page & Legal Alignment (2026-03-02)
 
 1. **Admin dispute page** — `/admin/disputes/[purchaseId]` — full printable evidence page with:
@@ -234,11 +258,13 @@ Admin: admin@techsci.xyz | Customer: customer@example.com (passwords via SEED_*_
 4. **`/refund` page** — full rewrite matching `whop-refund.md`: milestone-based (not "30-day guarantee"), phase table ($250/$450/$1,080/$269), chargeback warning, non-refundable situations, `billing@techsci.io`
 5. **Print CSS** — `globals.css` `@media print` hides nav/sidebar for clean PDF output
 6. **Key dispute facts** (George / ar3636998@yahoo.com):
-   - Purchase: Feb 2, 2026 · Whop payment: pay_4XEFaQjGrdrwqH · $507.27
-   - Access granted: Feb 2 (LIFETIME) · Email verified: Feb 14 · Delivered: Feb 15
-   - Dispute filed: Feb 26 (24 days after purchase, 11 days after delivery)
-   - Reason claimed: "No cardholder authorisation" — contradicted by Whop log
+   - Purchase: Feb 2, 2026 at 8:28 PM UTC · Whop payment: pay_4XEFaQjGrdrwqH · $507.27
+   - Access granted: Feb 2 (LIFETIME) · Email verified: Feb 2 at 8:35 PM UTC · Delivered: Feb 15
+   - Membership terminated by Whop: Feb 17, 6:53 PM UTC (dispute protection alert)
+   - Early dispute alerts: Feb 18 12:52 AM + 5:03 PM UTC
+   - Dispute filed: Feb 26, 7:26 PM UTC (reason: "No cardholder authorisation")
    - Evidence deadline: April 6, 2026
+   - **All timestamps on dispute page use UTC via `formatInTimeZone` (date-fns-tz) — never local timezone**
 
 ## Recent Migrations (2026-02-06)
 
