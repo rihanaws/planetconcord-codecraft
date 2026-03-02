@@ -68,7 +68,7 @@ function fmt(amount: number, currency = "usd") {
     style: "currency",
     currency: currency.toUpperCase(),
     minimumFractionDigits: 2,
-  }).format(amount / 100) // Whop returns amounts in cents
+  }).format(amount) // Whop returns amounts in dollars (not cents)
 }
 
 function fmtUtc(dateStr: string) {
@@ -212,7 +212,7 @@ export default function WhopBalancePage() {
             {refreshing ? "Refreshing…" : "Refresh"}
           </Button>
           <a
-            href={`https://whop.com/dashboard/${ledger.owner.id}/balances`}
+            href={`https://whop.com/dashboard/${ledger.owner.id}/balance`}
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -292,7 +292,11 @@ export default function WhopBalancePage() {
           <div className="space-y-3 text-sm">
             <div className="flex justify-between items-center py-1.5 border-b border-border/40">
               <span className="text-muted-foreground">Company</span>
-              <span className="font-medium">{ledger.owner.name ?? ledger.owner.username}</span>
+              <span className="font-medium">
+                {ledger.payout_account_details?.business_name
+                  ?? ledger.owner.name
+                  ?? ledger.owner.username}
+              </span>
             </div>
             <div className="flex justify-between items-center py-1.5 border-b border-border/40">
               <span className="text-muted-foreground">Ledger ID</span>
@@ -322,13 +326,13 @@ export default function WhopBalancePage() {
             )}
             {verification && (
               <div className="flex justify-between items-center py-1.5 border-b border-border/40">
-                <span className="text-muted-foreground">Verification</span>
+                <span className="text-muted-foreground">KYC Verification</span>
                 <VerificationBadge status={verification.status} />
               </div>
             )}
             {ledger.payments_approval_status && (
               <div className="flex justify-between items-center py-1.5">
-                <span className="text-muted-foreground">Payments Status</span>
+                <span className="text-muted-foreground">Payments Approval</span>
                 <Badge
                   className={
                     ledger.payments_approval_status === "approved"
