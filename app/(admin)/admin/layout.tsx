@@ -17,6 +17,7 @@ import {
   Megaphone,
   ClipboardList,
   Settings,
+  Wallet,
   Menu,
   X,
   LogOut,
@@ -76,6 +77,11 @@ const ADMIN_NAV = [
     label: "Service Requests",
     href: "/admin/service-requests",
     icon: ClipboardList,
+  },
+  {
+    label: "Balance",
+    href: "/admin/balance",
+    icon: Wallet,
   },
   {
     label: "Settings",
