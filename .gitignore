@@ -48,3 +48,10 @@ next-env.d.ts
 .cursor/rules/rules.md
 .serena/
 /whoplan/
+/dispute-evidence/
+/whop-refund.md
+/whop-terms.md
+.claude/projects/
+scripts/check-george.ts
+scripts/fix-customer-data.ts
+scripts/revoke-george-access.ts
