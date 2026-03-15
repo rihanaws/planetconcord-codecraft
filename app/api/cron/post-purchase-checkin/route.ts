@@ -24,16 +24,20 @@ export async function GET(req: NextRequest) {
   let errors = 0
 
   try {
-    // Find purchases completed between 47-49 hours ago (2-day window)
+    // Primary window: purchases completed between 47-49 hours ago (2-day target)
     const windowStart = new Date(now.getTime() - 49 * 60 * 60 * 1000)
     const windowEnd = new Date(now.getTime() - 47 * 60 * 60 * 1000)
+
+    // Backfill window: catch purchases from 49h–7 days ago that slipped through
+    // (e.g. cron was deployed after their window passed, or cron missed a run)
+    const backfillStart = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
 
     const purchases = await prisma.purchase.findMany({
       where: {
         status: PurchaseStatus.COMPLETED,
         completedAt: {
-          gte: windowStart,
-          lte: windowEnd,
+          gte: backfillStart,
+          lte: windowEnd, // never send before 47h have passed
         },
         checkinSentAt: null, // Not yet sent
       },
