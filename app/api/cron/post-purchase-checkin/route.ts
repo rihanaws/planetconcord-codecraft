@@ -24,12 +24,11 @@ export async function GET(req: NextRequest) {
   let errors = 0
 
   try {
-    // Primary window: purchases completed between 47-49 hours ago (2-day target)
-    const windowStart = new Date(now.getTime() - 49 * 60 * 60 * 1000)
+    // Send to purchases 47h–7 days old that haven't received a check-in yet.
+    // Lower bound (47h): never send before 2 days have passed.
+    // Upper bound (7 days): backfill purchases whose window was missed (e.g. cron
+    // deployed after their 47-49h target, or a cron run was skipped).
     const windowEnd = new Date(now.getTime() - 47 * 60 * 60 * 1000)
-
-    // Backfill window: catch purchases from 49h–7 days ago that slipped through
-    // (e.g. cron was deployed after their window passed, or cron missed a run)
     const backfillStart = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
 
     const purchases = await prisma.purchase.findMany({
