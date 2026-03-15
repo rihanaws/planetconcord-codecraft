@@ -178,6 +178,25 @@ async function DisputeContent({ purchaseId }: { purchaseId: string }) {
           },
         ]
       : []),
+    // Hardcoded from Whop dispute evidence page — these events are not in our DB
+    {
+      date: new Date("2026-02-18T00:52:00Z"),
+      label: "First early dispute alert",
+      detail: "Customer has contacted their bank requesting to reverse this payment",
+      type: "warning",
+    },
+    {
+      date: new Date("2026-02-18T17:03:00Z"),
+      label: "Second early dispute alert",
+      detail: "Customer has contacted their bank requesting to reverse this payment",
+      type: "warning",
+    },
+    {
+      date: new Date("2026-02-26T19:26:00Z"),
+      label: "Formal dispute filed",
+      detail: "Customer filed a dispute with their bank. Reason: \"No cardholder authorisation\"",
+      type: "warning",
+    },
     ...activities.map((a) => ({
       date: a.createdAt,
       label: a.action.replace(/_/g, " "),
