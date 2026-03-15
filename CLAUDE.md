@@ -1,8 +1,8 @@
 # CLAUDE.md
 
-## Status (Updated 2026-03-02)
-All 10 phases + Phase 11 (hardening) + Whop customer sync + dispute prevention + delivery tracking + admin settings + UserActivity logging + dispute evidence + admin dispute page + aligned legal pages + Whop V1 webhook fix + Whop balance sync.
-**Live:** https://codecraft.techsci.xyz | **Products:** 10 | **Last commit:** 2f0bdf9
+## Status (Updated 2026-03-15)
+All 10 phases + Phase 11 (hardening) + Whop customer sync + dispute prevention + delivery tracking + admin settings + UserActivity logging + dispute evidence + admin dispute page + aligned legal pages + Whop V1 webhook fix + Whop balance sync + dispute timeline fix + checkin cron backfill.
+**Live:** https://codecraft.techsci.xyz | **Products:** 10 | **Last commit:** 5eab524
 
 ## Stack
 Next.js 16.1.6 (App Router), React 19, TypeScript, Bun, Tailwind v4, Prisma 7 + Neon adapter, PostgreSQL (Neon), NextAuth v5, Zod v4, Sentry v10, Resend, Vercel Analytics, reCAPTCHA Enterprise, OpenAI, PayPal SDK, Upstash Redis (rate limiting)
@@ -95,7 +95,7 @@ Auth: `Authorization: Bearer $CRON_SECRET` (auto-injected)
    - Routes by event type: `PAYMENT.*` → PayPal handler, others → Whop handler
 
 4. **post-purchase-checkin** (`0 10 * * *`) - `/api/cron/post-purchase-checkin`
-   - Sends check-in email ~48h after purchase (47–49h window)
+   - Sends check-in email ~48h after purchase (47h–7 day window — backfills missed purchases)
    - Tracks via `Purchase.checkinSentAt` to avoid double-sends
    - Includes billing descriptor reminder for dispute prevention
 
@@ -265,6 +265,13 @@ Admin: admin@techsci.xyz | Customer: customer@example.com (passwords via SEED_*_
    - Dispute filed: Feb 26, 7:26 PM UTC (reason: "No cardholder authorisation")
    - Evidence deadline: April 6, 2026
    - **All timestamps on dispute page use UTC via `formatInTimeZone` (date-fns-tz) — never local timezone**
+
+## Dispute Timeline & Cron Fixes (2026-03-15)
+
+1. **Dispute page timeline** — Platform Event Timeline now includes 3 hardcoded entries from Whop's access log (not in DB): Feb 18 12:52 AM UTC (first early alert), Feb 18 5:03 PM UTC (second early alert), Feb 26 7:26 PM UTC (formal dispute filed). Sorted chronologically with access revocation (Feb 17).
+2. **Checkin cron backfill** — `post-purchase-checkin` window widened from strict 47–49h to 47h–7 days. Catches purchases whose window was missed (e.g. cron deployed after window closed). `checkinSentAt` null guard prevents double-sends.
+3. **Root cause (George)** — checkinSentAt was null because cron was added on Feb 5; George's 47–49h window was Feb 4. Cron arrived one day late.
+4. **Scripts sourcing** — use `grep -v "^#" .env.local | grep "^[A-Z]" | while IFS= read -r line; do export "$line"; done` to source `.env.local` safely (avoids `set -a` breaking on comment lines with spaces)
 
 ## Recent Migrations (2026-02-06)
 
