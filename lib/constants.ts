@@ -1,6 +1,12 @@
 /**
  * Site-wide constants and configuration
  * Centralized configuration for TechSci CodeCraft Agency
+ *
+ * Phase 1 transitional rebrand — Planet-Concord / Concord AI Ops
+ * New semantic brand lives in lib/brand.ts (BRAND). This file remains the runtime source for
+ * SITE_CONFIG/COMPANY_INFO/CONTACT_INFO until explicit per-surface migration in later phases.
+ * See docs/brand-spec.md. Keep codecraft.techsci.xyz domain, legal entity TechSci, Inc., and
+ * TECHSCI descriptor unchanged in this phase.
  */
 
 export const SITE_CONFIG = {
@@ -111,7 +117,7 @@ export const RATE_LIMITS = {
   },
 } as const;
 
-// Company information
+// Company information — LEGAL ENTITY UNCHANGED in Phase 1 (TechSci, Inc. retained)
 export const COMPANY_INFO = {
   legalName: "TechSci, Inc.",
   registeredState: "Delaware",
@@ -127,3 +133,8 @@ export const COMPANY_INFO = {
   },
   contactEmail: "hello@techsci.xyz",
 } as const;
+
+// Re-export semantic brand (Planet-Concord) — additive, no runtime switch in Phase 1.
+// Consumers should import from "@/lib/brand" directly in later phases for explicit surface mapping.
+export { BRAND, LEGACY_BRAND, getBrandForSurface } from "./brand";
+export type { BrandConfig, BrandSurface } from "./brand";
