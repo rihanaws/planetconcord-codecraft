@@ -2,6 +2,7 @@ import Link from "next/link"
 import { Code2, Twitter, Linkedin, Github, Youtube } from "lucide-react"
 import { NewsletterForm } from "@/components/forms/newsletter-form"
 import { NAVIGATION, SITE_CONFIG, SOCIAL_LINKS, COMPANY_INFO } from "@/lib/constants"
+import { BRAND } from "@/lib/brand"
 
 export function Footer() {
   const currentYear = new Date().getFullYear()
@@ -23,10 +24,7 @@ export function Footer() {
               </div>
               <div className="flex flex-col">
                 <span className="text-xl font-semibold tracking-tight leading-none">
-                  {SITE_CONFIG.shortName}
-                </span>
-                <span className="text-xs text-muted-foreground font-medium leading-none mt-0.5">
-                  by TechSci
+                  {BRAND.businessName}
                 </span>
               </div>
             </Link>

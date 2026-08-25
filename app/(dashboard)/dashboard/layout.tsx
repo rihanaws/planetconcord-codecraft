@@ -21,6 +21,7 @@ import {
   Code2,
 } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { BRAND } from "@/lib/brand"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -119,10 +120,7 @@ export default function DashboardLayout({
               </div>
               <div className="flex flex-col">
                 <span className="text-base font-semibold tracking-tight leading-none text-sidebar-foreground">
-                  CodeCraft
-                </span>
-                <span className="text-[10px] text-sidebar-foreground/60 font-medium leading-none">
-                  by TechSci
+                  {BRAND.businessName}
                 </span>
               </div>
             </Link>
@@ -218,7 +216,7 @@ export default function DashboardLayout({
 
           <Link href="/" className="flex items-center space-x-2">
             <Code2 className="h-6 w-6 text-primary" />
-            <span className="font-semibold text-sm">CodeCraft</span>
+            <span className="font-semibold text-sm">{BRAND.businessName}</span>
           </Link>
 
           <DropdownMenu>
@@ -268,7 +266,7 @@ export default function DashboardLayout({
               <div className="h-16 flex items-center justify-between px-6 border-b border-sidebar-border">
                 <Link href="/" className="flex items-center space-x-2">
                   <Code2 className="h-6 w-6 text-sidebar-primary" />
-                  <span className="font-semibold text-sidebar-foreground">CodeCraft</span>
+                  <span className="font-semibold text-sidebar-foreground">{BRAND.businessName}</span>
                 </Link>
                 <Button
                   variant="ghost"

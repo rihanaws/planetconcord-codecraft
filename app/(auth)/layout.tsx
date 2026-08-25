@@ -1,8 +1,9 @@
 import { Metadata } from "next"
+import { BRAND } from "@/lib/brand"
 
 export const metadata: Metadata = {
-  title: "Authentication - TechSci CodeCraft",
-  description: "Sign in or create an account to access TechSci CodeCraft",
+  title: "Authentication",
+  description: `Sign in or create an account to access ${BRAND.businessName}`,
 }
 
 export default function AuthLayout({

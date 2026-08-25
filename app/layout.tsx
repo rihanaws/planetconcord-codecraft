@@ -6,6 +6,7 @@ import { AuthProvider } from "@/components/layout/auth-provider"
 import { ThemeProvider } from "@/components/providers/theme-provider"
 import { Toaster } from "@/components/ui/sonner"
 import { ConsentBanner } from "@/components/consent-banner"
+import { BRAND } from "@/lib/brand"
 import "./globals.css"
 
 const geistSans = Geist({
@@ -21,8 +22,8 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://codecraft.techsci.xyz"),
   title: {
-    default: "TechSci CodeCraft - Premium Digital Products",
-    template: "%s | TechSci CodeCraft",
+    default: `${BRAND.businessName} — Premium Digital Products`,
+    template: `%s | ${BRAND.businessName}`,
   },
   description:
     "Access premium digital products and growth tools designed to accelerate your business.",
@@ -39,15 +40,15 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://codecraft.techsci.xyz",
-    title: "TechSci CodeCraft - Premium Digital Products",
+    title: `${BRAND.businessName} - Premium Digital Products`,
     description:
       "Access premium digital products and growth tools designed to accelerate your business.",
-    siteName: "TechSci CodeCraft",
-    images: [{ url: "/images/CODE_CRAFT_LOGO.png", width: 800, height: 800, alt: "TechSci CodeCraft" }],
+    siteName: BRAND.businessName,
+    images: [{ url: "/images/CODE_CRAFT_LOGO.png", width: 800, height: 800, alt: BRAND.businessName }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "TechSci CodeCraft - Premium Digital Products",
+    title: `${BRAND.businessName} - Premium Digital Products`,
     description:
       "Access premium digital products and growth tools designed to accelerate your business.",
     images: ["/images/CODE_CRAFT_LOGO.png"],

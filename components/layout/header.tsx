@@ -17,7 +17,8 @@ import {
   Code2,
   ChevronRight
 } from "lucide-react"
-import { NAVIGATION, SITE_CONFIG } from "@/lib/constants"
+import { NAVIGATION } from "@/lib/constants"
+import { BRAND } from "@/lib/brand"
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -84,10 +85,7 @@ export function Header() {
               </div>
               <div className="flex flex-col">
                 <span className="text-lg font-semibold tracking-tight leading-none">
-                  {SITE_CONFIG.shortName}
-                </span>
-                <span className="text-[10px] text-muted-foreground font-medium leading-none">
-                  by TechSci
+                  {BRAND.businessName}
                 </span>
               </div>
             </Link>

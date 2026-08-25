@@ -28,6 +28,7 @@ import {
 } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
+import { BRAND } from "@/lib/brand"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -153,10 +154,7 @@ export default function AdminLayout({
           </div>
           <div className="flex flex-col">
             <span className="text-base font-semibold tracking-tight leading-none text-sidebar-foreground">
-              CodeCraft
-            </span>
-            <span className="text-[10px] text-sidebar-foreground/60 font-medium leading-none">
-              by TechSci
+              {BRAND.businessName}
             </span>
           </div>
         </Link>
@@ -263,7 +261,7 @@ export default function AdminLayout({
           <div className="flex items-center space-x-2">
             <Link href="/" className="flex items-center space-x-2">
               <Code2 className="h-6 w-6 text-primary" />
-              <span className="font-semibold text-sm">CodeCraft</span>
+              <span className="font-semibold text-sm">{BRAND.businessName}</span>
             </Link>
             <Badge variant="destructive" className="text-[9px] px-1.5 py-0.5 leading-none">ADMIN</Badge>
           </div>
@@ -316,7 +314,7 @@ export default function AdminLayout({
                 <div className="flex items-center space-x-2">
                   <Link href="/" className="flex items-center space-x-2">
                     <Code2 className="h-6 w-6 text-sidebar-primary" />
-                    <span className="font-semibold text-sidebar-foreground">CodeCraft</span>
+                    <span className="font-semibold text-sidebar-foreground">{BRAND.businessName}</span>
                   </Link>
                   <Badge variant="destructive" className="text-[9px] px-1.5 py-0.5 leading-none">ADMIN</Badge>
                 </div>
