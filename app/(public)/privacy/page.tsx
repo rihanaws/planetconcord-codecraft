@@ -1,17 +1,18 @@
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
 import { Shield } from "lucide-react"
-
+import { PRIVACY_SECTIONS, LAST_UPDATED, POLICY_CONTACT_EMAIL } from "@/lib/legal/policies"
 
 export const metadata = {
-  title: "Privacy Policy | TechSci CodeCraft",
-  description: "Privacy Policy for TechSci CodeCraft Agency - How we collect, use, and protect your data.",
+  title: "Privacy Policy",
+  description: "Privacy Policy for Planet-Concord — how we collect, use, and protect your information.",
   openGraph: {
-    title: "Privacy Policy | TechSci CodeCraft",
-    description: "Privacy Policy for TechSci CodeCraft Agency - How we collect, use, and protect your data.",
+    title: "Privacy Policy | Planet-Concord",
+    description: "Privacy Policy for Planet-Concord — how we collect, use, and protect your information.",
     url: "https://codecraft.techsci.xyz/privacy",
+    siteName: "Planet-Concord",
     type: "website",
-    images: [{ url: "/images/CODE_CRAFT_LOGO.png", width: 800, height: 800, alt: "TechSci CodeCraft" }],
+    images: [{ url: "/images/CODE_CRAFT_LOGO.png", width: 800, height: 800, alt: "Planet-Concord" }],
   },
   twitter: {
     card: "summary_large_image",
@@ -37,85 +38,56 @@ export default function PrivacyPage() {
                   Privacy Policy
                 </span>
               </h1>
-              <p className="text-muted-foreground">Last updated: February 2, 2026</p>
+              <p className="text-muted-foreground text-sm">Planet-Concord · Last Updated: {LAST_UPDATED}</p>
             </div>
 
-            <div className="prose prose-lg max-w-none space-y-8">
-              <div className="p-8 rounded-2xl bg-card/50 backdrop-blur-xl border border-border/50">
-                <h2 className="text-2xl font-bold mb-4">1. Information We Collect</h2>
-                <p className="text-muted-foreground leading-relaxed mb-4">
-                  We collect information that you provide directly to us, including:
-                </p>
-                <ul className="space-y-2 text-muted-foreground">
-                  <li>• Name and email address when you create an account</li>
-                  <li>• Payment information processed through our secure payment provider</li>
-                  <li>• Communications you send to our support team</li>
-                  <li>• Usage data and analytics about how you interact with our services</li>
-                </ul>
-              </div>
+            <div className="space-y-6">
+              {PRIVACY_SECTIONS.map((section) => (
+                <section
+                  key={section.id}
+                  aria-labelledby={section.id}
+                  className="p-8 rounded-2xl bg-card/50 backdrop-blur-xl border border-border/50"
+                >
+                  <h2 id={section.id} className="text-2xl font-bold mb-4">
+                    {section.title}
+                  </h2>
+                  <div className="space-y-3">
+                    {section.paragraphs.map((p, i) => (
+                      <p key={i} className="text-sm text-muted-foreground leading-relaxed">
+                        {p}
+                      </p>
+                    ))}
+                    {section.bullets && section.bullets.length > 0 && (
+                      <ul className="space-y-1.5 text-sm text-muted-foreground list-disc pl-5">
+                        {section.bullets.map((b, i) => (
+                          <li key={i}>{b}</li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                </section>
+              ))}
 
-              <div className="p-8 rounded-2xl bg-card/50 backdrop-blur-xl border border-border/50">
-                <h2 className="text-2xl font-bold mb-4">2. How We Use Your Information</h2>
-                <p className="text-muted-foreground leading-relaxed mb-4">
-                  We use the information we collect to:
+              <section
+                aria-labelledby="contact"
+                className="p-8 rounded-2xl bg-card/50 backdrop-blur-xl border border-border/50"
+              >
+                <h2 id="contact" className="text-2xl font-bold mb-4">
+                  Contact
+                </h2>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  For questions, support, refunds, or privacy requests, contact Planet-Concord through Whop
+                  support chat or at{" "}
+                  <a
+                    href={`mailto:${POLICY_CONTACT_EMAIL}`}
+                    aria-label={`Email ${POLICY_CONTACT_EMAIL}`}
+                    className="text-primary underline underline-offset-4"
+                  >
+                    {POLICY_CONTACT_EMAIL}
+                  </a>
+                  .
                 </p>
-                <ul className="space-y-2 text-muted-foreground">
-                  <li>• Provide, maintain, and improve our services</li>
-                  <li>• Process transactions and send related information</li>
-                  <li>• Send technical notices, updates, and support messages</li>
-                  <li>• Respond to your comments and questions</li>
-                  <li>• Monitor and analyze trends and usage</li>
-                </ul>
-              </div>
-
-              <div className="p-8 rounded-2xl bg-card/50 backdrop-blur-xl border border-border/50">
-                <h2 className="text-2xl font-bold mb-4">3. Information Sharing</h2>
-                <p className="text-muted-foreground leading-relaxed">
-                  We do not sell, trade, or rent your personal information to third parties. We may share your information only in the following circumstances: with your consent, to comply with legal obligations, to protect our rights, or with service providers who assist in our operations (under strict confidentiality agreements).
-                </p>
-              </div>
-
-              <div className="p-8 rounded-2xl bg-card/50 backdrop-blur-xl border border-border/50">
-                <h2 className="text-2xl font-bold mb-4">4. Data Security</h2>
-                <p className="text-muted-foreground leading-relaxed">
-                  We implement appropriate technical and organizational measures to protect your personal information. However, no method of transmission over the internet is 100% secure, and we cannot guarantee absolute security.
-                </p>
-              </div>
-
-              <div className="p-8 rounded-2xl bg-card/50 backdrop-blur-xl border border-border/50">
-                <h2 className="text-2xl font-bold mb-4">5. Cookies and Tracking</h2>
-                <p className="text-muted-foreground leading-relaxed">
-                  We use cookies and similar tracking technologies to track activity on our service and store certain information. You can instruct your browser to refuse all cookies or to indicate when a cookie is being sent.
-                </p>
-              </div>
-
-              <div className="p-8 rounded-2xl bg-card/50 backdrop-blur-xl border border-border/50">
-                <h2 className="text-2xl font-bold mb-4">6. Your Rights (GDPR)</h2>
-                <p className="text-muted-foreground leading-relaxed mb-4">
-                  If you are a European resident, you have the right to:
-                </p>
-                <ul className="space-y-2 text-muted-foreground">
-                  <li>• Access your personal data</li>
-                  <li>• Request correction of inaccurate data</li>
-                  <li>• Request deletion of your data</li>
-                  <li>• Object to processing of your data</li>
-                  <li>• Request data portability</li>
-                </ul>
-              </div>
-
-              <div className="p-8 rounded-2xl bg-card/50 backdrop-blur-xl border border-border/50">
-                <h2 className="text-2xl font-bold mb-4">7. Data Retention</h2>
-                <p className="text-muted-foreground leading-relaxed">
-                  We retain your personal information only for as long as necessary to fulfill the purposes outlined in this Privacy Policy, unless a longer retention period is required by law.
-                </p>
-              </div>
-
-              <div className="p-8 rounded-2xl bg-card/50 backdrop-blur-xl border border-border/50">
-                <h2 className="text-2xl font-bold mb-4">8. Contact Us</h2>
-                <p className="text-muted-foreground leading-relaxed">
-                  For questions about this Privacy Policy, please contact us at support@techsci.xyz.
-                </p>
-              </div>
+              </section>
             </div>
           </div>
         </section>
