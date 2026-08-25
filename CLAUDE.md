@@ -1,6 +1,8 @@
 # CLAUDE.md
 
-## Status (Updated 2026-03-15)
+## Status (Updated 2026-03-15 — Rebrand status updated: August 25, 2026)
+Display rebrand active: Planet-Concord (store/business) / Concord AI Ops (public product/community) / TechSci, Inc. (legal operator) — Active domain remains https://codecraft.techsci.xyz — New customer-facing support/policy email: planet.concord0@gmail.com — `admin@techsci.xyz` is an existing seed/admin auth record, not the customer-support email. Existing TechSci contact: `hello@techsci.xyz` remains a TechSci, Inc. company-information contact where required. Historical CodeCraft identity remains only in historical evidence, payment records, issued receipts, and `LEGACY_BRAND` mapping.
+
 All 10 phases + Phase 11 (hardening) + Whop customer sync + dispute prevention + delivery tracking + admin settings + UserActivity logging + dispute evidence + admin dispute page + aligned legal pages + Whop V1 webhook fix + Whop balance sync + dispute timeline fix + checkin cron backfill.
 **Live:** https://codecraft.techsci.xyz | **Products:** 10 | **Last commit:** 5eab524
 
@@ -54,6 +56,10 @@ bunx prisma db push | bunx prisma studio | bun lib/db/seed.ts
 8. Email Automation Playbook - $249
 9. Paid Ads Master Class - $449
 10. E-Commerce Conversion Kit - $349
+
+Current confirmed public offer: AI Operator Elite Setup — Make.com Blueprint Pack ($250 one-time). It includes four prebuilt Make.com blueprints, written import guidance, and 30 days of Whop-chat support for import questions, setup issues, and minor adjustments. Buyers import into their own Make.com account, reconnect and maintain their own third-party services, and pay related third-party fees. Typical delivery is 2–3 business days and is an estimate, not a guarantee.
+
+Legacy marketplace catalog records remain operational and unchanged during the transition. They are not yet redefined, promoted, hidden, or deleted; see the future public-content/catalog audit.
 
 ## Rate Limiting (Upstash Redis)
 
@@ -152,7 +158,7 @@ Auth: `Authorization: Bearer $CRON_SECRET` (auto-injected)
 - Service Requests page with filters + detail view
 
 ## Test Accounts
-Admin: admin@techsci.xyz | Customer: customer@example.com (passwords via SEED_*_PASSWORD)
+Admin: admin@techsci.xyz (seed/admin auth record, not customer support) | Customer: customer@example.com (passwords via SEED_*_PASSWORD) — New customer-facing support/policy email: planet.concord0@gmail.com
 
 ## Key Gotchas
 - Zod `.email()` deprecation is hint-only; `.format("email")` breaks TS
@@ -173,6 +179,15 @@ Admin: admin@techsci.xyz | Customer: customer@example.com (passwords via SEED_*_
 - Date formatting: always use `formatInTimeZone(date, "UTC", fmt)` from `date-fns-tz` — bare `format()` from `date-fns` uses server local timezone (BST/UTC+6 on this machine)
 - Whop API amounts: returned in **dollars** (not cents) — do NOT divide by 100
 - Whop webhook events: V1 API uses `snake_case` (`invoice_paid`, `membership_activated`, `membership_deactivated`) — never dot-notation
+
+## AI Coding-Agent Brand Constraints
+
+- Never globally replace `CodeCraft`/`TechSci` strings; use `BRAND` (`businessName` for shell, `publicBrandName` only where product/community voice is semantic)
+- Preserve: active domain `codecraft.techsci.xyz`, `TECHSCI` descriptor, `TechSci, Inc.` legal operator, historical dispute evidence, `whopPaymentId`/`whopProductId`/`productId`/`slug`, webhook `invoice_paid` etc., Prisma `model`/`enum`, `proxy.ts` guards, cron/webhook behavior
+- Approved terminology: Planet-Concord (store/business), Concord AI Ops (public product only where semantic), `planet.concord0@gmail.com` (new support) — `admin@techsci.xyz` is seed/admin auth, not support; `hello@techsci.xyz` remains company-information contact where required
+- Prohibited public claims: done-for-you custom systems, bespoke tailored per buyer, install inside buyer accounts, 1:1 onboarding calls, plug-and-play without buyer-configuration context, AI agents as category unless verified, revenue/lead/engagement/time-savings/growth/scale/six-figure/no-hire/guarantee, unverified blueprint internals
+- Never expose secrets, `DATABASE_URL`, `WHOP_WEBHOOK_SECRET`, `PAYPAL_*`, customer `email`/`paymentId`, Drive links, or delivery URLs
+- Live display: Planet-Concord / Concord AI Ops; technical/legacy identifiers: `techsci-codecraft` (package), `codecraft.techsci.xyz` (domain), `TECHSCI` (descriptor), `TechSci, Inc.` (legal) — retained
 
 ## Purchase Delivery Tracking & Admin Settings (2026-02-15)
 

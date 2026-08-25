@@ -1,4 +1,4 @@
-# TechSci CodeCraft Agency
+# Planet-Concord
 
 [![Next.js](https://img.shields.io/badge/Next.js-16.1.6-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19-61dafb?style=for-the-badge&logo=react)](https://reactjs.org/)
@@ -7,9 +7,22 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-38bdf8?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
 [![Bun](https://img.shields.io/badge/Bun-Runtime-f472b6?style=for-the-badge&logo=bun)](https://bun.sh/)
 
-Production digital product marketplace for CodeCraft Agency (TechSci Inc.). Integrates with Whop for payments, auto-provisions customer access, and provides secure portals for customers and admins.
+Production digital product marketplace for Planet-Concord (operated by TechSci, Inc.) — public product line Concord AI Ops. Integrates with Whop for payments, auto-provisions customer access, and provides secure portals for customers and admins.
 
 **Live:** [codecraft.techsci.xyz](https://codecraft.techsci.xyz) | **Last updated:** March 2, 2026
+
+**Rebrand status updated:** August 25, 2026 — Store/business identity: Planet-Concord, public product/community identity: Concord AI Ops, legal operator: TechSci, Inc., active domain remains https://codecraft.techsci.xyz, new customer-facing support/policy email: planet.concord0@gmail.com.
+
+## Brand and Transition Status
+
+- **Store/business identity:** Planet-Concord
+- **Public product/community identity:** Concord AI Ops
+- **Legal operator:** TechSci, Inc.
+- **Active domain:** https://codecraft.techsci.xyz (canonical/OG/sitemap/OAuth/webhooks remain)
+- **New customer-facing support/policy email:** planet.concord0@gmail.com
+- **Existing TechSci contact:** `hello@techsci.xyz` remains a TechSci, Inc. company-information contact where required.
+- **Existing seed/admin identity:** `admin@techsci.xyz` is an existing seed/admin auth record, not the customer-support email
+- **Historical identity:** CodeCraft / TechSci CodeCraft remains only in historical evidence, payment records, issued receipts, `LEGACY_BRAND` mapping, and archival docs
 
 ---
 
@@ -132,6 +145,10 @@ set -a && source .env.local && set +a && npx tsx scripts/<name>.ts
 9. Paid Ads Master Class — $449
 10. E-Commerce Conversion Kit — $349
 
+Current confirmed public offer: AI Operator Elite Setup — Make.com Blueprint Pack ($250 one-time). It includes four prebuilt Make.com blueprints, written import guidance, and 30 days of Whop-chat support for import questions, setup issues, and minor adjustments. Buyers import into their own Make.com account, reconnect and maintain their own third-party services, and pay related third-party fees. Typical delivery is 2–3 business days and is an estimate, not a guarantee.
+
+Legacy marketplace catalog records remain operational and unchanged during the transition. They are not yet redefined, promoted, hidden, or deleted; see the future public-content/catalog audit.
+
 **Route groups:**
 - `(public)` — `/`, `/products/*`, `/about`, `/contact`, `/terms`, `/refund`, `/privacy`
 - `(auth)` — `/login`, `/signup`, `/verify-email`, `/forgot-password`, `/reset-password`
@@ -155,6 +172,8 @@ set -a && source .env.local && set +a && npx tsx scripts/<name>.ts
 | Admin | admin@techsci.xyz | `SEED_ADMIN_PASSWORD` |
 | Customer | customer@example.com | `SEED_CUSTOMER_PASSWORD` |
 
+`admin@techsci.xyz` is an existing seed/admin auth record, not the customer-support email. New customer-facing support/policy email: `planet.concord0@gmail.com`.
+
 ---
 
 ## Deployment
@@ -172,6 +191,8 @@ git push origin main   # triggers Vercel deploy
 
 ## Company
 
-TechSci Inc. (d/b/a CodeCraft Agency) · EIN: 35-2800827 · Delaware C-Corp
+TechSci Inc. · EIN: 35-2800827 · Delaware C-Corp
 
-Support: support@techsci.xyz · Legal: legal@techsci.io · +1 (302) 314-6007
+Support (new customer-facing): planet.concord0@gmail.com · Legal: legal@techsci.io · +1 (302) 314-6007
+
+Existing TechSci contact: `hello@techsci.xyz` remains a TechSci, Inc. company-information contact where required. Existing seed/admin identity `admin@techsci.xyz` is an auth/development record, not customer support. Historical CodeCraft identity remains only in historical evidence, payment records, issued receipts, and archival docs.

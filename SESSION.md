@@ -1,5 +1,5 @@
-# SESSION HANDOFF — CodeCraft Agency
-**Last updated: March 2, 2026 | Branch: main | Commit: f8930e2**
+# SESSION HANDOFF — Planet-Concord
+**Last updated: March 2, 2026 | Branch: main | Commit: f8930e2 — Rebrand status updated: August 25, 2026 — Store/business: Planet-Concord, public product/community: Concord AI Ops, legal operator: TechSci, Inc., active domain: https://codecraft.techsci.xyz, new customer-facing support/policy email: planet.concord0@gmail.com — `admin@techsci.xyz` is an existing seed/admin auth record, not customer support**
 
 Use this file to start a new Claude session with full context.
 
@@ -7,7 +7,11 @@ Use this file to start a new Claude session with full context.
 
 ## Project in One Line
 
-Production digital product marketplace at **codecraft.techsci.xyz** — Next.js 16 + Prisma + PostgreSQL (Neon) + Whop payments + PayPal + full admin panel.
+Production digital product marketplace for Planet-Concord at **codecraft.techsci.xyz** — Next.js 16 + Prisma + PostgreSQL (Neon) + Whop payments + PayPal + full admin panel. Live display: Planet-Concord (store) / Concord AI Ops (public product) / TechSci, Inc. (legal operator).
+
+Current confirmed public offer: AI Operator Elite Setup — Make.com Blueprint Pack ($250 one-time). It includes four prebuilt Make.com blueprints, written import guidance, and 30 days of Whop-chat support for import questions, setup issues, and minor adjustments. Buyers import into their own Make.com account, reconnect and maintain their own third-party services, and pay related third-party fees. Typical delivery is 2–3 business days and is an estimate, not a guarantee.
+
+Legacy marketplace catalog records remain operational and unchanged during the transition. They are not yet redefined, promoted, hidden, or deleted; see the future public-content/catalog audit.
 
 ---
 
